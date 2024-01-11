@@ -1,136 +1,122 @@
+let map, infoWindow, drawingManager;
+
 function initMap() {
-
-    var mapElement = document.getElementById('map');
-    var url = `/map/arcmap`;
-
-    async function markerscodes() {
-        var data = await axios(url);
-        var lacationData = data.data;
-        mapDisplay(lacationData);
-    }
-    markerscodes();
-
-    function mapDisplay(datas) {
-
-        //map options
-        var options = {
-                // center: { lat: 6.9586, lng: 79.9662 }, //Heiyanthuduwa
-                // center: { lat: 6.9333296, lng: 79.9833294 },
-                // Biygama,
-                center: { lat: Number(datas[0].gps_latitude), lng: Number(datas[0].gps_longitude) },
-                zoom: 10
-            }
-            // Create a map object and specify the DOM element for display.
-        var map = new google.maps.Map(mapElement, options);
-
-
-        var markers = new Array();
-
-        for (let index = 0; index < datas.length; index++) {
-            markers.push({
-                coords: { lat: Number(datas[index].gps_latitude), lng: Number(datas[index].gps_longitude) },
-                //iconImage:'https://maps.google.com/mapfiles/kml/shapes/',
-                content: `<div><h5>${datas[index].location_title}</h5><p><i class="icon address-icon"></i>${datas[index].addressline1}</p><p>${datas[index].addressline2}, ${datas[index].city}</p><small>${datas[index].location_email}</small></div>`
-            })
-        }
-
-        //loop through marker
-        for (var i = 0; i < markers.length; i++) {
-            addMarker(markers[i]);
-        }
-
-        //addMarker();
-        function addMarker(props) {
-            var marker = new google.maps.Marker({
-                position: props.coords,
-                map: map
-            });
-
-            if (props.iconImage) {
-                marker.setIcon(props.iconImage);
-            }
-
-            if (props.content) {
-
-                var infowindow = new google.maps.InfoWindow({
-                    content: props.content
-                });
-
-                marker.addListener('click', function() {
-                    infowindow.open(map, marker);
-                });
-
-            }
-        }
-
-
+    // Options for the map
+    const mapOptions = {
+        center: { lat: 6.9214, lng: 122.0790 },
+        zoom: 6,
     };
 
-} //initMap endfunction initMap() {
+    // Create the map instance
+    map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    infoWindow = new google.maps.InfoWindow();
 
-var mapElement = document.getElementById('map');
-var url = `/map/arcmap`;
+    const locationButton = document.createElement("button");
 
-async function markerscodes() {
-    var data = await axios(url);
-    var lacationData = data.data;
-    mapDisplay(lacationData);
+    locationButton.textContent = "Pan to Current Location";
+    locationButton.classList.add("custom-map-control-button");
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+    locationButton.addEventListener("click", () => {
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+
+                    // Create a marker at the current location
+                    const marker = new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        title: "Current Location",
+                    });
+
+                    // Add a click event listener to the marker
+                    marker.addListener("click", () => {
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent("This is the current location.");
+                        infoWindow.open(map);
+                    });
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent("Location found.");
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+
+                    // Create a polygon with sample coordinates
+                    const samplePolygonCoordinates = [
+                        { lat: 6.9674981, lng: 122.0467514 },
+                        { lat: 6.9142233, lng: 122.0425935 },
+                        { lat: 6.9391805, lng: 121.9914933 },
+                        { lat: 6.9544422, lng: 121.9726062 },
+                    ];
+
+                    const polygon = new google.maps.Polygon({
+                        paths: samplePolygonCoordinates,
+                        strokeColor: "#FF0000",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: "#FF0000",
+                        fillOpacity: 0.35,
+                    });
+
+                    polygon.setMap(map);
+                },
+                () => {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                },
+            );
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+        }
+    });
+
+    // Initialize the drawing manager
+    drawingManager = new google.maps.drawing.DrawingManager({
+        drawingMode: null,
+        drawingControl: true,
+        drawingControlOptions: {
+            position: google.maps.ControlPosition.TOP_LEFT,
+            drawingModes: ['polygon', 'polyline'],
+        },
+        polygonOptions: {
+            strokeColor: '#00FF00',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#00FF00',
+            fillOpacity: 0.35,
+        },
+        polylineOptions: {
+            strokeColor: '#0000FF',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+        },
+    });
+
+    // Set the drawing manager on the map
+    drawingManager.setMap(map);
+
+    // Add an event listener for when an overlay is complete
+    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+        // Get the overlay (polygon or polyline) that was drawn
+        const overlay = event.overlay;
+
+        // Add the overlay to the map
+        overlay.setMap(map);
+    });
 }
-markerscodes();
 
-function mapDisplay(datas) {
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(
+        browserHasGeolocation ?
+        "Error: The Geolocation service failed." :
+        "Error: Your browser doesn't support geolocation.",
+    );
+    infoWindow.open(map);
+}
 
-    //map options
-    var options = {
-            //center: { lat:6.9586, lng: 79.9662 }, //Heiyanthuduwa
-            // center: { lat: 6.9333296, lng: 79.9833294 }, Biygama
-            center: { lat: Number(datas[0].gps_latitude), lng: Number(datas[0].gps_longitude) },
-            zoom: 10
-        }
-        // Create a map object and specify the DOM element for display.
-    var map = new google.maps.Map(mapElement, options);
-
-
-    var markers = new Array();
-
-    for (let index = 0; index < datas.length; index++) {
-        markers.push({
-            coords: { lat: Number(datas[index].gps_latitude), lng: Number(datas[index].gps_longitude) },
-            //iconImage:'https://maps.google.com/mapfiles/kml/shapes/',
-            content: `<div><h5>${datas[index].location_title}</h5><p><i class="icon address-icon"></i>${datas[index].addressline1}</p><p>${datas[index].addressline2}, ${datas[index].city}</p><small>${datas[index].location_email}</small></div>`
-        })
-    }
-
-    //loop through marker
-    for (var i = 0; i < markers.length; i++) {
-        addMarker(markers[i]);
-    }
-
-    //addMarker();
-    function addMarker(props) {
-        var marker = new google.maps.Marker({
-            position: props.coords,
-            map: map
-        });
-
-        if (props.iconImage) {
-            marker.setIcon(props.iconImage);
-        }
-
-        if (props.content) {
-
-            var infowindow = new google.maps.InfoWindow({
-                content: props.content
-            });
-
-            marker.addListener('click', function() {
-                infowindow.open(map, marker);
-            });
-
-        }
-    }
-
-
-};
-
-//initMap end
+window.initMap = initMap;

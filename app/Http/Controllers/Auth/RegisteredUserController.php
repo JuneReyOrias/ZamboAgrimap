@@ -41,6 +41,7 @@ class RegisteredUserController extends Controller
     
     }
     catch(\Exception $ex){
+        
         return redirect('/register')->with('message','Someting went wrong');
     }
 

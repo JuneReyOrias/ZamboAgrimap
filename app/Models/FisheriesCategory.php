@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class FisheriesCategory extends Model
 {
     use HasFactory;
+    protected $table="fisheries_categorys";
     protected $fillable=[
-        'user_id',
-        'agri_district_id',
-        'categorize_id',
+        'users_id',
+        'agri_districts_id',
+        'categorizes_id',
         'fisheries_category_name',
         'fisheries_description',
         

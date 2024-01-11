@@ -32,7 +32,7 @@
 
           
          {{-- <p class="text-muted mb-3">Read the <a href="https://github.com/RobinHerbots/Inputmask" target="_blank"> Official Inputmask Documentation </a>for a full list of instructions and other options.</p> --}}
-          <form action{{url('crop_categorys')}} method="post">
+          <form action{{url('crops')}} method="post">
             @csrf
             <div class="row mb-3">
              
@@ -40,12 +40,12 @@
 
                 
                 <div class="form-floating mb-4 mb-md-0"> 
-                   <select class="form-control mb-4 mb-md-0" name="users_id" aria-label="User ID">
-                        @foreach ($categorize as $categorize)
-                            <option value="{{ $categorize->id }}">{{ $categorize->cat_name }}</option>
+                   <select class="form-control mb-4 mb-md-0" name="crop_categorys_id" aria-label="User ID">
+                        @foreach ($cropcat as $cropcat)
+                            <option value="{{ $cropcat->id }}">{{ $cropcat->crop_name }}</option>
                         @endforeach
                     </select>
-                    <label for="users_id">Categorize Name:</label>
+                    <label for="crop_categorys_id">Crop Category:</label>
                 </div>
               
             </div>

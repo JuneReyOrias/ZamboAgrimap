@@ -6,9 +6,46 @@ use App\Http\Controllers\Controller;
 use App\Models\AgriDistrict;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class AgriDistrictController extends Controller
 {
+    //parcellary boarders foreign key join functions
+            public function ParcelBoarders()
+            {
+      
+        $agriculture = DB::table('agri_districts')
+        ->Join('users', 'agri_districts.users_id', '=', 'users.id')
+
+        ->select('agri_districts.*', 'users.*' )
+        ->get();
+        return view('parcels.parcels_create',compact('agriculture'));
+
+    }
+     //farmprofiles foreign key join functions
+    public function FarmProfiles(){
+        try {
+            $farmLocation= AgriDistrict::all();
+    // $farmLocation = DB::table('polygons')
+    // ->join('agri_districts', 'polygons.id', '=', 'agri_districts.id')
+       
+    // ->select('polygons.*',
+    //   'agri_districts.*'
+    //   )
+    
+    // ->get();
+
+           // You can return the data to a view or process it further
+           return view('farm_profile.farm_index', [  
+        'farmLocation' => $farmLocation,
+      
+    
+    ]);
+       } catch (\Exception $ex) {
+           // Log the exception for debugging purposes
+           dd($ex);
+           return redirect()->back()->with('message', 'Something went wrong');
+       }
+        }  
     public function Gmap()
     {
         $districts= AgriDistrict::all();
@@ -23,31 +60,28 @@ class AgriDistrictController extends Controller
     return view('map.gmap', ['districts' => $districts]);
 
      }
+
+    //polygons foreign key join functions
     public function Polygons()
     {
         $agriculture = AgriDistrict::all();
      return view('polygon.polygon_create',compact('agriculture'));
     }
 
+     //category foreign key join functions
     public function category()
     {
-        $agriculture = AgriDistrict::all();
+      
+        $agriculture = DB::table('agri_districts')
+        ->Join('users', 'agri_districts.users_id', '=', 'users.id')
+       
+        ->select('agri_districts.*', 'users.*' )
+        ->get();
+   
 
      return view('categorize.categorize_index',compact('agriculture'));
     }
-    /**
-     * Display a listing of the resource.
-     */
-    // public function Creates()
-    // {
-    //     $agridistrict= AgriDistrict::all();
-    //  return view('agri_districts.agri_create',['agridistrict'=>$agridistrict]);
-    // }
-
-    /**
-     * Show the form for creating a new resource.
-     */
- 
+   
     /**
      * Store a newly created resource in storage.
      */
@@ -75,15 +109,7 @@ class AgriDistrictController extends Controller
         }   
     }
 
-    /**
-     * Display the specified resource.
-     */
-    // public function Districtshow()
 
-    // {
-       
-    //     return view('agri_districts.insertdata');
-    // }
 
     /**
      * Show the form for editing the specified resource.

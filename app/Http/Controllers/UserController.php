@@ -21,6 +21,7 @@ class UserController extends Controller
 
      return view('categorize.categorize_index',compact('user'));
     }
+  
     public function commonFunction()
     {
         return "This is a common function for all users.";

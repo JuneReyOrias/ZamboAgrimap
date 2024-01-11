@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class VariableCost extends Model
 {
     use HasFactory;
+    protected $table='variable_costs';
     protected $fillable=[
         'personal_informations_id',
         'farm_profiles_id',

@@ -19,6 +19,11 @@ class LivestockCategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function Livestocks()
+    {
+        $livestock = livestockCategory::all();
+     return view('livestocks.livestocks_create',compact('livestock'));
+    }
     public function LivestockCategory()
     {
         // $agridistrictS= AgriDistrictController::latest()->get();
@@ -40,16 +45,20 @@ class LivestockCategoryController extends Controller
     {
         try{
         
-            $data= $request->validated();
-            $data= $request->all();
-            livestockCategory::create($data);
+            // $data= $request->validated();
+            // $data= $request->all();
+            livestockCategory::create([
+                'categorizes_id' =>$request->input('categorizes_id'),
+                'livestock_category_name' =>$request->input('livestock_category_name'),
+                'livestock_description'=>$request->input('livestock_description'),
+            ]);
     
-            return redirect('/farmprofile')->with('message','Personal informations added successsfully');
+            return redirect('/livestockcategory/create')->with('message','Personal informations added successsfully');
         
         }
         catch(\Exception $ex){
             dd($ex); // Debugging statement to inspect the exception
-            return redirect('/personalinformation')->with('message','Someting went wrong');
+            return redirect('/livestockcategory/create')->with('message','Someting went wrong');
             
         }   
     }

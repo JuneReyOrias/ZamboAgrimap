@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class ParcelBoarder extends Model
 {
     use HasFactory;
+    protected $table="parcellary_boundaries";
     protected $fillable=[
-        'user_id',
-        'agri_district_id',
+        'users_id',
+        'agri_districts_id',
         'ricefield_boarders_id',
         'parcel_name',
         'area',
@@ -40,6 +41,14 @@ class ParcelBoarder extends Model
        'parseven_longitude',
        'pareight_latitude',
        'pareight_longitude',
+       'parnine_latitude',
+       'parnine_longitude',
+       'parten_latitude',
+       'parten_longitude',
+       'pareleven_latitude',
+       'pareleven_longitude',
+       'partwelve_latitude',
+       'partwelve_longitude',
         
     ];
     public function user()

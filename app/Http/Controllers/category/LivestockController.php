@@ -40,16 +40,25 @@ class LivestockController extends Controller
     {
         try{
         
-            $data= $request->validated();
-            $data= $request->all();
-            Livestock::create($data);
+            // $data= $request->validated();
+            // $data= $request->all();
+            Livestock::create([
+                'categorizes_id' =>$request->input('categorizes_id'),
+                'livestock_categorys_id' =>$request->input('livestock_categorys_id'),
+                'livestock_name'=> $request->input('livestock_name'),
+                'breed'=>$request->input('breed'),
+                'age'=>$request->input('age'),
+                'gender'=>$request->input('gender'),
+                'livestock_description'=>$request->input('livestock_description'),
+                ]
+            );
     
-            return redirect('/farmprofile')->with('message','Personal informations added successsfully');
+            return redirect('/livestocks/create')->with('message','Personal informations added successsfully');
         
         }
         catch(\Exception $ex){
             dd($ex); // Debugging statement to inspect the exception
-            return redirect('/personalinformation')->with('message','Someting went wrong');
+            return redirect('/livestocks/create')->with('message','Someting went wrong');
             
         }   
     }

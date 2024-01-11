@@ -32,7 +32,7 @@
 
           
          {{-- <p class="text-muted mb-3">Read the <a href="https://github.com/RobinHerbots/Inputmask" target="_blank"> Official Inputmask Documentation </a>for a full list of instructions and other options.</p> --}}
-          <form action{{url('categorizes')}} method="post">
+          <form action{{url('fisheries')}} method="post">
             @csrf
             <div class="row mb-3">
              
@@ -40,12 +40,12 @@
 
                 
                 <div class="form-floating mb-4 mb-md-0"> 
-                   <select class="form-control mb-4 mb-md-0" name="users_id" aria-label="User ID">
-                        @foreach ($categorize as $categorize)
-                            <option value="{{ $categorize->id }}">{{ $categorize->cat_name }}</option>
+                   <select class="form-control mb-4 mb-md-0" name="fisheries_categorys_id" aria-label="User ID">
+                        @foreach ($fisheries as $fisheries)
+                            <option value="{{ $fisheries->id }}">{{ $fisheries->fisheries_category_name }}</option>
                         @endforeach
                     </select>
-                    <label for="users_id">Categorize Name:</label>
+                    <label for="fisheries_categorys_id">Fisheries Category:</label>
                 </div>
               
             </div>
@@ -53,30 +53,56 @@
             <div class="col-md-3">
 
                 <div class="form-floating mb-4 mb-md-0">
-                <input  class="form-control mb-4 mb-md-0" name="fisheries_category_name" placeholder="FirstName" type="text" aria-label="FirstName"id="floatingInput">
-                <label for="floatingInput" >Fisheries_category Name:</label>
+                <input  class="form-control mb-4 mb-md-0" name="species_name" placeholder="FirstName" type="text" aria-label="FirstName"id="floatingInput">
+                <label for="floatingInput" >Species Name:</label>
               </div>
               
             </div>
             <div class="col-md-3">
               <div class="form-floating mb-4 mb-md-0">
-              <input  class="form-control mb-4 mb-md-0" name="fisheries_description" placeholder="MiddleName" type="text" aria-label="MiddleName"id="floatingInput">
-              <label for="floatingInput" >fisheries Category Description:</label>
+              <input  class="form-control mb-4 mb-md-0" name="common_name" placeholder="MiddleName" type="text" aria-label="MiddleName"id="floatingInput">
+              <label for="floatingInput" >Common Name:</label>
             </div>
-          {{-- </div>
+          </div>
           <div class="col-md-3">
             <div class="form-floating mb-4 mb-md-0">
             <input  class="form-control mb-4 mb-md-0" name="latitude" placeholder="Lastname" type="text" aria-label="LastName"id="floatingInput">
-            <label for="floatingInput" >Latitude:</label>
+            <label for="floatingInput" >Habitat:</label>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-floating mb-4 mb-md-0">
-          <input  class="form-control mb-4 mb-md-0"  name="longitude"  placeholder="Extension Name" type="text" aria-label="ExtensionName"id="floatingInput">
-          <label for="floatingInput" >Longitude:</label>
-        </div> --}}
-      </div>
+       
               </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <div class="form-floating mb-4 mb-md-0">
+                  <input  class="form-control mb- mb-md-0" name="fish_description"placeholder="Home Address" type="text" aria-label="HomeAddress"id="floatingInput">
+                  <label for="floatingInput" >Description:</label>
+                </div>
+              </div>
+              {{-- <div class="col-md-3">
+                <div class="form-floating mb-4 mb-md-0">
+                  <select class="form-select mb-4 mb-md-0" name="sex"id="floatingSelect" aria-label="Floating label select e">
+                    <option selected disabled>Select</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                  </select>
+                <label for="floatingInput" >Sex:</label>
+              </div>
+            </div> --}}
+                  {{-- <div class="col-md-3">
+                    <div class="form-floating mb-4 mb-md-0">
+                    <input  class="form-control mb-4 mb-md-0" name="religion" placeholder="Lastname" type="text" aria-label="MiddlName"id="floatingInput">
+                    <label for="floatingInput" >Religion:</label>
+                  </div>
+                </div> --}}
+             
+              {{-- <div class="col-md-3">
+                <div class="form-floating mb-4 mb-md-0">
+                <input  class="form-control mb-4 mb-md-0" name="date_of_birth" placeholder="Date Of Birth" type="date" aria-label="DateOfBirth"id="floatingInput">
+                <label for="floatingInput" >Date of Birth:</label>
+              </div>
+            </div> --}}
+          </div>
 {{--   
             <div class="row mb-3">
               <div class="col-md-3">

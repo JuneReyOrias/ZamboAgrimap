@@ -24,27 +24,11 @@ class FarmProfile extends Model
  
 //  protected $guarded = [];
     protected $fillable=[
-    //    'farmno_id',
-    //    'farmer_no',
 
-    //       'seeds_typed_used',
-    //        'seeds_used_in_kg',
-    //       'seed_source',
-    //        'no_of_fertilizer_used_in_bags',
-    //        'no_of_pesticides_used_in_l_per_kg',
-    //        'no_of_insecticides_used_in_l',
-    //       'area_planted',
-    //       'date_planted',
-    //       'date_harvested',
-    //        'yield_tons_per_kg',
-    //        'unit_price_palay_per_kg',
-    //        'unit_price_rice_per_kg',
-    //       'type_of_product',
-    //       'sold_to',
-    //       'if_palay_milled_where',
-    //        'gross_income_palay',
-    //        'gross_income_rice',
-   ' personal_information_id',
+        
+   'personal_informations_id',
+'agri_districts_id',
+'polygons_id',
   'tenurial_status',
   'rice_farm_address',
    'no_of_years_as_farmers',
@@ -80,11 +64,15 @@ public function user()
 }
 public function personalInformations()
 {
-    return $this->belongsTo(PersonalInformations::class, 'personal_information_id','id')->withDefault();
+    return $this->belongsTo(PersonalInformations::class, 'personal_informations_id','id')->withDefault();
 }
     public function agridistricts()
     {
-        return $this->belongsTo(AgriDistrict::class,'agri_district_id','id');
+        return $this->belongsTo(AgriDistrict::class,'agri_districts_id','id');
+    }
+    public function polygon()
+    {
+        return $this->belongsTo(Polygon::class,'polygons_id' );
     }
     public function fixedcost()
     {

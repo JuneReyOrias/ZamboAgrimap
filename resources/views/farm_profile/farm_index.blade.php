@@ -27,29 +27,75 @@
           </ul>
           @endif
           <h6 class="card-title"><span>II.</span>Farm Profile</h6>
-      
-          {{-- @section('content')
-          <div class="form-floating mb-4 mb-md-0">
-              <select class="form-select" name="personal_information_id" id="personalInformationDropdown" aria-label="Floating label select">
-                  <option selected disabled>Select Personal Information</option>
-                  @foreach( $personalInformations as $personalInfo)
-                      <option value="{{ $personalInfo->id }}">{{ $personalInfo->first_name }} {{ $personalInfo->last_name }}</option>
-                  @endforeach
-              </select>
-              <label for="personalInformationDropdown">Select Personal Information:</label>
-          </div>
-      @endsection  --}}
-      
-      @foreach($personalInformations  as $persoanlinfo)
-              <input id="personal_information_id" class="form-control mb-4 mb-md-0" name="id" value="{{ $persoanlinfo->id}}" placeholder="" type="text" aria-label="personal_information_id"id="floatingInput">
-              <label for="floatingInput" >personal_information_id:</label>
-              <input id="personal_information_id" class="form-control mb-4 mb-md-0" name="personal_information_id" value="{{ $persoanlinfo->first_name}}" placeholder="" type="text" aria-label="personal_information_id"id="floatingInput">
-              <input id="personal_information_id" class="form-control mb-4 mb-md-0" name="personal_information_id" value="{{ $persoanlinfo->last_name}}" placeholder="" type="text" aria-label="personal_information_id"id="floatingInput">
-              @endforeach
+      <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
+       
           <form  action{{url('farm_profiles')}} method="post"  >
             @csrf
             <div class="row mb-3">
+{{--               
+              <div class="col-md-3">
+
+                
+                <div class="form-floating mb-4 mb-md-0"> 
+                   <select class="form-control mb-4 mb-md-0" name="personal_informations_id" aria-label="User ID">
+                        @foreach ( $personalInformations as $personalInformations)
+                            <option value="{{  $personalInformations->id }}">{{ $personalInformations->last_name.' ,'.$personalInformations->first_name. ', '.$personalInformations->mothers_maiden_name }}</option>
+                        @endforeach
+                    </select>
+                    <label for="personal_informations_id">Name:</label>
+                </div>
+              
+            </div> --}}
+            <div class="col-md-3">
+
+                
+              <div class="form-floating mb-4 mb-md-0"> 
+                 <select class="form-control mb-4 mb-md-0" name="personal_informations_id" aria-label="agri_districts_id">
+                      @foreach ($farmLocation as $farmLocation)
+                          <option value="{{ $farmLocation->id }}">{{ $farmLocation->last_name
+                        
+                           }}</option>
+                      @endforeach
+                  </select>
+                  <label for="personal_informations_id">Agri-District:</label>
+              </div>
             
+          
+      </div>
+  
+      <div class="col-md-3">
+
+                
+        <div class="form-floating mb-4 mb-md-0"> 
+           <select class="form-control mb-4 mb-md-0" name="polygons_id" aria-label="User ID">
+                @foreach ( $polygonsIds as  $polygonsIds)
+                    <option value="{{  $polygonsIds }}">{{  $polygonsIds}}</option>
+                @endforeach
+            </select>
+            <label for="polygons_id">Polygon:</label>
+        </div>
+      
+    </div> 
+        <div class="col-md-3">
+
+                
+        <div class="form-floating mb-4 mb-md-0"> 
+           <select class="form-control mb-4 mb-md-0" name="agri_districts_id"aria-label="agri_districts_id">
+                @foreach ( $agriDistrictIds as  $agriDistrictIds)
+                    <option value="{{  $agriDistrictIds }}">{{$agriDistrictIds.''.
+
+                     }}</option>
+                       
+                @endforeach
+            </select>
+            <label for="agri_districts_id">Agri-District:</label>
+        </div>
+      
+    
+</div>
+              </div>
+            <div class="row mb-3">
+              
               <div class="col-md-3">
  
                 <div class="form-floating mb-4 mb-md-0">
@@ -254,7 +300,7 @@
   </div>
 
   <!--end for Production Cost-->
-  <div class="row">
+  {{-- <div class="row">
     <div class="col-md-6 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
@@ -272,7 +318,7 @@
       </div>
     </div>
   
-  </div>
+  </div> --}}
 
 </div>
 @endsection

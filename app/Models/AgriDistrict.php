@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class AgriDistrict extends Model
 {
-    use HasFactory;
+    use HasFactory; 
+    protected $table= 'agri_districts';
     protected $fillable=[
         'users_id',
         'district',
@@ -23,7 +24,7 @@ class AgriDistrict extends Model
     }
     public function categorizes()
     {
-        return $this->hasOne(Categorize::class,'id','agri_districts_id' );
+        return $this->hasMany(Categorize::class,'categorize_id','id' );
     }
     public function polygon()
     {

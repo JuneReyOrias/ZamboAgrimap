@@ -8,25 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class CropCategory extends Model
 {
     use HasFactory;
+    protected $table="crop_categorys";
     protected $fillable=[
-        'user_id',
-        'agri_district_id',
-        'categorize_id',
+        'users_id',
+        'agri_districts_id',
+        'categorizes_id',
         'crop_name',
         'crop_descript',
         
     ];
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id', )->withDefault();
+        return $this->belongsTo(User::class,'users_id', )->withDefault();
     }
     public function agridistricts()
     {
-        return $this->belongsToe(AgriDistrict::class,'agri_district_id','id')->withDefault();;
+        return $this->belongsToe(AgriDistrict::class,'agri_districts_id','id')->withDefault();;
     }
     public function categorizes()
     {
-        return $this->belongsTo(Categorize::class,'categorize_id','id')->withDefault();;
+        return $this->belongsTo(Categorize::class,'categorizes_id','id')->withDefault();;
     }
     public function crop()
     {

@@ -1,5 +1,7 @@
 let map; // Declare the map variable to make it accessible globally
-
+let markers = []; // Global array to track markers
+let polygons = []; // Global array to track markers
+let infoWindows = []; // Global array to track info windows
 function initMap() {
     // Create LatLng objects for different locations
     let map; // Global map variable
@@ -48,40 +50,96 @@ function initMap() {
     function displayKMZ(kmzData) {
         // ... (your existing displayKMZ code)
     }
-    class farmprofiles {
-        constructor(gps_latitude, gps_longitude) {
 
-            this.gps_latitude = gps_latitude;
-            this.gps_longitude = gps_longitude;
+    class farmprofiles {
+        constructor(latitude, longitude, district) {
+
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.district = district;
+
         }
     }
 
     const listOfprofiles = []
 
+    const datadistricts = document.querySelectorAll('.test')
+    datadistricts.forEach((location, index) => {
+        let lat = location.getAttribute("data-lat")
+        let long = location.getAttribute("data-lng")
+        let loc = location.getAttribute("data-location")
+        listOfprofiles.push(new farmprofiles(parseFloat(lat), parseFloat(long), loc));
+    })
+
+    //farmers locations
     class farmdistricts {
-        constructor(latitude, longitude, district, gps_latitude, gps_longitude) {
+        constructor(latitude, longitude, district, gps_latitude, gps_longitude, last_name, mothers_maiden_name,
+            home_address, nameof_farmers_ass_org_coops, tenurial_status, no_of_years_as_farmers, land_title_no,
+            lot_no, area_prone_to, ecosystem, type_rice_variety, prefered_variety, plant_schedule_wetseason,
+            plant_schedule_dryseason, no_of_cropping_yr, yield_kg_ha, source_of_capital) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.location_name = district;
             this.gps_latitude = gps_latitude;
             this.gps_longitude = gps_longitude;
+            this.last_name = last_name;
+            this.mothers_maiden_name = mothers_maiden_name;
+            this.home_address = home_address;
+            this.nameof_farmers_ass_org_coops = nameof_farmers_ass_org_coops;
+            this.tenurial_status = tenurial_status;
+            this.no_of_years_as_farmers = no_of_years_as_farmers;
+            this.land_title_no = land_title_no;
+            this.lot_no = lot_no;
+            this.area_prone_to = area_prone_to;
+            this.ecosystem = ecosystem;
+            this.type_rice_variety = type_rice_variety;
+            this.prefered_variety = prefered_variety;
+            this.plant_schedule_wetseason = plant_schedule_wetseason;
+            this.plant_schedule_dryseason = plant_schedule_dryseason;
+            this.no_of_cropping_yr = no_of_cropping_yr;
+            this.yield_kg_ha = yield_kg_ha;
+            this.source_of_capital = source_of_capital;
+
         }
     }
 
     const listOfFarm = []
-
+        //farmloactions
     const dataLocation = document.querySelectorAll(".test")
     dataLocation.forEach((location, index) => {
-            let lat = location.getAttribute("data-lat")
-            let long = location.getAttribute("data-lng")
-            let loc = location.getAttribute("data-location")
-            let farm_lat = location.getAttribute("data-farms_lat")
-            let farm_long = location.getAttribute("data-farms_lng")
-            listOfFarm.push(new farmdistricts(parseFloat(lat), parseFloat(long), loc, parseFloat(farm_lat), parseFloat(farm_long), ));
-        })
-        //polygons
+        let lat = location.getAttribute("data-lat")
+        let long = location.getAttribute("data-lng")
+        let loc = location.getAttribute("data-location")
+        let last = location.getAttribute("data-lastname")
+        let farm_lat = location.getAttribute("data-farms_lat")
+        let farm_long = location.getAttribute("data-farms_lng")
+        let mother = location.getAttribute("data-mothers")
+        let address = location.getAttribute("data-address")
+        let farm_org = location.getAttribute("data-farm_org")
+        let status = location.getAttribute("data-status")
+        let years = location.getAttribute("data-years")
+        let landtitle = location.getAttribute("data-landtitle")
+        let lotno = location.getAttribute("data-lotno")
+        let areaprone = location.getAttribute("data-areaprone")
+        let ecosystem = location.getAttribute("data-ecosystem")
+        let typevariety = location.getAttribute("data-typevariety")
+        let prefered = location.getAttribute("data-prefered")
+        let wetseason = location.getAttribute("data-wetseason")
+        let dryseason = location.getAttribute("data-dryseason")
+        let cropping = location.getAttribute("data-cropping")
+        let yieldha = location.getAttribute("data-yieldha")
+        let capital = location.getAttribute("data-capital")
+        listOfFarm.push(new farmdistricts(parseFloat(lat), parseFloat(long), loc, parseFloat(farm_lat), parseFloat(farm_long), last, mother, address,
+            farm_org, status, parseFloat(years), parseFloat(landtitle), parseFloat(lotno), areaprone, ecosystem, typevariety,
+            prefered, wetseason, dryseason, cropping, yieldha, capital));
+    })
+
+    //polygons
     class districtPolygon {
-        constructor(verone_latitude, verone_longitude, vertwo_latitude, vertwo_longitude, verthree_latitude, verthree_longitude, vertfour_latitude, vertfour_longitude, verfive_latitude, verfive_longitude, versix_latitude, versix_longitude, verseven_latitude, verseven_longitude, vereight_latitude, verteight_longitude, strokecolor) {
+        constructor(verone_latitude, verone_longitude, vertwo_latitude, vertwo_longitude, verthree_latitude, verthree_longitude,
+            vertfour_latitude, vertfour_longitude, verfive_latitude, verfive_longitude, versix_latitude,
+            versix_longitude, verseven_latitude, verseven_longitude, vereight_latitude, verteight_longitude,
+            strokecolor, area, perimeter) {
             this.verone_latitude = verone_latitude;
             this.verone_longitude = verone_longitude;
             this.vertwo_latitude = vertwo_latitude;
@@ -99,6 +157,8 @@ function initMap() {
             this.vereight_latitude = vereight_latitude;
             this.verteight_longitude = verteight_longitude;
             this.strokecolor = strokecolor;
+            this.area = area;
+            this.perimeter = perimeter;
         }
     }
 
@@ -123,118 +183,209 @@ function initMap() {
         let vereight_lat = location.getAttribute("data-vereight_lat")
         let verteight_long = location.getAttribute("data-verteight_lng")
         let color = location.getAttribute("data-color")
+        let area = location.getAttribute("data-area")
+        let perimeter = location.getAttribute("data-perimeter")
         listOfPolygon.push(new districtPolygon(parseFloat(verone_lat), parseFloat(verone_long),
             parseFloat(vertwo_lat), parseFloat(vertwo_long), parseFloat(verthree_lat), parseFloat(verthree_long),
             parseFloat(vertfour_lat), parseFloat(vertfour_long), parseFloat(verfive_lat), parseFloat(verfive_long),
             parseFloat(versix_lat), parseFloat(versix_long), parseFloat(verseven_lat), parseFloat(verseven_long),
-            parseFloat(vereight_lat), parseFloat(verteight_long), color,
+            parseFloat(vereight_lat), parseFloat(verteight_long), color, area, perimeter,
         ));
     })
 
-    const locationZC = { lat: 6.9214, lng: 122.0790 }; // New York City, USA
-    // const locationManicahan = { lat: 7.0245, lng: 122.1935 }; // Manicahan, Philippines
-    // const locationTumaga = { lat: 6.9434, lng: 122.0795 }; // Tumaga, Philippines
-    // const locationAyala = { lat: 6.9692, lng: 121.9471 }; // Tumaga, Philippines
-    // const locationCulianan = { lat: 6.977367, lng: 122.168928 }; // Tumaga, Philippines
-    // const locationCuruan = { lat: 7.2004, lng: 122.1803 }; // Tumaga, Philippines
-    // const locationVitali = { lat: 7.3586, lng: 122.3483 }; // Tumaga, Philippines
-    // // Tumaga farmers
-    // const locationTumManzano = { lat: 6.924013, lng: 122.096047 }; // Tumaga, Philippines
-    // const locationTumFALCASANTOS = { lat: 6.9250247, lng: 122.0981137 }; // Tumaga, Philippines 
-
-    // const locationTumPARAGOSO = { lat: 6.9277897, lng: 122.09070217 }; // Tumaga, Philippines
-    // const locationTumPARAGOSOS = { lat: 6.9276535, lng: 122.0969297 }; // Tumaga, Philippines
-    // const locationTumMANOY = { lat: 6.9271337, lng: 122.0976297 }; // Tumaga, Philippines
-    // const locationTumBOROMEO = { lat: 6.9223527, lng: 122.0969971 }; // Tumaga, Philippines 
-    // const locationTumGALVEZ = { lat: 6.9271378, lng: 122.0976345 }; // Tumaga, Philippines
-    // const locationTumANGELES = { lat: 6.923881, lng: 122.0964671 }; // Tumaga, Philippines 
-    // const locationTumRICO = { lat: 6.9216691, lng: 122.1002043 }; // Tumaga, Philippines
-    // const locationTumNATIVIDAD = { lat: 6.9241163, lng: 122.1000559 }; // Tumaga, Philippines 
-    // const locationTumMADRAZO = { lat: 6.9252693, lng: 122.097675 }; // Tumaga, Philippines
-    // const locationTumRICOS = { lat: 6.9256862, lng: 122.0966491 }; // Tumaga, Philippines 
-
-    // const locationTumgALVEZ = { lat: 6.9257358, lng: 122.1008294 }; // Tumaga, Philippines
-    // const locationTumCLIMACO = { lat: 6.9251268, lng: 122.0983621 }; // Tumaga, Philippines 
-    // const locationTumMALICAY = { lat: 6.9213221, lng: 122.0994685 }; // Tumaga, Philippines
-    // const locationTumYEE = { lat: 6.9291991, lng: 122.0998732 }; // Tumaga, Philippines 
-    // const locationNATIVIDAD = { lat: 6.92666751, lng: 122.097755 }; // Tumaga, Philippines
-    // const locationTumEJE = { lat: 6.9236119, lng: 122.0968145 }; // Tumaga, Philippines 
-    // const locationTumNATIVIDADes = { lat: 6.9296202, lng: 122.0962877 }; // Tumaga, Philippines
-    // const locationTumNATIVIDADrod = { lat: 6.9264808, lng: 122.0996788 }; // Tumaga, Philippines 
-    // const permDistrictCoordinates = [
-    //     { lat: 6.9674981, lng: 122.0467514 }, // Vertex 1
-    //     { lat: 6.9142233, lng: 122.0425935 }, // Vertex 2
-    //     { lat: 6.9391805, lng: 121.9914933 }, // Vertex 3
-    //     { lat: 6.9544422, lng: 121.9726062 }, // Vertex 4
-    //     { lat: 6.9546074, lng: 121.9496387 }, // Vertex 1
-    //     { lat: 6.9846874, lng: 121.9253666 }, // Vertex 2
-    //     { lat: 7.0155378, lng: 121.9181573 }, // Vertex 3
-    //     { lat: 7.0424026, lng: 121.9650361 }, // Vertex 4
-    // ];
-    // Create a LatLng array for the Perm District polygon
-
-
+    const locationZC = { lat: 6.9214, lng: 122.0790 }; // ZAMBOANGA CITY LATLANG
 
     // Options for the map
     const mapOptions = {
         center: locationZC,
-        zoom: 11
+        zoom: 10
     };
 
     // Create the map instance
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-    // // Place a marker on the map for each location
-    const image =
-        "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
-    const bounds = new google.maps.LatLngBounds();
-    listOfFarm.forEach(farm => {
-        console.log(farm.location_name)
-        console.log(farm.latitude)
-        console.log(farm.longitude)
-        console.log(farm.gps_latitude)
-        console.log(farm.gps_longitude)
-        const positions = {
-            lat: farm.gps_latitude ? farm.gps_latitude : farm.latitude,
-            lng: farm.gps_longitude ? farm.gps_longitude : farm.longitude,
-        };
+    //Districts informations info window
+    function districtContent(profiles) {
+        return `
+        <div>
+        
+        <strong> ${profiles.district}</strong><br>
+        Latitude: ${profiles.latitude}<br>
+        Longitude: ${profiles.longitude}<br>
+    
+        </div>
+        `;
+    }
 
+    //Farmers demographic informations functions info window
+    function generateInfoWindowContent(farm) {
+        return `
+            <div>
+                
+                Name: <strong>${farm.last_name}</strong><br>
+                Mother's maidensName: ${farm.mothers_maiden_name}<br>
+                Home Address: ${farm.home_address}<br>
+                GPS_Latitude: ${farm.gps_latitude ? farm.gps_latitude : farm.latitude}<br>
+                GPS_Longitude: ${farm.gps_longitude ? farm.gps_longitude : farm.longitude}<br>
+               farmers_org/assoc/coop: ${farm.nameof_farmers_ass_org_coops}<br>
+               Tenurial status: ${farm.tenurial_status}<br>
+               No. of years as farmers; ${farm.no_of_years_as_farmers}<br>
+               Land Title no.: ${farm.land_title_no}<br>
+               Lot No.: ${farm.lot_no}<br>
+               Area Prone to: ${farm.area_prone_to}<br>
+               Ecosystem: ${farm.ecosystem}<br>
+               Type of rice variety: ${farm.type_rice_variety}<br>
+               prefered variety: ${farm.prefered_variety}<br>
+               Plant Schedule(wetseason): ${farm.plant_schedule_wetseason}<br>
+               Plant Schedule(dryseason):${farm.plant_schedule_dryseason}<br>
+               No.cropping/yr:${farm.no_of_cropping_yr}<br>
+               Yield kg/has: ${farm.yield_kg_ha}<br>
+               Source of Capaital: ${farm.source_of_capital}<br>
+                <!-- Add more farmer-specific information as needed -->
+            </div>
+        `;
+    }
 
-        new google.maps.Marker({
-            position: positions,
-            // position: { lat: farm.gps_latitude, lng: farm.gps_longitude },
-            // position: { lat: farm.latitude, lng: farm.longitude },
-            map: map,
-            // map1: map,
-            title: farm.location_name,
-            icon: image
-                // title1: farm.location_name,
-                // icon: `http://maps.google.com/mapfiles/ms/icons/${pinColor}-dot.png`,
-        });
-        bounds.extend(positions);
-    })
-    map.fitBounds(bounds);
+    //Districts informations info window
+    function PolygonInfo(polygon) {
+        return `
+                <div>
+                
+             
+               Area(m^2): <strong> ${polygon.area}</strong><br>
+               Perimeter: <strong> ${polygon.perimeter}</strong><br>
+             
+
+                </div>
+                `;
+    }
+
+    // const bounds = new google.maps.LatLngBounds();
     // listOfFarm.forEach(farm => {
-    //     console.log(farm.location_name);
-    //     console.log(farm.latitude);
-    //     console.log(farm.longitude);
-    //     console.log(farm.gps_latitude);
-    //     console.log(farm.gps_longitude);
-
-    //     const position = {
+    //     console.log(farm.location_name)
+    //     console.log(farm.latitude)
+    //     console.log(farm.longitude)
+    //     console.log(farm.gps_latitude)
+    //     console.log(farm.gps_longitude)
+    //     const positions = {
     //         lat: farm.gps_latitude ? farm.gps_latitude : farm.latitude,
     //         lng: farm.gps_longitude ? farm.gps_longitude : farm.longitude,
     //     };
 
-    //     new google.maps.Marker({
-    //         position: position,
-    //         map: map,
-    //         title: farm.location_name,
-    //         icon: image,
-    //     });
-    // });
-    const strokeColors = ['#EE9322', '#3366cc', '#ff0000', '#00ff00'];
 
+    //     new google.maps.Marker({
+    //         position: positions,
+    //         // position: { lat: farm.gps_latitude, lng: farm.gps_longitude },
+    //         // position: { lat: farm.latitude, lng: farm.longitude },
+    //         map: map,
+    //         // map1: map,
+    //         title: farm.location_name,
+    //         icon: image
+    //             // title1: farm.location_name,
+    //             // icon: `http://maps.google.com/mapfiles/ms/icons/${pinColor}-dot.png`,
+    //     });
+    //     bounds.extend(positions);
+    // })
+    // map.fitBounds(bounds);
+    // Add KML layer
+    // Add this section to include geoxml3 parsing logic
+
+    // Display KML content on the map
+    // old.js
+
+    // Access the KML file name from the global window object
+
+    // Add this code for the KML layer (if needed)
+    const kmlLayer = new google.maps.KmlLayer({
+        url: `/storage/kml_folder/{{ $fileName }}`,
+        map: map,
+        preserveViewport: true
+    });
+    // URL image of markers pin
+    const imagefarmers = "../assets/images/mappin.png";
+    //farmers pin locations
+    listOfFarm.forEach(farm => {
+
+        const positions = {
+            lat: farm.gps_latitude,
+            lng: farm.gps_longitude,
+
+        };
+
+        const marker = new google.maps.Marker({
+            position: positions,
+            map: map,
+            // title: farm.location_name,
+            icon: {
+                url: imagefarmers, // Use the image URL as the marker icon
+                scaledSize: new google.maps.Size(30, 30), // Adjust the size as needed
+            },
+
+        });
+
+        const infoWindowContent = generateInfoWindowContent(farm);
+
+        const infoWindow = new google.maps.InfoWindow({
+            content: infoWindowContent,
+        });
+
+        marker.addListener('click', function() {
+            // Close all other open info windows
+            infoWindows.forEach(info => info.close());
+
+            // Open the current info window
+            infoWindow.open(map, marker);
+
+            // Add the current info window to the global array
+            infoWindows.push(infoWindow);
+        });
+
+        markers.push(marker); // Add the marker to the global array
+    });
+
+    const imagedistrict = "../assets/images/district.png";
+    //profiles of districts 
+    listOfprofiles.forEach(profiles => {
+        const position = {
+            lat: profiles.latitude,
+            lng: profiles.longitude,
+
+
+        };
+
+        const marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: profiles.district,
+            icon: {
+                url: imagedistrict, // Use the image URL as the marker icon
+                scaledSize: new google.maps.Size(40, 40), // Adjust the size as needed
+            },
+        });
+
+        const infoWindowContent = districtContent(profiles);
+
+
+
+        const infoWindow = new google.maps.InfoWindow({
+            content: infoWindowContent,
+        });
+
+        marker.addListener('click', function() {
+            // Close all other open info windows
+            infoWindows.forEach(info => info.close());
+
+            // Open the current info window
+            infoWindow.open(map, marker);
+
+            // Add the current info window to the global array
+            infoWindows.push(infoWindow);
+        });
+
+        markers.push(marker); // Add the marker to the global array
+    });
+
+    // Polygons points using lat lang  to create a districts boundary
     listOfPolygon.forEach(polygon => {
         console.log(polygon.verone_latitude)
         console.log(polygon.verone_longitude)
@@ -255,32 +406,60 @@ function initMap() {
         console.log(polygon.strokecolor)
 
 
-
+        //coordinates of per points using lang
         const permDistrictCoordinates = [
-            { lat: polygon.verone_latitude, lng: polygon.verone_longitude }, // Vertex 1
-            { lat: polygon.vertwo_latitude, lng: polygon.vertwo_longitude }, // Vertex 2
-            { lat: polygon.verthree_latitude, lng: polygon.verthree_longitude }, // Vertex 3
-            { lat: polygon.vertfour_latitude, lng: polygon.vertfour_longitude }, // Vertex 4
-            { lat: polygon.verfive_latitude, lng: polygon.verfive_longitude }, // Vertex 1
-            { lat: polygon.versix_latitude, lng: polygon.versix_longitude }, // Vertex 2
-            { lat: polygon.verseven_latitude, lng: polygon.verseven_longitude }, // Vertex 3
-            { lat: polygon.vereight_latitude, lng: polygon.verteight_longitude }, // Vertex 4
+            { lat: polygon.verone_latitude, lng: polygon.verone_longitude }, // point latlang 1
+            { lat: polygon.vertwo_latitude, lng: polygon.vertwo_longitude }, // point latlang 2
+            { lat: polygon.verthree_latitude, lng: polygon.verthree_longitude }, // point latlang 3
+            { lat: polygon.vertfour_latitude, lng: polygon.vertfour_longitude }, // point latlang 4
+            { lat: polygon.verfive_latitude, lng: polygon.verfive_longitude }, // point latlang 5
+            { lat: polygon.versix_latitude, lng: polygon.versix_longitude }, // point latlang 6
+            { lat: polygon.verseven_latitude, lng: polygon.verseven_longitude }, // point latlang 7
+            { lat: polygon.vereight_latitude, lng: polygon.verteight_longitude }, // point latlang 8
 
         ];
 
+
+        //polygons fetcing of for each data from databases then display it in the map
         const permDistrictPolygon = new google.maps.Polygon({
             paths: permDistrictCoordinates,
             strokeColor: polygon.strokecolor,
             strokeOpacity: 0.8,
             strokeWeight: 2,
             fillColor: 'transparent', // Set fillColor to transparent
-            fillOpacity: 0 // Set fillOpacity to 0 for transparency
+            fillOpacity: 0.1 // Set fillOpacity to 0 for transparency
         });
         permDistrictPolygon.setMap(map);
-    })
 
 
+        const infoWindowContent = PolygonInfo(polygon);
 
+        const infoWindow = new google.maps.InfoWindow({
+            content: infoWindowContent,
+        });
+
+        permDistrictPolygon.addListener('click', function(event) {
+            // Close all other open info windows
+            infoWindows.forEach(info => info.close());
+
+            // Set the position of the InfoWindow to the clicked position
+            infoWindow.setPosition(event.latLng);
+
+            // Open the current info window
+            infoWindow.open(map);
+
+            // Add the current info window to the global array
+            infoWindows.push(infoWindow);
+        });
+
+        polygons.push(permDistrictPolygon);
+
+    });
+
+    // const kmlLayer = new google.maps.KmlLayer({
+    //     url: `/storage/kml_folder/{{ $fileName }}`,
+    //     map: map,
+    // });
     // // Create the Perm District polygon
     // const permDistrictPolygon = new google.maps.Polygon({
     //     paths: permDistrictCoordinates,

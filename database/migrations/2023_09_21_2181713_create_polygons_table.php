@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('polygons', function (Blueprint $table) {
             $table->id();
             $table->foreignId('agri_districts_id')->nullable();
+            $table->string('strokecolor',50);
             $table->double('verone_latitude',15,8);
             $table->double('verone_longitude',15,8);
             $table->double('vertwo_latitude',15,8);
@@ -33,6 +34,7 @@ return new class extends Migration
             $table->json('coordinates')->nullable();
             $table->double('area',8,4)->nullable();
             $table->double('perimeter',8,4)->nullable();
+   
             $table->timestamps();
         });
     }

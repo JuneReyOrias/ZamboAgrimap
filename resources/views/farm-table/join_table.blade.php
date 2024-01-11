@@ -68,12 +68,12 @@
   
                         <td>
                            
-                             <a href="" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                             {{-- <a href="" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                 
                              <form  action=""method="post" accept-charset="UTF-8" style="display:inline">
                                 {{ csrf_field()}}
                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                            </form>
+                            </form> --}}
                             {{-- <div class="col-sm">
                                 <form action="{{ route('personalinfo.destroy', $personalInformations->id) }}" method="post">
                                   @csrf

@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class livestockCategory extends Model
 {
     use HasFactory;
+    protected $table="livestock_categorys";
     protected $fillable=[
-        'user_id',
-        'agri_district_id',
-        'categorize_id',
+        'users_id',
+        'agri_districts_id',
+        'categorizes_id',
         'livestock_category_name',
         'livestock_description',
     ];
     public function user()
     {
-        return $this->belongsTo(User::class,'uses_id', )->withDefault();
+        return $this->belongsTo(User::class,'users_id', )->withDefault();
     }
     public function agridistricts()
     {

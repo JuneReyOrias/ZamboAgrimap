@@ -15,6 +15,7 @@ use App\Http\Controllers\Backend\PesticideController;
 use App\Http\Controllers\Backend\SeedController;
 use App\Http\Controllers\Backend\TransportController;
 use App\Http\Controllers\Backend\VariableCostController;
+use App\Http\Controllers\boarders\ParcelBoarderController;
 use App\Http\Controllers\category\AgriDistrictController;
 use App\Http\Controllers\category\CategorizeController;
 use App\Http\Controllers\category\CropCategoryController;
@@ -29,6 +30,7 @@ use App\Http\Controllers\KmlImportController;
 use App\Http\Controllers\LandingPageController;
 
 use App\Http\Controllers\RegisteredUserController;
+use App\Models\AgriDistrict;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,35 +52,46 @@ Route::get('/landing', [LandingPageController::class, 'LandingPage'])->name('lan
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+//kml file upload
+Route::get('/kml/import', [KmlImportController::class, 'index'])->name('kml.import');
+Route::post('/kml/import',[KmlImportController::class, 'upload']);
+Route::get('/map/arcmap/{fileName}', [KmlImportController::class, 'displayMap']);
 
+//parcelaryBoarders
+Route::get('/parcel/create',[ParcelBoarderController::class, 'ParcelBoarders'])->name('parcels.create');
+Route::post('/parcel/create',[ParcelBoarderController::class, 'store']);
+Route::get('/parcel/create',[AgriDistrictController::class, 'ParcelBoarders'])->name('parcels.create');
 //polygons
 Route::get('/polygon/create',[PolygonController:: class, 'Polygons'])->name('polygon.create');
 Route::post('/polygon/create',[PolygonController::class, 'store']);
 Route::get('/polygon/create',[AgriDistrictController:: class, 'Polygons'])->name('polygon.create');
 //fish
 Route::get('/fisheries/create',[FisheriesController::class, 'Fisheries'])->name('fish.create');
-Route::get('/fisheries',[FisheriesController::class, 'store']);
-Route::get('/fisheries/create',[CategorizeController::class, 'Fisheries'])->name('fish.create');
+Route::post('/fisheries/create',[FisheriesController::class, 'store']);
+Route::get('/fisheries/create',[FisheriesCategoryController::class, 'Fisheries'])->name('fish.create');
+// Route::get('/fisheries/create',[CategorizeController::class, 'Fisheries'])->name('fish.create');
 
 //livestocks
 Route::get('/livestocks/create',[LivestockController::class, 'Livestocks'])->name('livestocks.create');
-Route::get('/livestocks',[LivestockController::class, 'store']);
+Route::post('/livestocks/create',[LivestockController::class, 'store']);
 Route::get('/livestocks/create',[CategorizeController::class, 'Livestocks'])->name('livestocks.create');
+Route::get('/livestocks/create',[LivestockCategoryController::class, 'Livestocks'])->name('livestocks.create');
 //crops
 Route::get('/crops/create',[CropController::class, 'Cropping'])->name('crops.create');
-Route::get('/crops',[CropController::class, 'store']);
-Route::get('/crops/create',[CategorizeController::class, 'Cropping'])->name('crops.create');
+Route::post('/crops/create',[CropController::class, 'store']);
+Route::get('/crops/create',[CropCategoryController::class, 'Cropping'])->name('crops.create');
+// Route::get('/crops/create',[CategorizeController::class, 'Cropping'])->name('crops.create');
 //livestock-category
 Route::get('/livestockcategory/create',[LivestockCategoryController::class, 'LivestockCategory'])->name('livestock_category.livestock_create');
-Route::get('/livestock-category',[LivestockCategoryController::class, 'store']);
+Route::post('/livestockcategory/create',[LivestockCategoryController::class, 'store']);
 Route::get('/livestockcategory/create',[CategorizeController::class, 'LivestockCategory'])->name('livestock_category.livestock_create');
 //fisheries-category
 Route::get('/fisheriescategory/create',[FisheriesCategoryController::class, 'FisheriesCategory'])->name('fisheries_category.fisheries_create');
-Route::get('/fisheriescategory',[FisheriesController::class, 'store']);
+Route::post('/fisheriescategory/create',[FisheriesCategoryController::class, 'store']);
 Route::get('/fisheriescategory/create',[CategorizeController::class, 'FisheriesCategory'])->name('fisheries_category.fisheries_create');
 //crop-category
 Route::get('/crops-category', [CropCategoryController:: class,'CropCategory'])->name('crop_category.crop_create');
-Route::get('/crops-category',[CropCategoryController::class, 'store']);
+Route::post('/crops-category',[CropCategoryController::class, 'store']);
 Route::get('/crops-category', [CategorizeController:: class,'CropCategory'])->name('crop_category.crop_create');
 //catgorize router
 Route::get('/category', [CategorizeController:: class,'Category'])->name('categorize.index');
@@ -203,8 +216,6 @@ Route::get('/multifile/imports', [FileController::class, 'MultiFilesAgent'])->na
 // Route::delete('/personalinfo-destroy/{id}', PersonalInformationsController::class ,'destroy')->name('personalinfo.destroy');
 // Route::get('/personalinfo/{personalInformations}/edit',[PersonalInformationsController::class, 'edit'])->name('personalinfo.edit');
 
-Route::get('/kml/import', [KmlImportController::class, 'index'])->name('kml.import');
-Route::post('/kml/import',[KmlImportController::class, 'store'])->name('kml.store');
 
 // Route::get('/', [KmlImportController::class, 'index']);
 // Route::post('/import', [KmlImportController::class, 'import']);
@@ -239,7 +250,9 @@ Route::controller(PersonalInformationsController::class)->group(function () {
 Route::get('/farmprofile',[PersonalInformationsController::class ,'showPersonalInfo'])->name('farm_profile.index');
 Route::middleware('auth')->group(function () {
     Route::get('/farmprofile',[FarmProfileController::class ,'FarmProfile'])->name('farm_profile.index');
+    // Route::get('/farmprofile',[AgriDistrictController::class ,'FarmProfiles'])->name('farm_profile.index');
     Route::get('/farmprofile',[PersonalInformationsController::class ,'FarmProfiles'])->name('farm_profile.index');
+    // Route::get('/farmprofile',[FarmProfileController::class ,'FarmProfiles'])->name('farm_profile.index');
     Route::post('/farmprofile',[FarmProfileController::class, 'store'])->name('farm_profile.store');
     Route::get('/farmprofile/show',[FarmProfileController::class, 'FarmProfileCrud'])->name('farm_profile.show');
     Route::get('/farmprofile/{farmprofile}',[ FarmProfileController::class,'edit'])->name('farm_profile.edit');

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Polygon extends Model
 {
     use HasFactory;
+   protected $table='polygons';
     protected $fillable=[
           // 'user_id',
           'agri_districts_id',
@@ -36,8 +37,10 @@ class Polygon extends Model
          'vereight_latitude',
          'verteight_longitude',
           'coordinates',
+          'strokecolor',
           'area',
           'perimeter',
+       
     ];
     public function user()
     {
@@ -47,4 +50,9 @@ class Polygon extends Model
     {
         return $this->belongsTo(AgriDistrict::class,'agri_districts_id','id')->withDefault();
     }
+    public function farmprofile()
+    {
+        return $this->hasOne(FarmProfile::class,'id','polygons_id' );
+    }
+
 }

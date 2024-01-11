@@ -44,16 +44,24 @@ class CropController extends Controller
     {
         try{
         
-            $data= $request->validated();
-            $data= $request->all();
-            Crop::create($data);
+            // $data= $request->validated();
+            // $data= $request->all();
+            Crop::create([
+                'crop_categorys_id'=> $request->input('crop_categorys_id'),
+                'crop_name'=>$request->input('crop_name'),
+                'crop_variety'=>$request->input('crop_variety'),
+                'crop_planting_season'=>$request->input('crop_planting_season'),
+                'crop_harvesting_season'=>$request->input('crop_harvesting_season'),
+                'crop_type_soil'=>$request->input('crop_type_soil'),
+                'crop_description'=>$request->input('crop_description'),
+            ]);
     
-            return redirect('/farmprofile')->with('message','Personal informations added successsfully');
+            return redirect('/crops-category')->with('message','Personal informations added successsfully');
         
         }
         catch(\Exception $ex){
             dd($ex); // Debugging statement to inspect the exception
-            return redirect('/personalinformation')->with('message','Someting went wrong');
+            return redirect('/crops-category')->with('message','Someting went wrong');
             
         }   
     }

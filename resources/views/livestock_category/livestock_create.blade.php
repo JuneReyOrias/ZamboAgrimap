@@ -40,12 +40,12 @@
 
                 
                 <div class="form-floating mb-4 mb-md-0"> 
-                   <select class="form-control mb-4 mb-md-0" name="users_id" aria-label="User ID">
+                   <select class="form-control mb-4 mb-md-0" name="categorizes_id" aria-label="User ID">
                         @foreach ($categorize as $categorize)
-                            <option value="{{ $categorize->id }}">{{ $categorize->cat_name }}</option>
+                            <option value="{{ $categorize->id  }}">{{ $categorize->cat_name.' ' .$categorize->cat_descript}}</option>
                         @endforeach
                     </select>
-                    <label for="users_id">Categorize Name:</label>
+                    <label for="categorizes_id">Categorize Name:</label>
                 </div>
               
             </div>

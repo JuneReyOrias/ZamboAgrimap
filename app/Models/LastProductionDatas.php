@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LastProductionDatas extends Model
 {
     use HasFactory;
+    protected $table="last_production_datas";
     protected $fillable=[
         'personal_informations_id',
         'farm_profiles_id',

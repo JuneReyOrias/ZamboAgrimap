@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Seed extends Model
 {
     use HasFactory;
+    protected $table='seeds';
     protected $fillable=[
         'seed_name',
         'seed_type',

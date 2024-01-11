@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Crop extends Model
 {
     use HasFactory;
+    protected $table="crops";
     protected $fillable=[
-        'user_id',
-        'categorize_id',
-        'crop_category_id',
+        'users_id',
+        'categorizes_id',
+        'crop_categorys_id',
         'crop_name',
         'crop_variety',
         'crop_planting_season',
@@ -25,10 +26,10 @@ class Crop extends Model
     }
     public function categorize()
     {
-        return $this->belongsTo(Categorize::class,'categorize_id','id');
+        return $this->belongsTo(Categorize::class,'categorizes_id','id');
     }
     public function cropcategory()
     {
-        return $this->belongsTo(CropCategory::class,'crop_category_id','id');
+        return $this->belongsTo(CropCategory::class,'crop_categorys_id','id');
     }
 }

@@ -9,14 +9,7 @@ use Illuminate\Http\Request;
 
 class FisheriesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
+   
     /**
      * Show the form for creating a new resource.
      */
@@ -26,13 +19,6 @@ class FisheriesController extends Controller
      return view('fish.fish_create');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,16 +27,23 @@ class FisheriesController extends Controller
     {
         try{
         
-            $data= $request->validated();
-            $data= $request->all();
-           Fisheries::create($data);
+            // $data= $request->validated();
+            // $data= $request->all();
+           Fisheries::create([
+            'categorizes_id'=>$request->input('categorizes_id'),
+            'fisheries_categorys_id'=>$request->input('fisheries_categorys_id'),
+            'species_name'=>$request->input('species_name'),
+            'common_name'=>$request->input('common_name'),
+            'habitat'=>$request->input('habitat'),
+            'fish_description'=>$request->input('fish_description'),
+           ]);
     
-            return redirect('/farmprofile')->with('message','Personal informations added successsfully');
+            return redirect('/fisheries/create')->with('message','Personal informations added successsfully');
         
         }
         catch(\Exception $ex){
             dd($ex); // Debugging statement to inspect the exception
-            return redirect('/personalinformation')->with('message','Someting went wrong');
+            return redirect('/fisheries/create')->with('message','Someting went wrong');
             
         }   
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PolygonRequest;
 use App\Models\Polygon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,11 +13,31 @@ class PolygonController extends Controller
      /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+ 
+    public function FarmProfiles(){
+        try {
+            // $farmprofile= FarmProfile::all();
+    $farmLocation = DB::table('polygons')
+    ->join('agri_districts', 'polygons.id', '=', 'agri_districts.id')
+       
+    ->select('polygons.*',
+      'agri_districts.*'
+      )
+    
+    ->get();
 
+           // You can return the data to a view or process it further
+           return view('farm_profile.farm_index', [  
+        'farmLocation' => $farmLocation,
+      
+    
+    ]);
+       } catch (\Exception $ex) {
+           // Log the exception for debugging purposes
+           dd($ex);
+           return redirect()->back()->with('message', 'Something went wrong');
+       }
+        }  
     /**
      * Show the form for creating a new resource.
      */
@@ -44,15 +65,15 @@ class PolygonController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PolygonRequest $request)
     {
         try{
         
-            // $data= $request->validated();
+            $data= $request->validated();
             // $data= $request->all();
            Polygon::create([
             'users_id' => $request->input('users_id'),
-            'agri_districts'=>$request->input('agri_districts'),
+            'agri_districts_id'=>$request->input('agri_districts_id'),
             'verone_latitude'=>$request->input('verone_latitude'),
             'verone_longitude'=>$request->input('verone_longitude'),
             'vertwo_latitude'=>$request->input('vertwo_latitude'),
@@ -69,7 +90,9 @@ class PolygonController extends Controller
             'verseven_longitude'=>$request->input('verseven_longitude'),
             'vereight_latitude'=>$request->input('vereight_latitude'),
             'verteight_longitude'=>$request->input('verteight_longitude'),
-
+            'strokecolor'=>$request->input('strokecolor'),
+            'area'=>$request->input('area'),
+            'perimeter'=>$request->input('area'),
            ]);
     
             return redirect('/polygon/create')->with('message','Personal informations added successsfully');

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MachineriesUsed extends Model
 {
     use HasFactory;
+    protected $table="machineries_useds";
     protected $fillable=[
         'personal_informations_id',
         'farm_profiles_id',

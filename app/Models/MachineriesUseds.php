@@ -9,6 +9,7 @@ class MachineriesUseds extends Model
 {
     use HasFactory;
     use HasFactory;
+    protected $table="machineries_useds";
     protected $fillable=[
         'personal_informations_id',
         'farm_profiles_id',

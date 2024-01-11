@@ -13,10 +13,10 @@ class PersonalInformations extends Model
     protected $fillable=[
    
       
-       'agri_id',
-       'crop_cat_id',
-       'livestock_id',
-       'fish_cat_id',
+       'agri_districts_id',
+       'crop_categorys_id',
+       'livestock_categorys_id',
+       'fisheries_categories_id',
        'first_name',
        'middle_name',
        'last_name',
@@ -52,7 +52,7 @@ class PersonalInformations extends Model
     // Define the relationship with FarmProfile
     public function farmProfiles()
     {
-        return $this->hasMany(FarmProfile::class, 'id','personal_informations_id');
+        return $this->hasMany(FarmProfile::class, 'id','personal_informations_id')->withDefault();
     }
     public function fixedcost()
     {

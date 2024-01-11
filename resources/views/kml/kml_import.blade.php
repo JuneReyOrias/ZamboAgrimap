@@ -35,14 +35,11 @@
              <div class="card-header">Upload KML File</div>
 
             <div class="card-body">
-              <form action="{{ route('kml.store') }}" method="post" enctype="multipart/form-data">
+              <form action="/kml/import" method="post" enctype="multipart/form-data">
                 @csrf
-                    <div class="form-group">
-                        <label for="file">Select KML File</label>
-                        <input type="file" name="location" accept=".kmz"class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                <input type="file" name="file" accept=".kml,.kmz" required>
+                <button type="submit">Upload</button>
+              </form>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
             integrity="sha384-oBqDVmz9ATKxIep9tiCx5/Z9fNEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">

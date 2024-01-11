@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategorizeRequest;
 use App\Models\AgricDistrict;
 use App\Models\Categorize;
 use Illuminate\Http\Request;
@@ -70,14 +71,15 @@ class CategorizeController extends Controller
         
             // $data= $request->validated();
             // $data= $request->all();
-           Categorize::create([
-        //    'users_id' => $request->input('users_id'), 'users_id' => $request->input('users_id'),
+            $categorize  =Categorize::create([
+           'users_id' => $request->input('users_id'), 
             'agri_districts_id' => $request->input('agri_districts_id'),
                 'cat_name' => $request->input('cat_name'),
                 'cat_descript' => $request->input('cat_descript'),
                 
            ]);
     
+           $lastInsertedAgriDistrictId = $categorize->agri_districts_id;
             return redirect('/category')->with('message','Personal informations added successsfully');
         
         }

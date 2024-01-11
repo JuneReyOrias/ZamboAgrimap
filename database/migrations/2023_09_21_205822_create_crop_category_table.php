@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('crop_category', function (Blueprint $table) {
+        Schema::create('crop_categorys', function (Blueprint $table) {
             $table->id();
             $table->foreignId('agri_districts_id')->nullable();
             $table->foreignId('categorizes_id')->nullable();

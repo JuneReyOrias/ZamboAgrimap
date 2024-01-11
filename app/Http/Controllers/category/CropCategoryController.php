@@ -29,7 +29,11 @@ class CropCategoryController extends Controller
     {
         //
     }
-
+    public function Cropping()
+    {
+        $cropcat = CropCategory::all();
+     return view('crops.crops_create',compact('cropcat'));
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -46,12 +50,12 @@ class CropCategoryController extends Controller
                 'crop_descript' => $request->input('crop_descript'),
            ]);
     
-            return redirect('/farmprofile')->with('message','Personal informations added successsfully');
+            return redirect('/crops-category')->with('message','Personal informations added successsfully');
         
         }
         catch(\Exception $ex){
             dd($ex); // Debugging statement to inspect the exception
-            return redirect('/personalinformation')->with('message','Someting went wrong');
+            return redirect('/crops-category')->with('message','Someting went wrong');
             
         }   
     }

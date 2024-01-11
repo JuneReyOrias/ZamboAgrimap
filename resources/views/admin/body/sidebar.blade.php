@@ -204,7 +204,7 @@
                 <a href="{{route('polygon.create')}}" class="nav-link">polygon Boundary</a>
               </li>
               <li class="nav-item">
-                <a href="" class="nav-link">Parcellary Boarders</a>
+                <a href="{{route('parcels.create')}}" class="nav-link">Parcellary Boarders</a>
               </li>
               <li class="nav-item">
                 <a href="" class="nav-link">Ricefield Boarders</a>
@@ -234,9 +234,7 @@
                <li class="nav-item">
                 <a href="{{route('livestocks.create')}}" class="nav-link">Livestocks Create</a>
               </li> 
-              <li class="nav-item">
-                <a href="" class="nav-link">ADipslay</a>
-              </li>
+             
             </ul>
           </div>
         </li>

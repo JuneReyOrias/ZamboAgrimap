@@ -40,12 +40,12 @@
 
                 
                 <div class="form-floating mb-4 mb-md-0"> 
-                   <select class="form-control mb-4 mb-md-0" name="users_id" aria-label="User ID">
+                   <select class="form-control mb-4 mb-md-0" name="agri_districts_id" aria-label="User ID">
                         @foreach ($agriculture as $agriculture)
                             <option value="{{ $agriculture->id }}">{{ $agriculture->district }}</option>
                         @endforeach
                     </select>
-                    <label for="users_id">Agri_District Name:</label>
+                    <label for="agri_districts_id">Agri_District Name:</label>
                 </div>
               
             </div>
@@ -185,6 +185,12 @@
                               </div>
                               
                             </div>
+                            <div class="col-md-3">
+                              <div class="form-floating mb-4 mb-md-0">
+                              <input  class="form-control mb-4 mb-md-0" name="strokecolor" placeholder="MiddleName" type="text" aria-label="MiddleName"id="floatingInput">
+                              <label for="floatingInput" >Polygon Color:</label>
+                            </div>
+                          </div>
                             <div class="col-md-3">
                               <div class="form-floating mb-4 mb-md-0">
                               <input  class="form-control mb-4 mb-md-0" name="area" placeholder="MiddleName" type="text" aria-label="MiddleName"id="floatingInput">

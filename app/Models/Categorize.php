@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Categorize extends Model
 {
     use HasFactory;
+    protected $table="categorizes";
     protected $fillable=[
-        // 'user_id',
+        'users_id',
         'agri_districts_id',
-        'crop_categorys_id',
         'cat_name',
         'cat_descript',
         
@@ -22,11 +22,11 @@ class Categorize extends Model
     }
     public function agridistricts ()
     {
-        return $this->belongsTo(AgriDistrict::class,'agri_district_id','id')->withDefault();
+        return $this->belongsTo(AgriDistrict::class,'agri_districts_id')->withDefault();
     }
     public function Cropcategory ()
     {
-        return $this->hasMany(CropCategory::class,'id','categprizes_id')->withDefault();
+        return $this->hasMany(CropCategory::class,'id','categoprizes_id')->withDefault();
     }
     public function Fisheriescategory ()
     {

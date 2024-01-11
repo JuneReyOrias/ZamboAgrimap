@@ -45,7 +45,7 @@
 	   @include('admin.body.sidebar')
    
 		<!-- partial -->
-        <nav class="settings-sidebar">
+        {{-- <nav class="settings-sidebar">
             <div class="sidebar-body">
              
               </a>
@@ -54,7 +54,7 @@
                 </a>
               </div>
             </div>
-          </nav>
+          </nav> --}}
 	
 		<div class="page-wrapper">
 					

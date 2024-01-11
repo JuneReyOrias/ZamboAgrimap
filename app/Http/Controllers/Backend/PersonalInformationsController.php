@@ -24,22 +24,29 @@ public function __construct() {
 }
 public function FarmProfiles(){
     try {
-       // Retrieve the necessary information from the personal_informations table
-       $personalInformations = PersonalInformations::select('id', 'first_name', 'last_name')
-       ->latest('id') // Order by id in descending order (latest first)
-    ->first()
+    //    Retrieve the necessary information from the personal_informations table
+//        $farmLocation = PersonalInformations::select('id', 'first_name', 'last_name', 'mothers_maiden_name')
+//        ->latest('id') // Order by id in descending order (latest first)
+//     ->first()
+// ->get();
+$farmLocation = DB::table('personal_informations')
+->Join('agri_districts', 'personal_informations.agri_districtS_id', '=', 'agri_districts.id')
+->leftJoin('polygons', 'personal_informations.polygons_id', '=', 'polygons.id')
+->select('personal_informations.*', 'agri_districts.*' , 'polygons.*')
 ->get();
-   
-//    if ($personalInformations) {
-//        // Record found, you can access its properties
-//        $id = $personalInformations->id;
-//        $firstname = $personalInformations->first_name;
-//        $lastname = $personalInformations->last_name;
-//    } else {
-//        // Record not found, handle it accordingly (e.g., show an error message)
-//        echo "Record not found!";}
-       // You can return the data to a view or process it further
-       return view('farm_profile.farm_index', ['personalInformations' => $personalInformations]);
+$agriDistrictIds = [];
+$polygonsIds = [];
+
+    
+    // // Loop through each row of the result
+    foreach ($farmLocation as $location) {
+        // Extract agri_district_id and polygons_id from each row
+        $agriDistrictIds[] = $location->id;
+        $polygonsIds[] = $location->id;
+    }
+       return view('farm_profile.farm_index', ['farmLocation' => $farmLocation,
+       'agriDistrictIds' => $agriDistrictIds,   'polygonsIds' => $polygonsIds,
+    ]);
    } catch (\Exception $ex) {
        // Log the exception for debugging purposes
        dd($ex);
@@ -54,39 +61,36 @@ public function Personalfarms() {
 
    
 
-// $personalInformations = PersonalInformations::join('farm_profiles', 'personal_informations.farmer_no', '=', 'farm_profiles.farmer_no')
-//                                             ->join('fixed_costs', 'fixed_costs.farmno_id', '=', 'fixed_costs.farmno_id')
-//                                             ->get(['personal_informations.*', 'farm_profiles.tenurial_status','farm_profiles.gps_latitude'],['personal_informations.*', 'fixed_cost.fixed_id'],);
-
-              
-        // $personalInformations=DB::table('personal_informations')
-        //                             ->leftJoin('farm_profiles','farm_profiles.farmer_no','personal_informations.farmer_no',)
-    //     //                             ->leftJoin('personal_informations','personal_informations.farmno_id','farm_profiles.farmno_id',)->get();
+    // $personalInformations = DB::table('personal_informations')
+    // ->Join('farm_profiles', 'personal_informations.farm_profiles_id', '=', 'farm_profiles.id')
+    // ->leftJoin('fixed_costs', 'personal_informations.farm_profiles_id', '=', 'personal_informations.farm_profiles_id')
+    // ->leftJoin('machineries_useds', 'machineries_useds.farm_profiles_id', '=', 'personal_informations.farm_profiles_id')
+    // ->leftJoin('seeds', 'seeds.farm_profiles_id', '=', 'personal_informations.farm_profiles_id')
+    // ->leftJoin('fertilizers', 'fertilizers.farm_profiles_id', '=', 'personal_informations.farm_profiles_id')
+    // ->leftJoin('labors', 'labors.farm_profiles_id', '=', 'personal_informations.farm_profiles_id')
+    // ->leftJoin('pesticides', 'pesticides.farm_profiles_id', '=', 'personal_informations.farm_profiles_id')
+    // ->leftJoin('transports', 'transports.farm_profiles_id', '=', 'personal_informations.farm_profiles_id')
+    // ->leftJoin('variable_costs', 'variable_costs.farm_profiles_id', '=', 'personal_informations.farm_profiles_id')
+    // ->leftJoin('last_production_datas', 'last_production_datas.farm_profiles_id', '=', 'personal_informations.farmer_no')
+    // ->select(
+    //     'personal_informations.first_name', 'personal_informations.last_name',
+    //     'farm_profiles.tenurial_status',
+    //     'fixed_costs.total_amount',
+    //     'machineries_useds.total_cost_for_machineries', // Select all columns from machineries_useds
+    //     'seeds.total_seed_cost',
+    //     'fertilizers.total_cost_fertilizers',
+    //     'labors.total_labor_cost',
+    //     'pesticides.total_cost_pesticides',
+    //     'transports.total_transport_per_deliverycost',
+    //     'variable_costs.total_machinery_fuel_cost',
+    //     'last_production_datas.gross_income_palay',  'last_production_datas.gross_income_rice', 
+    // )
+    // ->get();
     $personalInformations = DB::table('personal_informations')
-    ->leftJoin('farm_profiles', 'farm_profiles.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('fixed_costs', 'fixed_costs.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('machineries_useds', 'machineries_useds.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('seeds', 'seeds.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('fertilizers', 'fertilizers.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('labors', 'labors.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('pesticides', 'pesticides.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('transports', 'transports.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('variable_costs', 'variable_costs.farmer_no', '=', 'personal_informations.farmer_no')
-    ->leftJoin('last_production_datas', 'last_production_datas.farmer_no', '=', 'personal_informations.farmer_no')
-    ->select(
-        'personal_informations.first_name', 'personal_informations.last_name',
-        'farm_profiles.tenurial_status',
-        'fixed_costs.total_amount',
-        'machineries_useds.total_cost_for_machineries', // Select all columns from machineries_useds
-        'seeds.total_seed_cost',
-        'fertilizers.total_cost_fertilizers',
-        'labors.total_labor_cost',
-        'pesticides.total_cost_pesticides',
-        'transports.total_transport_per_deliverycost',
-        'variable_costs.total_machinery_fuel_cost',
-        'last_production_datas.gross_income_palay',  'last_production_datas.gross_income_rice', 
-    )
-    ->get();
+->Join('farm_profiles', 'personal_informations.farm_profiles_id', '=', 'agri_districts.id')
+->leftJoin('polygons', 'personal_informations.polygons_id', '=', 'polygons.id')
+->select('personal_informations.*', 'agri_districts.*' , 'polygons.*')
+->get();
     return view('farm-table.join_table',compact('personalInformations'));
 
     // dd($personalInformations);

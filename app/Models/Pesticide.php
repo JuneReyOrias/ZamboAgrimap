@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pesticide extends Model
 {
     use HasFactory;
+    protected $table='pesticides';
     protected $fillable =[
         'pesticides_name',
         'type_ofpesticides',

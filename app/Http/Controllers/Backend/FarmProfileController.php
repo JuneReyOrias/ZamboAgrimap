@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateFarmProfileRequest;
 use App\Models\PersonalInformations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Optional;
+
 class FarmProfileController extends Controller
 {
     /**
@@ -31,17 +33,73 @@ class FarmProfileController extends Controller
         // $farmprofile= FarmProfile::all();
         $farmLocation = DB::table('farm_profiles')
      ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
-     ->leftJoin('polygons', 'farm_profiles.id', '=', 'polygons.farm_profiles_id')
-     ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*')
+     ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+     ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+     ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*','personal_informations.*')
      ->get();
+
+     // Initialize empty arrays
+$agriDistrictIds = [];
+$polygonsIds = [];
+
+// Loop through each row of the result
+foreach ($farmLocation as $location) {
+    // Extract agri_district_id and polygons_id from each row
+    $agriDistrictIds[] = $location->id;
+    $polygonsIds[] = $location->id;
+}
 
 
     //  return view('map.arcmap',compact('farmprofile'));
     // return  $farmLocation;
-    return view('map.arcmap', ['farmLocation' => $farmLocation]);
+    return view('map.arcmap', [
+        'farmLocation' => $farmLocation,
+        'agriDistrictIds' => $agriDistrictIds,
+    'polygonsIds' => $polygonsIds,
+
+]);
 
      }
+//      public function FarmProfiles(){
+//             try {
+//                 // $farmprofile= FarmProfile::all();
+//         $farmLocation = DB::table('farm_profiles')
+//         ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
+//         ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+//         ->join('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+           
+//         ->select('farm_profiles.*',
+//          'agri_districts.*' ,
+//           'polygons.*',
+//           'personal_informations.*',
+//           )
+        
+//         ->get();
+   
+// //         // Initialize empty arrays
+// //    $agriDistrictIds = [];
+// //    $polygonsIds = [];
+   
+// //    // Loop through each row of the result
+// //    foreach ($farmLocation as $location) {
+// //        // Extract agri_district_id and polygons_id from each row
+// //        $agriDistrictIds[] = $location->agri_district_id;
+// //        $polygonsIds[] = $location->polygons_id;
+//    }
     
+//                // You can return the data to a view or process it further
+//                return view('farm_profile.farm_index', [  
+//             'farmLocation' => $farmLocation,
+//             'agriDistrictIds' => $agriDistrictIds,
+//            'polygonsIds' => $polygonsIds,
+        
+//         ]);
+//            } catch (\Exception $ex) {
+//                // Log the exception for debugging purposes
+//                dd($ex);
+//                return redirect()->back()->with('message', 'Something went wrong');
+//            }
+//             }   
  
 
 
@@ -124,7 +182,9 @@ class FarmProfileController extends Controller
     // Access the primary key of the PersonalInformations model instance
 
     $farmProfile = FarmProfile::create([
-             'personal_information_id' => $request->input('personal_information_id'),
+             'personal_informations_id' => $request->input('personal_informations_id'),
+             'agri_districts_id' => $request->input('agri_districts_id'),
+             'polygons_id' => $request->input('polygons_id'),
             'tenurial_status' => request('tenurial_status'),
             'rice_farm_address' => request('rice_farm_address'),
             'no_of_years_as_farmers' => request('no_of_years_as_farmers'),
@@ -218,33 +278,19 @@ return redirect('/fixedcost')->with('message', 'Farm Profile added successfully'
     
     
     
-       
+    public function edit($farmprofile)
+    {
+        // dd($id);
+        $farmprofile = PersonalInformations::find($farmprofile);
+      
+        // // $personalInformation = PersonalInformations::findOrFail($personalInformation);
+        return view('farm_profile.farm_edit')->with('farmprofile',$farmprofile);
+       ;
+    }
   
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  */
-    // public function update(UpdateFarmProfileRequest $request, $farmno_id)
-    // {
-    //                 // dd(($request->all()));
-    //                 try {
-    //                     // Get validated data from the request (if you're using validation rules)
-    //                     $data = $request->validated();
-                    
-    //                     // If you want to use all data, use this line instead of the above line.
-    //                     // $data = $request->all();
-                    
-    //                     // Update the PersonalInformations table
-    //                     FarmProfile::where('farmno_id', $farmno_id)->update($data);
-                    
-    //                     // Optionally, you can return a response indicating success
-    //                     return redirect('/farmprofile/create')->with('message','Farm Profile updated successsfully');
-    //                 } catch (\Exception $e) {
-    //                     // Handle any exceptions that might occur during the update process
-    //                     return response()->json(['message' => 'Error updating record: ' . $e->getMessage()], 500);
-    //                 }
-    // }
-    public function update(UpdateFarmProfileRequest $request, $farmno_id)
+ 
+    public function update(UpdateFarmProfileRequest $request, $id)
     {
         try {
             $data = $request->validated();
@@ -252,7 +298,7 @@ return redirect('/fixedcost')->with('message', 'Farm Profile added successfully'
             // Optionally, add logic to get farmer_no
             // $data['farmer_no'] = $this->getFarmerNo();
     
-            FarmProfile::where('farmno_id', $farmno_id)->update($data);
+            FarmProfile::where('id', $id)->update($data);
     
             return redirect('/farmprofile/create')->with('message', 'Farm Profile updated successfully');
         } catch (\Exception $e) {
@@ -263,10 +309,10 @@ return redirect('/fixedcost')->with('message', 'Farm Profile added successfully'
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($farmno_id)
+    public function destroy($id)
     {
         try {
-            $farmprofile = FarmProfile::where('farmno_id', $farmno_id);
+            $farmprofile = FarmProfile::where('id', $id);
         
             if ($farmprofile) {
                 $farmprofile->delete();

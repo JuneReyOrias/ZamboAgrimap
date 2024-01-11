@@ -8,12 +8,10 @@ use Illuminate\Http\Request;
 
 class FisheriesCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function Fisheries()
     {
-        //
+        $fisheries = FisheriesCategory::all(); 
+     return view('fish.fish_create',compact('fisheries'));
     }
 
     /**
@@ -40,16 +38,20 @@ class FisheriesCategoryController extends Controller
     {
         try{
         
-            $data= $request->validated();
-            $data= $request->all();
-           FisheriesCategory::create($data);
-    
-            return redirect('/farmprofile')->with('message','Personal informations added successsfully');
+            // $data= $request->validated();
+            // $data= $request->all();
+           FisheriesCategory::create([ 
+            'categorizes_id'=>$request->input('categorizes_id'),
+            'fisheries_category_name'=>$request->input('fisheries_category_name'),
+            'fisheries_description'=>$request->input('fisheries_description'),
+    ]  );
+          
+            return redirect('/fisheriescategory/create')->with('message','Personal informations added successsfully');
         
         }
         catch(\Exception $ex){
             dd($ex); // Debugging statement to inspect the exception
-            return redirect('/personalinformation')->with('message','Someting went wrong');
+            return redirect('/fisheriescategory/create')->with('message','Someting went wrong');
             
         }   
     }
@@ -115,6 +117,7 @@ class FisheriesCategoryController extends Controller
                                  ->with('message', 'Personal Informations not found');
             }
         } catch (\Exception $e) {
+            dd($e);
             return redirect()->route('personalinfo.create')
                              ->with('message', 'Error deleting Personal Informations : ' . $e->getMessage());
         }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Labor extends Model
 {
     use HasFactory;
+    protected $table="labors";
     protected $fillable=[
         'no_of_person',
         'rate_per_person',

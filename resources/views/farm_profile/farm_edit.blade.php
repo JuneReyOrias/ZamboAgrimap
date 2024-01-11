@@ -24,10 +24,9 @@
           @endif
           <h6 class="card-title"><span>II.</span>Farm Profile</h6>
 
-          <form  action="{{route('farm_profile.update', $farmprofile->farmno_id)}} "method="post"  >
+          <form  action="{{route('farm_profile.update', $farmprofile->id)}} "method="post"  >
             @csrf
-         
-            <div class="row mb-3">
+           
              
               <div class="col-md-3">
                 {{-- <div class="form-floating mb-4 mb-md-0">
@@ -45,6 +44,7 @@
               <label for="floatingInput" >Rice Farm Address:</label>
             </div>
           </div>
+          
           <div class="col-md-3">
             <div class="form-floating mb-4 mb-md-0">
             <input  class="form-control mb-4 mb-md-0" name="no_of_years_as_farmers" placeholder="" value="{{$farmprofile->no_of_years_as_farmers}}" type="text" aria-label="MiddlName"id="floatingInput">

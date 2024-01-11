@@ -28,7 +28,7 @@
         @endif
         <div class="card-body">
           
-          <h6 class="card-title"><span>I.</span>Create Agri-Districts</h6>
+          <h6 class="card-title"><span>I.</span>Create Categorizes</h6>
 
           
          {{-- <p class="text-muted mb-3">Read the <a href="https://github.com/RobinHerbots/Inputmask" target="_blank"> Official Inputmask Documentation </a>for a full list of instructions and other options.</p> --}}
@@ -36,16 +36,18 @@
             @csrf
             <div class="row mb-3">
              
+             
               <div class="col-md-3">
 
                 
                 <div class="form-floating mb-4 mb-md-0"> 
-                   <select class="form-control mb-4 mb-md-0" name="users_id" aria-label="User ID">
+                   <select class="form-control mb-4 mb-md-0" name="agri_districts_id" aria-label="User ID">
                         @foreach ($agriculture as $agriculture)
-                            <option value="{{ $agriculture->id }}">{{ $agriculture->district }}</option>
+                        <option value="{{ $agriculture->id }}">{{ $agriculture->district }}</option>
+
                         @endforeach
                     </select>
-                    <label for="users_id">District Name:</label>
+                    <label for="agri_districts_id">District Name:</label>
                 </div>
               
             </div>

@@ -40,12 +40,12 @@
 
                 
                 <div class="form-floating mb-4 mb-md-0"> 
-                   <select class="form-control mb-4 mb-md-0" name="users_id" aria-label="User ID">
-                        @foreach ($categorize as $categorize)
-                            <option value="{{ $categorize->id }}">{{ $categorize->cat_name }}</option>
+                   <select class="form-control mb-4 mb-md-0" name="livestock_categorys_id" aria-label="User ID">
+                        @foreach ($livestock as $livestock)
+                            <option value="{{ $livestock->id }}">{{ $livestock->livestock_category_name}}</option>
                         @endforeach
                     </select>
-                    <label for="users_id">Categorize Name:</label>
+                    <label for="livestock_categorys_id">Livestock Category:</label>
                 </div>
               
             </div>
@@ -53,21 +53,21 @@
             <div class="col-md-3">
 
                 <div class="form-floating mb-4 mb-md-0">
-                <input  class="form-control mb-4 mb-md-0" name="crop_name" placeholder="FirstName" type="text" aria-label="FirstName"id="floatingInput">
-                <label for="floatingInput" >Crop Name:</label>
+                <input  class="form-control mb-4 mb-md-0" name="livestock_name" placeholder="FirstName" type="text" aria-label="FirstName"id="floatingInput">
+                <label for="floatingInput" >Livestock Name:</label>
               </div>
               
             </div>
             <div class="col-md-3">
               <div class="form-floating mb-4 mb-md-0">
-              <input  class="form-control mb-4 mb-md-0" name="crop_variety" placeholder="MiddleName" type="text" aria-label="MiddleName"id="floatingInput">
-              <label for="floatingInput" >crop_variety:</label>
+              <input  class="form-control mb-4 mb-md-0" name="breed" placeholder="MiddleName" type="text" aria-label="MiddleName"id="floatingInput">
+              <label for="floatingInput" >Breed:</label>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-floating mb-4 mb-md-0">
-            <input  class="form-control mb-4 mb-md-0" name="crop_planting_season" placeholder="Lastname" type="text" aria-label="LastName"id="floatingInput">
-            <label for="floatingInput" >crop_planting_season:</label>
+            <input  class="form-control mb-4 mb-md-0" name="age" placeholder="Lastname" type="text" aria-label="LastName"id="floatingInput">
+            <label for="floatingInput" >Age:</label>
           </div>
         </div>
         {{-- <div class="col-md-3">
@@ -83,24 +83,24 @@
               <div class="col-md-3">
   
                   <div class="form-floating mb-4 mb-md-0">
-                  <input  class="form-control mb-4 mb-md-0" name="crop_harvesting_season" placeholder="FirstName" type="text" aria-label="FirstName"id="floatingInput">
-                  <label for="floatingInput" >crop_harvesting_season:</label>
+                  <input  class="form-control mb-4 mb-md-0" name="gender" placeholder="FirstName" type="text" aria-label="FirstName"id="floatingInput">
+                  <label for="floatingInput" >Gender:</label>
                 </div>
                 
               </div>
               <div class="col-md-3">
                 <div class="form-floating mb-4 mb-md-0">
-                <input  class="form-control mb-4 mb-md-0" name="crop_type_soil" placeholder="MiddleName" type="text" aria-label="MiddleName"id="floatingInput">
-                <label for="floatingInput" >crop_type_soil:</label>
+                <input  class="form-control mb-4 mb-md-0" name="livestock_description" placeholder="MiddleName" type="text" aria-label="MiddleName"id="floatingInput">
+                <label for="floatingInput" >Livestock Description:</label>
               </div>
             </div>
           
-          <div class="col-md-3">
+          {{-- <div class="col-md-3">
             <div class="form-floating mb-4 mb-md-0">
             <input  class="form-control mb-4 mb-md-0"  name="crop_description"  placeholder="Extension Name" type="text" aria-label="ExtensionName"id="floatingInput">
             <label for="floatingInput" >crop_description:</label>
           </div>
-        </div>
+        </div> --}}
                 </div>
 {{--   
             <div class="row mb-3">

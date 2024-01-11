@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RicefieldBoarder extends Model
 {
     use HasFactory;
+    protected $table='ricefield_boarders';
     protected $fillable=[
 
     ];
