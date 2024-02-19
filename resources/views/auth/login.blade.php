@@ -8,7 +8,7 @@
 	<meta name="author" content="NobleUI">
 	<meta name="keywords" content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"> --}}
 
-	<title>Admin Login Page </title>
+	<title>AgriMap Login </title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,11 +43,11 @@
 	<link rel="stylesheet" href="{{asset('./../../assets/css/demo2/style.css')}}">
   <!-- End layout styles -->
 
-  <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" />
+  <link rel="shortcut icon" href="{{asset('assets/logo/logo.png')}}" />
 </head>
 <body>
     
-	<div class="main-wrapper">
+	<div class="main-wrapper" style="background-image: url('.../upload/pin.png');">
 		<div class="page-wrapper full-pages">
 			<div class="page-content d-flex align-items-center justify-content-center">
 

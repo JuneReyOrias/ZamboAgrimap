@@ -41,10 +41,10 @@
 	<div class="main-wrapper">
 
 		<!-- partial:partials/_sidebar.html -->
-	   @include('admin.body.sidebar')
+	   @include('user.body.sidebar')
    
 		<!-- partial -->
-        <nav class="settings-sidebar">
+        {{-- <nav class="settings-sidebar">
             <div class="sidebar-body">
              
               </a>
@@ -54,17 +54,17 @@
               </div>
             </div>
           </nav>
-	
+	 --}}
 		<div class="page-wrapper">
 					
 			<!-- partial:partials/_navbar.html -->
-		@include('admin.body.header')
+		@include('user.body.header')
 			<!-- partial -->
 
-            @yield('admin')
+            @yield('user')
 			
 			<!-- partial:partials/_footer.html -->
-		@include('admin.body.footer')
+		@include('user.body.footers')
 			<!-- partial -->
 		
 		</div>

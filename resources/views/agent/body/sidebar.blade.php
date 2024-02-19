@@ -13,7 +13,7 @@
     <ul class="nav">
       <li class="nav-item nav-category">Main</li>
       <li class="nav-item">
-        <a href="{{route('admin.dashb')}}" class="nav-link">
+        <a href="{{route('agent.agent_index')}}" class="nav-link">
           <i class="link-icon" data-feather="box"></i>
           <span class="link-title">Dashboard</span>
         </a>
@@ -22,17 +22,12 @@
      
       <li class="nav-item">
         <a href="{{route('map.gmap')}}" class="nav-link">
-          <i class="link-icon" data-feather="calendar"></i>
-          <span class="link-title">ZamboAgriMap</span>
+          <i class="link-icon" data-feather="map"></i>
+          <span class="link-title">Agri-Map</span>
         </a>
       </li>
-      {{-- <li class="nav-item">
-        <a href="https://earth.google.com/web/@7.15493912,122.21738186,143.06466033a,158600.66482102d,30.00000001y,0h,0t,0r" class="nav-link">
-          <i class="link-icon" data-feather="calendar"></i>
-          <span class="link-title">Google Earth</span>
-        </a>
-      </li> --}}
-      <li class="nav-item nav-category">Features</li>
+     
+      {{-- <li class="nav-item nav-category">Features</li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false" aria-controls="uiComponents">
           <i class="link-icon" data-feather="feather"></i>
@@ -83,7 +78,7 @@
             
           </ul>
         </div>
-      </li>
+      </li> --}}
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#forms" role="button" aria-expanded="false" aria-controls="forms">
           <i class="link-icon" data-feather="inbox"></i>
@@ -92,42 +87,69 @@
         </a>
         <div class="collapse" id="forms">
           <ul class="nav sub-menu">
+          
             <li class="nav-item">
-              <a href="" class="nav-link">RiceFarmerForms</a>
+              <a href="{{route('agent.personal_info.add_info')}}" class="nav-link">Rice Survey Form</a>
             </li>
             <li class="nav-item">
-              <a href="{{route('personalinfo.index_agent')}}" class="nav-link">Rice Survey Form</a>
+              <a href="{{route('agent.personal_info.add_info')}}" class="nav-link">Corn Survey Form</a>
+            </li>
+             <li class="nav-item">
+              <a href="{{route('agent.personal_info.add_info')}}" class="nav-link">Coconut Survey Form</a>
             </li>
             <li class="nav-item">
               <a href="{{route('multifile.import_agent')}}" class="nav-link">Multiple Import Form</a>
             </li>
-            <li class="nav-item">
-              <a href="{{route('personalinfo.show_agent')}}" class="nav-link">Personal Informations Crud</a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('farm_profile.show')}}" class="nav-link">Farm Profile Crud</a>
-          </li>
-            <li class="nav-item">
-              <a href="{{route('fixed_cost.create')}}" class="nav-link">Fixed Cost Crud</a>
-            </li> 
-            <li class="nav-item">
-              <a href="{{route('machineries_used.create')}}" class="nav-link">Machineries Used Crud</a>
-            </li> 
-            <li class="nav-item">
-              <a href="{{route('production_data.create')}}" class="nav-link">Last Production Data Crud</a>
-            </li> 
+           
               <li class="nav-item">
               <a href="{{route('kml.import')}}" class="nav-link">Kml Import</a>
             </li>
-           <!--- <li class="nav-item">
-              <a href="pages/forms/advanced-elements.html" class="nav-link">Advanced Elements</a>
+         
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"  data-bs-toggle="collapse" href="#farmers" role="button" aria-expanded="false" aria-controls="charts">
+          <i class="link-icon" data-feather="calendar"></i>
+          <span class="link-title">Farmers Info</span>
+          <i class="link-arrow" data-feather="chevron-down"></i>
+        </a>
+        <div class="collapse" id="farmers">
+          <ul class="nav sub-menu">
+            <li class="nav-item">
+              <a href="{{route('agent.allfarmersinfo.forms_info')}}" class="nav-link">Farmers Rice Info</a>
             </li>
             <li class="nav-item">
-              <a href="pages/forms/editors.html" class="nav-link">Editors</a>
+              <a href="{{route('agent.personal_info.view_infor')}}" class="nav-link">Personal Informations</a>
             </li>
             <li class="nav-item">
-              <a href="pages/forms/wizard.html" class="nav-link">Wizard</a>
-            </li>-->
+              <a href="{{route('agent.farmprofile.farm_view')}}" class="nav-link">Farm Profiles</a>
+          </li>
+            <li class="nav-item">
+              <a href="{{route('agent.fixedcost.fcost_view')}}" class="nav-link">Fixed Cost</a>
+            </li> 
+            <li class="nav-item">
+              <a href="{{route('agent.machineused.show_maused')}}" class="nav-link">Machineries Used </a>
+            </li> 
+            <li class="nav-item">
+              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Variable Cost </a>
+            </li> 
+            <li class="nav-item">
+              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Seeds </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Labor </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Fertilizers</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Pesticides</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('agent.lastproduction.view_prod')}}" class="nav-link">Last Production Data </a>
+            </li> 
+          
           </ul>
         </div>
       </li>
@@ -159,13 +181,14 @@
             </li>
           </ul>
         </div>
-      </li> <li class="nav-item">
-        <a class="nav-link"  data-bs-toggle="collapse" href="#charts" role="button" aria-expanded="false" aria-controls="charts">
+      </li> 
+      <li class="nav-item">
+        <a class="nav-link"  data-bs-toggle="collapse" href="#schedule" role="button" aria-expanded="false" aria-controls="charts">
           <i class="link-icon" data-feather="calendar"></i>
           <span class="link-title">Schedule</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
-        <div class="collapse" id="charts">
+        <div class="collapse" id="schedule">
           <ul class="nav sub-menu">
             <li class="nav-item">
               <a href="p" class="nav-link">Planting</a>
@@ -194,7 +217,7 @@
           </ul>
         </div>
       </li>
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#icons" role="button" aria-expanded="false" aria-controls="icons">
           <i class="link-icon" data-feather="smile"></i>
           <span class="link-title">Coordinates Update</span>
@@ -213,7 +236,7 @@
             </li>
           </ul>
         </div>
-      </li>
+      </li> --}}
     <!--  <li class="nav-item nav-category">Pages</li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" role="button" aria-expanded="false" aria-controls="general-pages">

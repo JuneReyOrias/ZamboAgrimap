@@ -53,7 +53,7 @@
 							<div class="row">
                 <div class="col-md-4 pe-md-0">
                   <div class="auth-side-wrapper">
-
+                 
                   </div>
                 </div>
                 <div class="col-md-8 ps-md-0">
@@ -97,7 +97,7 @@
                             Sign up
                           </button>
                       </div>
-                      <a href={{url('/landing')}} class="d-block mt-3 text-muted">have already account? Log in</a>
+                      <a href={{url('/')}} class="d-block mt-3 text-muted">have already account? Log in</a>
                     </form>
                   </div>
                 </div>

@@ -33,10 +33,10 @@ class MachineriesUseds extends Model
 
     public function farmprofiles()
     {
-        return $this->belongsTo(FarmProfile::class, 'farm_profiles_id','id')->withDefault();
+        return $this->belongsTo(FarmProfile::class,'farm_profiles_id','id')->withDefault();
     }
     public function personalInformations()
 {
-    return $this->belongsTo(PersonalInformations::class, 'personal_informations_id','id')->withDefault();
+    return $this->belongsTo(PersonalInformations::class,'personal_informations_id','id')->withDefault();
 }
 }

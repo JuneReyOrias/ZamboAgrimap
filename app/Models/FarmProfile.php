@@ -24,47 +24,46 @@ class FarmProfile extends Model
  
 //  protected $guarded = [];
     protected $fillable=[
-
-        
-   'personal_informations_id',
-'agri_districts_id',
-'polygons_id',
-  'tenurial_status',
-  'rice_farm_address',
-   'no_of_years_as_farmers',
-   'gps_longitude',
-   'gps_latitude',
-   'total_physical_area_has',
-   'rice_area_cultivated_has',
-  'land_title_no',
-  'lot_no',
-  'area_prone_to',
-  'ecosystem',
-  'type_rice_variety',
-  'prefered_variety',
-  'plant_schedule_wetseason',
-  'plant_schedule_dryseason',
-  'no_of_cropping_yr',
-    'yield_kg_ha',
-  'rsba_register',
-  'pcic_insured',
-  'source_of_capital',
-  'remarks_recommendation',
-  'oca_district_office',
-  'name_technicians',
-  'date_interview',
-//   'user_id', 
-//   'personal_informations_id',
+   
+            
+            'agri_districts_id',
+            'polygons_id',
+            'tenurial_status',
+            'rice_farm_address',
+            'no_of_years_as_farmers',
+            'gps_longitude',
+            'gps_latitude',
+            'total_physical_area_has',
+            'rice_area_cultivated_has',
+            'land_title_no',
+            'lot_no',
+            'area_prone_to',
+            'ecosystem',
+            'type_rice_variety',
+            'prefered_variety',
+            'plant_schedule_wetseason',
+            'plant_schedule_dryseason',
+            'no_of_cropping_yr',
+            'yield_kg_ha',
+            'rsba_register',
+            'pcic_insured',
+            'source_of_capital',
+            'remarks_recommendation',
+            'oca_district_office',
+            'name_technicians',
+            'date_interview',
+  'user_id', 
+  'personal_informations_id',
     ];
 
 //    protected $fillable=['farm_no'];
 public function user()
 {
-    return $this->belongsTo(User::class,'user_id', )->withDefault();
+    return $this->belongsTo(User::class,'users_id', )->withDefault();
 }
 public function personalInformations()
 {
-    return $this->belongsTo(PersonalInformations::class, 'personal_informations_id','id')->withDefault();
+    return $this->belongsTo(PersonalInformations::class,'personal_informations_id')->withDefault();
 }
     public function agridistricts()
     {

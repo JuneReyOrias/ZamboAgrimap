@@ -61,7 +61,7 @@ class UserController extends Controller
     // }
     
     public function UserDashboard(){
-        return view('user.user_dashboard');
+        return view('user.user_dash');
     }
     public function UserLogout(Request $request)
     {

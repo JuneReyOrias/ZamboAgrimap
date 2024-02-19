@@ -32,3 +32,4 @@ class Fisheries extends Model
         return $this->belongsTo(FisheriesCategory::class,'fisheries_categorys_id','id');
     }
 }
+ 

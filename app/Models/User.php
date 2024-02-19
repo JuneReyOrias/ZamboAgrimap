@@ -25,10 +25,12 @@ class User extends Authenticatable
         'email',
         'agri_district',
         'password',
-        'role'
+        'role',
+        'image'
+
       
     ];
-
+  
     public function personalinformations()
     {
         return $this->hasMany(PersonalInformations::class,'id','users_id');

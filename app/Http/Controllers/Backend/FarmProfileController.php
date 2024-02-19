@@ -6,28 +6,51 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FarmProfileRequest;
 use App\Http\Requests\UpdateFarmProfileRequest;
 use App\Models\PersonalInformations;
+use App\Models\FixedCost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Optional;
 
 class FarmProfileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    // public function show(personalInformations $personalInformations): 
-    // {
-    //     // $personalInformations = PersonalInformations::find($id);
-    //     return view('personalinfo.create')->with('personalInformations',$personalInformations);
-    // }
-    // public function ArcMap()
-    // {
-    //  $farmprofile= FarmProfile::all();
-    //  return view('map.arcmap',compact('farmprofile'));}
+    public function FarmProfiles(){
+        try {
+        //    Retrieve the necessary information from the personal_informations table
+    //        $farmLocation = PersonalInformations::select('id', 'first_name', 'last_name', 'mothers_maiden_name')
+    //        ->latest('id') // Order by id in descending order (latest first)
+    //     ->first()
+    // ->get();
+    $farmLocation = DB::table('personal_informations')
+    ->Join('agri_districts', 'personal_informations.agri_districtS_id', '=', 'agri_districts.id')
+    ->leftJoin('polygons', 'personal_informations.polygons_id', '=', 'polygons.id')
+    ->select('personal_informations.*', 'agri_districts.*' , 'polygons.*')
+    ->get();
+    $agriDistrictIds = [];
+    $polygonsIds = [];
+    
+        
+        // // Loop through each row of the result
+        foreach ($farmLocation as $location) {
+            // Extract agri_district_id and polygons_id from each row
+            $agriDistrictIds[] = $location->id;
+            $polygonsIds[] = $location->id;
+        }
+           return view('farm_profile.farm_index', ['farmLocation' => $farmLocation,
+           'agriDistrictIds' => $agriDistrictIds,   'polygonsIds' => $polygonsIds,
+        ]);
+       } catch (\Exception $ex) {
+           // Log the exception for debugging purposes
+           dd($ex);
+           return redirect()->back()->with('message', 'Something went wrong');
+       }
+        }
+   
     public function index()
     {
         //
     }
+
+    //arcmap for admin
     public function Arcmap()
     {
         // $farmprofile= FarmProfile::all();
@@ -60,53 +83,73 @@ foreach ($farmLocation as $location) {
 ]);
 
      }
-//      public function FarmProfiles(){
-//             try {
-//                 // $farmprofile= FarmProfile::all();
-//         $farmLocation = DB::table('farm_profiles')
-//         ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
-//         ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
-//         ->join('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-           
-//         ->select('farm_profiles.*',
-//          'agri_districts.*' ,
-//           'polygons.*',
-//           'personal_informations.*',
-//           )
-        
-//         ->get();
-   
-// //         // Initialize empty arrays
-// //    $agriDistrictIds = [];
-// //    $polygonsIds = [];
-   
-// //    // Loop through each row of the result
-// //    foreach ($farmLocation as $location) {
-// //        // Extract agri_district_id and polygons_id from each row
-// //        $agriDistrictIds[] = $location->agri_district_id;
-// //        $polygonsIds[] = $location->polygons_id;
-//    }
-    
-//                // You can return the data to a view or process it further
-//                return view('farm_profile.farm_index', [  
-//             'farmLocation' => $farmLocation,
-//             'agriDistrictIds' => $agriDistrictIds,
-//            'polygonsIds' => $polygonsIds,
-        
-//         ]);
-//            } catch (\Exception $ex) {
-//                // Log the exception for debugging purposes
-//                dd($ex);
-//                return redirect()->back()->with('message', 'Something went wrong');
-//            }
-//             }   
+
+
+     
+
+     //gmap is for agent of 
+     public function Gmap()
+     {
+         // $farmprofile= FarmProfile::all();
+         $farmLocation = DB::table('farm_profiles')
+      ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
+      ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+      ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+      ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*','personal_informations.*')
+      ->get();
  
-
-
-    // public function getLocation() {
-
-    // }
-    
+      // Initialize empty arrays
+ $agriDistrictIds = [];
+ $polygonsIds = [];
+ 
+ // Loop through each row of the result
+ foreach ($farmLocation as $location) {
+     // Extract agri_district_id and polygons_id from each row
+     $agriDistrictIds[] = $location->id;
+     $polygonsIds[] = $location->id;
+ }
+ 
+ 
+     //  return view('map.arcmap',compact('farmprofile'));
+     // return  $farmLocation;
+     return view('map.gmap', [
+         'farmLocation' => $farmLocation,
+         'agriDistrictIds' => $agriDistrictIds,
+     'polygonsIds' => $polygonsIds,
+ 
+ ]);
+ 
+      }
+      public function agrimap()
+      {
+          // $farmprofile= FarmProfile::all();
+          $farmLocation = DB::table('farm_profiles')
+       ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
+       ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+       ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+       ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*','personal_informations.*')
+       ->get();
+  
+       // Initialize empty arrays
+  $agriDistrictIds = [];
+  $polygonsIds = [];
+  
+  // Loop through each row of the result
+  foreach ($farmLocation as $location) {
+      // Extract agri_district_id and polygons_id from each row
+      $agriDistrictIds[] = $location->id;
+      $polygonsIds[] = $location->id;
+  }
+  
+  
+      //  return view('map.arcmap',compact('farmprofile'));
+      // return  $farmLocation;
+      return view('map.agrimap', [
+          'farmLocation' => $farmLocation,
+          'agriDistrictIds' => $agriDistrictIds,
+      'polygonsIds' => $polygonsIds,
+  
+  ]);}
     public function searchfarm(Request $request){
  
         $gps_latitude=$request->gps_latitude;
@@ -135,29 +178,6 @@ foreach ($farmLocation as $location) {
         return view('farm_profile.farm_show',compact('farmprofile'));
         
     }
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(FarmProfileRequest $request)
-    // {
-    //     try{
-        
-    //         $data= $request->validated();
-    //         $data= $request->all();
-           
-    //         // if($file= $request->file('farmer_no')){
-    //         //     $name=
-    //         // }
-    //         FarmProfile::create($data);
-    
-    //         return redirect('/fixedcost')->with('message','Farm Profile added successsfully');
-        
-    //     }
-    //     catch(\Exception $ex){
-    //         return redirect('/farmprofile')->with('message','Someting went wrong');
-    //     }
-    // }
-   
    
 
 
@@ -170,13 +190,7 @@ foreach ($farmLocation as $location) {
             $data = $request->validated();
             $personalInformationId = 1;
 
-            // $personalInformation = $user->personalInformation;
-            // $personalInformationId = $request->input('personal_information_id');
-            // $personalInformation = PersonalInformations::findOrFail($personalInformationId);
-         // Assuming there's a relationship between User and PersonalInformations
-        //  if (!$personalInformation) {
-        //     return redirect('/farmprofile')->with('message', 'Personal Information not found for the authenticated user');
-        // }
+       
 
     // Check if the associated PersonalInformations record exists
     // Access the primary key of the PersonalInformations model instance
@@ -210,11 +224,7 @@ foreach ($farmLocation as $location) {
             'name_technicians' => request('name_technicians'),
             'date_interview' => request('date_interview'),
             ]);
-            // dd($farmProfile);
-
-// Save the FarmProfile
-// $farmProfile = FarmProfile::create($data);
-
+            
 // Retrieve the personal_information_id
 $personalInformationId = $farmProfile->getKey();
 
@@ -232,58 +242,18 @@ return redirect('/fixedcost')->with('message', 'Farm Profile added successfully'
     dd($ex);
     return redirect('/farmprofile')->with('message', 'Something went wrong');
 }
-        //    // }
-        //    try{
-        //     $user = auth()->user();
-        //     $data= $request->validated();
-        //     $data= $request->all();
-        //     PersonalInformations::create($data);
-    
-        //     return redirect('//fixedcost')->with('message','Personal informations added successsfully');
-        
-        // }
-        // catch(\Exception $ex){
-        //     dd($ex); // Debugging statement to inspect the exception
-        //     return redirect('/farmprofile')->with('message','Someting went wrong');
-            
-        // }   
+       
     }
     
      
-    // try {
-    //     // Your validation logic here
-    //     $data = $request->validated();
-    
-    //     // Assuming there's a relationship between User and PersonalInformations
-    //     $user = auth()->user();
-
-    //     $data['id_type'] = 1;
-    //     // $data['personal_informations_id'] = 1;
-    //     // Set the foreign key value to the primary key of the user
-    //     // $data['users_id'] = $user  ->getPrimaryKey();
    
-    //     // Create a new PersonalInformations record and associate it with the user
-    //    Farmprofile::create($data);
-    
-    //     // Debugging statement to inspect data or variables
-    //     dd('Data processed successfully');
-    
-    //     return redirect('/farmprofile')->with('message', 'Personal information added successfully');
-    // } catch (\Exception $ex) {
-    //     // Log the exception or handle it as needed
-    //     dd($ex); // Debugging statement to inspect the exception
-    
-    //     return redirect('/personalinformation')->with('message', 'Something went wrong');
-    // }
-    
-    
     
     public function edit($farmprofile)
     {
         // dd($id);
         $farmprofile = PersonalInformations::find($farmprofile);
       
-        // // $personalInformation = PersonalInformations::findOrFail($personalInformation);
+      // $personalInformation = PersonalInformations::findOrFail($personalInformation);
         return view('farm_profile.farm_edit')->with('farmprofile',$farmprofile);
        ;
     }
@@ -295,9 +265,7 @@ return redirect('/fixedcost')->with('message', 'Farm Profile added successfully'
         try {
             $data = $request->validated();
             
-            // Optionally, add logic to get farmer_no
-            // $data['farmer_no'] = $this->getFarmerNo();
-    
+         
             FarmProfile::where('id', $id)->update($data);
     
             return redirect('/farmprofile/create')->with('message', 'Farm Profile updated successfully');

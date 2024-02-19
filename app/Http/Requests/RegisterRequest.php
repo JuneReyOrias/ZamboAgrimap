@@ -44,6 +44,7 @@ class RegisterRequest extends FormRequest
                 'max:250',
                 'unique:'.User::class,
             ],
+            
             'agri_district'=>[
                 'required',
                 'string',
@@ -52,15 +53,10 @@ class RegisterRequest extends FormRequest
             'password'=>[
                 'required',
                 'string',
-                'min:10',
+                'max:20',
                 
             ],
-            'role'=>[
-                'required',
-                'string',
-                'max:50',
-            Rule::in(['admin', 'agent', 'user', /* Add other roles as needed */]),
-            ],
+           
            
         ];
         return $rule;
@@ -70,8 +66,8 @@ class RegisterRequest extends FormRequest
             'name.required'=>'Please input name',
             'email.required'=>'Please input email',
             'agri_district.required'=>'Please input agri_district',
-            'password.required'=>'Please input 8 digitspassword',
-            'role.required'=>'Please input role',
+            'password.required'=>'Please input password',
+           
             
        ];
     

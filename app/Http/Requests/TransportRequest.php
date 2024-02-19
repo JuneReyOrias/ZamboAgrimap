@@ -53,7 +53,7 @@ class TransportRequest extends FormRequest
     }
     public function messages(){
        return [
-            'total_transport_per_deliverycost.required'=>'Please input plowing cost',
+            'total_transport_per_deliverycost.required'=>'Please input the Total Transport per delivery cost',
             // 'harrowing_cost.required'=>'Please input harrowing cost',
             // 'harvesting_cost.required'=>'Please input harvesting cost',
             // 'post_harvest_cost.required'=>'Please input post harvest cost',

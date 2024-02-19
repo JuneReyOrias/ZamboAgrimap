@@ -22,10 +22,10 @@ class Role
         //     return $next($request);
         // }
 
-        // return abort(403, 'Unauthorized.');
-        if($request->user()->role!==$role){
-            return redirect('dashboard');
-        }
+        // // return abort(403, 'Unauthorized.');
+        // if($request->user()->role!==$role){
+        //     return redirect('dashboard');
+        // }
         return $next($request);
         // if (Auth::check() && Auth::user()->role == $role) {
         //     return $next($request);

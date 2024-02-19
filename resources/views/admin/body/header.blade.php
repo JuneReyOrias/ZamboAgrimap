@@ -8,7 +8,7 @@
   <div class="input-group-text">
     <i data-feather="search"></i>
   </div>
-                <input type="text" class="form-control" id="navbarForm" placeholder="Search here...">
+                {{-- <input type="text" class="form-control" id="navbarForm" placeholder="Search here..."> --}}
             </div>
         </form>
         <ul class="navbar-nav">
@@ -52,6 +52,10 @@
                     </div>
                 </div>
             </li>
+            @php
+            $id =Auth::user()->id;
+                   $admin = App\Models\User:: find($id);
+                       @endphp
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i data-feather="mail"></i>
@@ -202,8 +206,8 @@
                             <img class="wd-80 ht-80 rounded-circle" src="https://via.placeholder.com/80x80" alt="">
                         </div>
                         <div class="text-center">
-                            <p class="tx-16 fw-bolder">{Amiah Burton}</p>
-                            <p class="tx-12 text-muted">amiahburton@gmail.com</p>
+                            <p class="tx-16 fw-bolder">{{ $admin->name}}</p>
+                            <p class="tx-12 text-muted">{{ $admin->email}}</p>
                         </div>
                     </div>
     <ul class="list-unstyled p-1">

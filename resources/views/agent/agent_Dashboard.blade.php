@@ -8,14 +8,15 @@
 	<meta name="author" content="NobleUI">
 	<meta name="keywords" content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
-	<title>Agent- AgriMap</title>
+	<title>Agent-AgriMap</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <!-- End fonts -->
-
+ 
+  
 	<!-- core:css -->
 	<link rel="stylesheet" href="{{asset('../assets/vendors/core/core.css')}}">
 	<!-- endinject -->
@@ -55,27 +56,29 @@
 			<!-- partial:partials/_footer.html -->
 		@include('agent.body.footer')
 			<!-- partial -->
-		
+			
 		</div>
 	</div>
 
+	
 	<!-- core:js -->
-	<script src="{{asset('../assets/vendors/core/core.js')}}"></script>
+	<script src="../assets/vendors/core/core.js"></script>
 	<!-- endinject -->
 
 	<!-- Plugin js for this page -->
-  <script src="{{asset('../assets/vendors/flatpickr/flatpickr.min.js')}}"></script>
-  <script src="{{asset('../assets/vendors/apexcharts/apexcharts.min.js')}}"></script>
+  <script src="../assets/vendors/flatpickr/flatpickr.min.js"></script>
+  
+  <script src="../assets/vendors/apexcharts/apexcharts.min.js"></script>
 	<!-- End plugin js for this page -->
 
 	<!-- inject:js -->
-	<script src="{{asset('../assets/vendors/feather-icons/feather.min.js')}}"></script>
-	<script src="{{asset('../assets/js/template.js')}}"></script>
+	<script src="../assets/vendors/feather-icons/feather.min.js"></script>
+	
+	<script src="../assets/js/template.js"></script>
 	<!-- endinject -->
 
 	<!-- Custom js for this page -->
-  <script src="{{asset('../assets/js/dashboard-dark\.js')}}"></script>
+  <script src="../assets/js/dashboard-dark.js"></script>
 	<!-- End custom js for this page -->
-
 </body>
 </html>    

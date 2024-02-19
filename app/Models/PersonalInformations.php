@@ -52,7 +52,7 @@ class PersonalInformations extends Model
     // Define the relationship with FarmProfile
     public function farmProfiles()
     {
-        return $this->hasMany(FarmProfile::class, 'id','personal_informations_id')->withDefault();
+        return $this->hasMany(FarmProfile::class,'id','personal_informations_id')->withDefault();
     }
     public function fixedcost()
     {
@@ -66,11 +66,7 @@ class PersonalInformations extends Model
     {
         return $this->hasMany(VariableCost::class, 'id','personal_informations_id');
     }
-    public function getPrimaryKey()
-    {
-        return $this->getKey();
-    }
-
+    
     // protected static function boot()
     // {
     //     parent::boot();

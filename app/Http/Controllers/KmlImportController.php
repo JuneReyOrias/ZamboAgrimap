@@ -21,25 +21,42 @@ public function index()
 
     public function upload(Request $request)
 {
+
     try {
-        $request->validate([
-            'file' => 'required|max:2048',
-        ]);
-      
-        $file = $request->file('file');
-        $fileName = time() . '.' . $file->getClientOriginalExtension();
+        $data = KmlUpload::find($id);
 
-        // Attempt to store the file
-        $file->storeAs('public/kml_folder', $fileName);
+        if ($data) {
+            // Check if a file is present in the request and if it's valid
+            if ($request->hasFile('kml_file') && $request->file('kml_file')->isValid()) {
+                // Retrieve the KML file from the request
+                $kmlFile = $request->file('kml_file');
 
-        // If the file was stored successfully, return a success response
-        return response()->json(['message' => 'File uploaded successfully']);
+                // Generate a unique filename using current timestamp and file extension
+                $filename = time() . '.' . $kmlFile->getClientOriginalExtension();
+
+                // Move the uploaded KML file to the 'kml_files' directory with the generated filename
+                $kmlFile->move(public_path('kml_files'), $filename);
+
+                // Delete the previous KML file, if it exists
+                if ($data->kml_file) {
+                    // Assuming the file is saved in public_path('kml_files')
+                    if (file_exists(public_path('kml_files/' . $data->kml_file))) {
+                        unlink(public_path('kml_files/' . $data->kml_file));
+                    }
+                }
+
+                // Set the filename in the appropriate column in the database
+                $data->kml_file = $filename;
+
+                // Save the model instance to update the database record
+                $data->save();
+            }
+        }
     } catch (\Exception $e) {
-
-  
-        // If an error occurs, return an error response
-        return response()->json(['error' => 'File upload failed', 'message' => $e->getMessage()], 500);
+        // Handle the exception, log it, or return an error response
+        return response()->json(['error' => 'An error occurred while uploading KML file.'], 500);
     }
+
 }
 
     public function displayMap($fileName)

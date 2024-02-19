@@ -18,30 +18,7 @@
  
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
  
-    <!-- Primary Meta Tags -->
-{{-- <meta name="title" content="Play - Free Open Source HTML Bootstrap Template by UIdeck">
-<meta name="description" content="Play - Free Open Source HTML Bootstrap Template by UIdeck Team"> --}}
 
-<!-- Open Graph / Facebook -->
-{{-- <meta property="og:type" content="website">
-<meta property="og:url" content="https://uideck.com/play/">
-<meta property="og:title" content="Play - Free Open Source HTML Bootstrap Template by UIdeck">
-<meta property="og:description" content="Play - Free Open Source HTML Bootstrap Template by UIdeck Team">
-<meta property="og:image" content="https://uideck.com/wp-content/uploads/2021/09/play-meta-bs.jpg">
-
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://uideck.com/play/">
-<meta property="twitter:title" content="Play - Free Open Source HTML Bootstrap Template by UIdeck">
-<meta property="twitter:description" content="Play - Free Open Source HTML Bootstrap Template by UIdeck Team">
-<meta property="twitter:image" content="https://uideck.com/wp-content/uploads/2021/09/play-meta-bs.jpg"> --}}
-
-    <!--====== Favicon Icon ======-->
-    {{-- <link
-      rel="shortcut icon"
-      href="landing_page/assets/images/favicon.svg"
-      type="image/svg"
-    /> --}}
 
     <!-- ===== All CSS files ===== -->
     <link rel="stylesheet" href="landing_page/assets/css/bootstrap.min.css" />
@@ -81,56 +58,14 @@
                   <li class="nav-item">
                     <a class="ud-menu-scroll" href="#about">About</a>
                   </li>
-                  {{-- <li class="nav-item">
-                    <a class="ud-menu-scroll" href="#pricing">Pricing</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="ud-menu-scroll" href="#team">Team</a>
-                  </li> --}}
-                  
-                  {{-- <li class="nav-item nav-item-has-children">
-                    <a href="javascript:void(0)"> Pages </a>
-                    <ul class="ud-submenu">
-                      <li class="ud-submenu-item">
-                        <a href="about.html" class="ud-submenu-link">
-                          About Page
-                        </a>
-                      </li>
-                      <li class="ud-submenu-item">
-                        <a href="pricing.html" class="ud-submenu-link">
-                          Pricing Page
-                        </a>
-                      </li>
-                      <li class="ud-submenu-item">
-                        <a href="contact.html" class="ud-submenu-link">
-                          Contact Page
-                        </a>
-                      </li>
-                      <li class="ud-submenu-item">
-                        <a href="blog.html" class="ud-submenu-link">
-                          Blog Grid Page
-                        </a>
-                      </li>
-                      <li class="ud-submenu-item">
-        
-                      
-                        <button class="btn btn-success " class="ud-submenu-link" class="ud-main-btn ud-login-btn" onClick="add()" href="javascript:void(0)"> log</button>
-                      </li>
-                      <li class="ud-submenu-item">
-                        <button class="btn btn-success " class="ud-submenu-link"  class="ud-main-btn ud-login-btn" onClick="login()" href="javascript:void(0)" >  Log in</button>
-                      </li>
-                      <li class="ud-submenu-item">
-                        <a href="404.html" class="ud-submenu-link">404 Page</a>
-                      </li>
-                    </ul>
-                  </li> --}}
+           
                 
                   <li class="nav-item">
                     <a class="ud-menu-scroll" href="#contact">Contact</a>
                     
                   </li>
                   <li class="nav-item">
-                    <a class="ud-menu-scroll" style="" onClick="login()" href="javascript:void(0)">Log in</a>
+                    <a  href="{{route('login')}}" href="javascript:void(0)">Log in</a>
               
                   </li>
                   <li class="nav-item">

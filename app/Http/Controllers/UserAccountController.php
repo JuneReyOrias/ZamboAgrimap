@@ -2,17 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserAccount;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserAccountController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function UserDashboard(){
+        return view('user.user_dash');
+    }
+    public function UserLogout(Request $request)
     {
-        //
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 
     /**
@@ -28,19 +38,7 @@ class UserAccountController extends Controller
      */
     
     public function store(Request $request)
-    {
-        try{
-            $data= $request->validated();
-            $data= $request->all();
-           UserAccount::create($data);
-    
-            return redirect('/pesticides')->with('message','Fertilizers data added successsfully');
-        
-        }
-        catch(\Exception $ex){
-            return redirect('/fertilizer')->with('message','Someting went wrong');
-        }
-    }
+    {}
     /**
      * Display the specified resource.
      */

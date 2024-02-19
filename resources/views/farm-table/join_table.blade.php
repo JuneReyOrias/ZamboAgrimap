@@ -45,50 +45,51 @@
                     </tr>
                 </thead>
                 <tbody>
-                  @if($personalInformations->count() > 0)
+                 
+                   @if($personalInformations->count() > 0)
 
-                @foreach($personalInformations as $personalInformation)
+                @foreach($personalInformations as $farmdata)
                     <tr class="table-light">
                          <td>{{ $loop->iteration }}</td>
-                        <td>{{ $personalInformation->first_name }}</td>
-                        <td>{{ $personalInformation->last_name }}</td>
-                      <td>{{ $personalInformation->tenurial_status }}</td>
-                        <td>{{ $personalInformation->total_amount}}</td>
-                        <td>{{ $personalInformation->total_cost_for_machineries }}</td>
-                        <td>{{ $personalInformation->total_seed_cost }}</td>
-                        <td>{{ $personalInformation->total_cost_fertilizers }}</td>
-                        <td>{{ $personalInformation->total_labor_cost}}</td>
-                        <td>{{ $personalInformation->total_cost_pesticides }}</td>
-                        <td>{{ $personalInformation->total_transport_per_deliverycost }}</td>
-                        <td>{{ $personalInformation->total_machinery_fuel_cost}}</td>
-                        <td>{{ $personalInformation->gross_income_palay}}</td>
-                        <td>{{ $personalInformation->gross_income_rice }}</td>
+                        <td>{{ $farmdata->first_name }}</td>
+                        <td>{{ $farmdata->last_name }}</td>
+                      <td>{{ $farmdata->tenurial_status }}</td>
+                        <td>{{ $farmdata->total_amount}}</td>
+                        <td>{{ $farmdata->total_cost_for_machineries }}</td>
+                        <td>{{ $farmdata->total_seed_cost }}</td>
+                        <td>{{ $farmdata->total_cost_fertilizers }}</td>
+                        <td>{{ $farmdata->total_labor_cost}}</td>
+                        <td>{{ $farmdata->total_cost_pesticides }}</td>
+                        <td>{{ $farmdata->total_transport_per_deliverycost }}</td>
+                        <td>{{ $farmdata->total_machinery_fuel_cost}}</td>
+                        <td>{{ $farmdata->gross_income_palay}}</td>
+                        <td>{{ $farmdata->gross_income_rice }}</td>
                        
                         
   
                         <td>
                            
-                             {{-- <a href="" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                           {{-- <a href="" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                 
                              <form  action=""method="post" accept-charset="UTF-8" style="display:inline">
                                 {{ csrf_field()}}
                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                            </form> --}}
-                            {{-- <div class="col-sm">
+                            </form> 
+                          <div class="col-sm">
                                 <form action="{{ route('personalinfo.destroy', $personalInformations->id) }}" method="post">
                                   @csrf
                                   @method('DELETE')
                                   <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </div> --}}
-                        </td>
-                    </tr>
-                @endforeach
+                                </form> --}}
+                          </div> 
+                      </td>
+                    </tr> 
+              @endforeach
                 @else
-                <tr>
-                    <td class="text-center" colspan="5">Personal Informations not found</td>
+                <tr> 
+                  <td class="text-center" colspan="5">Personal Informations not found</td>
                 </tr>
-            @endif
+            @endif 
                 </tbody>
             </table>
         </div>

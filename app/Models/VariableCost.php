@@ -35,6 +35,6 @@ class VariableCost extends Model
         return$this->hasMany(Pesticide::class, 'pesticides_id','id');
     }
     public function transports(){
-        return$this->hasMany(Transport::class, 'transports_id','id');
+        return$this->hasMany(Transport::class, 'tranports_id','id');
     }
 }

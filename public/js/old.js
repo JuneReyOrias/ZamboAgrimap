@@ -193,6 +193,86 @@ function initMap() {
         ));
     })
 
+    //parcels
+    class parcelboarders {
+        constructor(parone_latitude, parone_longitude, partwo_latitude, partwo_longitude, parthree_latitude, parthree_longitude,
+            parfour_latitude, parfour_longitude, parfive_latitude, parfive_longitude, parsix_latitude,
+            parsix_longitude, parseven_latitude, parseven_longitude, pareight_latitude, pareight_longitude,
+            parnine_latitude, parnine_longitude, parten_latitude, parten_longitude,
+            pareleven_latitude, pareleven_longitude, partwelve_latitude, partwelve_longitude, parcolor, parcel_name) {
+            this.parone_latitude = parone_latitude;
+            this.parone_longitude = parone_longitude;
+            this.partwo_latitude = partwo_latitude;
+            this.partwo_longitude = partwo_longitude;
+            this.parthree_latitude = parthree_latitude;
+            this.parthree_longitude = parthree_longitude;
+            this.parfour_latitude = parfour_latitude;
+            this.parfour_longitude = parfour_longitude;
+            this.parfive_latitude = parfive_latitude;
+            this.parfive_longitude = parfive_longitude;
+            this.parsix_latitude = parsix_latitude;
+            this.parsix_longitude = parsix_longitude;
+            this.parseven_latitude = parseven_latitude;
+            this.parseven_longitude = parseven_longitude;
+            this.pareight_latitude = pareight_latitude;
+            this.pareight_longitude = pareight_longitude;
+            this.parnine_latitude = parnine_latitude;
+            this.parnine_longitude = parnine_longitude;
+            this.parten_latitude = parten_latitude;
+
+            this.parten_longitude = parten_longitude;
+            this.pareleven_latitude = pareleven_latitude;
+            this.pareleven_longitude = pareleven_longitude;
+            this.partwelve_latitude = partwelve_latitude;
+            this.partwelve_longitude = partwelve_longitude;
+            this.parcolor = parcolor;
+            this.parcel_name = parcel_name;
+        }
+    }
+
+    const listOfParcels = []
+
+    const dataParcel = document.querySelectorAll(".newparcel")
+    dataParcel.forEach((parcel, index) => {
+        let paronelat = parcel.getAttribute("data-paronelat")
+        let paronelong = parcel.getAttribute("data-paronelong")
+        let partwolat = parcel.getAttribute("data-partwolat")
+        let partwolong = parcel.getAttribute("data-partwolong")
+        let parthreelat = parcel.getAttribute("data-parthreelat")
+        let parthreelong = parcel.getAttribute("parthree_longitude")
+        let parfourlat = parcel.getAttribute("data-parfourlat")
+        let parfourlong = parcel.getAttribute("data-parfourlong")
+        let parfivelat = parcel.getAttribute("data-parfivelat")
+        let parfivelong = parcel.getAttribute("data-parfivelong")
+        let parsixlat = parcel.getAttribute("data-parsixlat")
+        let parsixlong = parcel.getAttribute("data-parsixlong")
+        let parsevenlat = parcel.getAttribute("data-parsevenlat")
+        let parsevenlong = parcel.getAttribute("data-parsevenlong")
+        let pareightlat = parcel.getAttribute("data-pareightlat")
+        let pareightlong = parcel.getAttribute("data-pareightlong")
+
+        let parninelat = parcel.getAttribute("data-parninelat")
+        let parninelong = parcel.getAttribute("data-parninelong")
+        let partenlat = parcel.getAttribute("data-partenlat")
+        let partenlong = parcel.getAttribute("data-partenlong")
+        let parelevenlat = parcel.getAttribute("data-parelevenlat")
+        let parelevenlong = parcel.getAttribute("data-parelevenlong")
+        let paronetwelvelat = parcel.getAttribute("data-paronetwelvelat")
+        let partwelvelong = parcel.getAttribute("data-pareightlong")
+
+
+        let parcolors = parcel.getAttribute("data-parcolor")
+        let parname = parcel.getAttribute("data-parcel_name")
+
+        listOfParcels.push(new parcelboarders(parseFloat(paronelat), parseFloat(paronelong),
+            parseFloat(partwolat), parseFloat(partwolong), parseFloat(parthreelat), parseFloat(parthreelong),
+            parseFloat(parfourlat), parseFloat(parfourlong), parseFloat(parfivelat), parseFloat(parfivelong),
+            parseFloat(parsixlat), parseFloat(parsixlong), parseFloat(parsevenlat), parseFloat(parsevenlong),
+            parseFloat(pareightlat), parseFloat(pareightlong), parseFloat(parninelat), parseFloat(parninelong),
+            parseFloat(partenlat), parseFloat(partenlong), parseFloat(parelevenlat), parseFloat(parelevenlong),
+            parseFloat(paronetwelvelat), parseFloat(partwelvelong), parcolors, parname,
+        ));
+    })
     const locationZC = { lat: 6.9214, lng: 122.0790 }; // ZAMBOANGA CITY LATLANG
 
     // Options for the map
@@ -260,38 +340,6 @@ function initMap() {
                 `;
     }
 
-    // const bounds = new google.maps.LatLngBounds();
-    // listOfFarm.forEach(farm => {
-    //     console.log(farm.location_name)
-    //     console.log(farm.latitude)
-    //     console.log(farm.longitude)
-    //     console.log(farm.gps_latitude)
-    //     console.log(farm.gps_longitude)
-    //     const positions = {
-    //         lat: farm.gps_latitude ? farm.gps_latitude : farm.latitude,
-    //         lng: farm.gps_longitude ? farm.gps_longitude : farm.longitude,
-    //     };
-
-
-    //     new google.maps.Marker({
-    //         position: positions,
-    //         // position: { lat: farm.gps_latitude, lng: farm.gps_longitude },
-    //         // position: { lat: farm.latitude, lng: farm.longitude },
-    //         map: map,
-    //         // map1: map,
-    //         title: farm.location_name,
-    //         icon: image
-    //             // title1: farm.location_name,
-    //             // icon: `http://maps.google.com/mapfiles/ms/icons/${pinColor}-dot.png`,
-    //     });
-    //     bounds.extend(positions);
-    // })
-    // map.fitBounds(bounds);
-    // Add KML layer
-    // Add this section to include geoxml3 parsing logic
-
-    // Display KML content on the map
-    // old.js
 
     // Access the KML file name from the global window object
 
@@ -456,6 +504,90 @@ function initMap() {
 
     });
 
+    // ParcelBoarder points using lat lang  to create a districts boundary
+    listOfParcels.forEach(parcelary => {
+        console.log(parcelary.parone_latitude)
+        console.log(parcelary.parone_longitude)
+        console.log(parcelary.partwo_latitude)
+        console.log(parcelary.partwo_longitude)
+        console.log(parcelary.parthree_latitude)
+        console.log(parcelary.parthree_longitude)
+        console.log(parcelary.parfour_latitude)
+        console.log(parcelary.parfour_longitude)
+        console.log(parcelary.parfive_latitude)
+        console.log(parcelary.parfive_longitude)
+        console.log(parcelary.parsix_latitude)
+        console.log(parcelary.parsix_longitude)
+        console.log(parcelary.parseven_latitude)
+        console.log(parcelary.parseven_longitude)
+        console.log(parcelary.pareight_latitude)
+        console.log(parcelary.pareight_longitude)
+        console.log(parcelary.parnine_latitude)
+        console.log(parcelary.parnine_longitude)
+        console.log(parcelary.parten_latitude)
+        console.log(parcelary.parten_longitude)
+        console.log(parcelary.pareleven_latitude)
+        console.log(parcelary.pareleven_longitude)
+        console.log(parcelary.partwelve_latitude)
+        console.log(parcelary.partwelve_longitude)
+
+        console.log(parcelary.parcolor)
+
+
+        //coordinates of per points using lang
+        const permParcelCoordinates = [
+            { lat: parcelary.parone_latitude, lng: parcelary.parone_longitude }, // point latlang 1
+            { lat: parcelary.partwo_latitude, lng: parcelary.partwo_longitude }, // point latlang 2
+            { lat: parcelary.parthree_latitude, lng: parcelary.parthree_longitude }, // point latlang 3
+            { lat: parcelary.parfour_latitude, lng: parcelary.parfour_longitude }, // point latlang 4
+            { lat: parcelary.parfive_latitude, lng: parcelary.parfive_longitude }, // point latlang 5
+            { lat: parcelary.parsix_latitude, lng: parcelary.parsix_longitude }, // point latlang 6
+            { lat: parcelary.parseven_latitude, lng: parcelary.parseven_longitude }, // point latlang 7
+            { lat: parcelary.pareight_latitude, lng: parcelary.pareight_longitude }, // point latlang 8
+            { lat: parcelary.parnine_latitude, lng: parcelary.parnine_longitude }, // point latlang 3
+            { lat: parcelary.parten_latitude, lng: parcelary.parten_longitude }, // point latlang 4
+            { lat: parcelary.pareleven_latitude, lng: parcelary.pareleven_longitude }, // point latlang 5
+            { lat: parcelary.partwelve_latitude, lng: parcelary.partwelve_longitude }, // point latlang 6
+
+        ];
+
+
+        //polygons fetcing of for each data from databases then display it in the map
+        const permDistrictPolygon = new google.maps.Polygon({
+            paths: permParcelCoordinates,
+            strokeColor: parcelary.parcolor,
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: 'transparent', // Set fillColor to transparent
+            fillOpacity: 0.1 // Set fillOpacity to 0 for transparency
+        });
+        permDistrictPolygon.setMap(map);
+
+
+        const infoWindowContent = PolygonInfo(parcelary);
+
+        const infoWindow = new google.maps.InfoWindow({
+            content: infoWindowContent,
+        });
+
+        permDistrictPolygon.addListener('click', function(event) {
+            // Close all other open info windows
+            infoWindows.forEach(info => info.close());
+
+            // Set the position of the InfoWindow to the clicked position
+            infoWindow.setPosition(event.latLng);
+
+            // Open the current info window
+            infoWindow.open(map);
+
+            // Add the current info window to the global array
+            infoWindows.push(infoWindow);
+        });
+
+        polygons.push(permDistrictPolygon);
+
+    });
+
     // const kmlLayer = new google.maps.KmlLayer({
     //     url: `/storage/kml_folder/{{ $fileName }}`,
     //     map: map,
@@ -474,58 +606,58 @@ function initMap() {
     //     content: `<div><strong>${farm.location_name}</strong></div>`,
     // });
     // permDistrictPolygon.setMap(map);
-    // Add a click event listener to open the info window when the marker is clicked
-    marker.addListener('click', function() {
-        infoWindow.open(map, marker);
-    });
-    // Create the map instance
-    map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    // // Add a click event listener to open the info window when the marker is clicked
+    // marker.addListener('click', function() {
+    //     infoWindow.open(map, marker);
+    // });
+    // // Create the map instance
+    // map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-    // Initialize the drawing manager
-    drawingManager = new google.maps.drawing.DrawingManager({
-        drawingMode: null,
-        drawingControl: true,
-        drawingControlOptions: {
-            position: google.maps.ControlPosition.TOP_LEFT,
-            drawingModes: ['polygon', 'polyline'],
-        },
-        polygonOptions: {
-            strokeColor: '#00FF00',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#00FF00',
-            fillOpacity: 0.35,
-        },
-        polylineOptions: {
-            strokeColor: '#0000FF',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-        },
-    });
+    // // Initialize the drawing manager
+    // drawingManager = new google.maps.drawing.DrawingManager({
+    //     drawingMode: null,
+    //     drawingControl: true,
+    //     drawingControlOptions: {
+    //         position: google.maps.ControlPosition.TOP_LEFT,
+    //         drawingModes: ['polygon', 'polyline'],
+    //     },
+    //     polygonOptions: {
+    //         strokeColor: '#00FF00',
+    //         strokeOpacity: 0.8,
+    //         strokeWeight: 2,
+    //         fillColor: '#00FF00',
+    //         fillOpacity: 0.35,
+    //     },
+    //     polylineOptions: {
+    //         strokeColor: '#0000FF',
+    //         strokeOpacity: 0.8,
+    //         strokeWeight: 2,
+    //     },
+    // });
 
     // Set the drawing manager on the map
-    drawingManager.setMap(map);
+    // drawingManager.setMap(map);
 
-    // Add an event listener for when an overlay is complete
-    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-        // Get the overlay (polygon or polyline) that was drawn
-        const overlay = event.overlay;
+    // // Add an event listener for when an overlay is complete
+    // google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+    //     // Get the overlay (polygon or polyline) that was drawn
+    //     const overlay = event.overlay;
 
-        // Add the overlay to the map
-        overlay.setMap(map);
+    //     // Add the overlay to the map
+    //     overlay.setMap(map);
 
-        // Add the overlay to the global array (if you want to keep track of them)
-        markers.push(overlay);
+    //     // Add the overlay to the global array (if you want to keep track of them)
+    //     markers.push(overlay);
 
-        // Add an event listener for click on the overlay
-        google.maps.event.addListener(overlay, 'click', function() {
-            // Handle the click event for the overlay (e.g., show information)
-            console.log('Overlay clicked');
-        });
+    //     // Add an event listener for click on the overlay
+    //     google.maps.event.addListener(overlay, 'click', function() {
+    //         // Handle the click event for the overlay (e.g., show information)
+    //         console.log('Overlay clicked');
+    //     });
 
-        // Reset the drawing mode to null (disables drawing)
-        drawingManager.setDrawingMode(null);
-    });
+    //     // Reset the drawing mode to null (disables drawing)
+    //     drawingManager.setDrawingMode(null);
+    // });
 
     // listOfFarm.forEach(farm => {
     //     const marker = new google.maps.Marker({

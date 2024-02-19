@@ -35,13 +35,20 @@ class RegisteredUserController extends Controller
         // dd($request->all());
         $data= $request->validated();
         $data= $request->all();
-        User::create($data);
-
-        return redirect('/landing')->with('message','Personal informations added successsfully');
+        $users= User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'agri_district' => $request->input('agri_district'),
+            'password' => $request->input('password'),
+           
+           
+        ]);
+        $users->save();
+        return redirect('/')->with('message','Registered uccesssfully');
     
     }
     catch(\Exception $ex){
-        
+        dd($ex);
         return redirect('/register')->with('message','Someting went wrong');
     }
 

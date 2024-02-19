@@ -35,4 +35,8 @@ class LastProductionDatas extends Model
     {
         return $this->belongsTo(FarmProfile::class, 'farm_profiles_id','id')->withDefault();
     }
+    public function personalInformations()
+    {
+        return $this->belongsTo(PersonalInformations::class,'personal_informations_id','id')->withDefault();
+    }
 }
