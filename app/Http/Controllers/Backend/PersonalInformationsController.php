@@ -322,4 +322,52 @@ public function forms() {
 
 
 }
+
+
+
+public function profileFarmer($id) {
+    // agent all data form 
+            try { 
+        
+            $allfarmers =PersonalInformations:: find($id)
+            ->leftJoin('farm_profiles', 'farm_profiles.id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.id', '=', 'personal_informations.id')
+            ->leftJoin('seeds', 'seeds.id', '=', 'personal_informations.id')
+            ->leftJoin('fertilizers', 'fertilizers.id', '=', 'personal_informations.id')
+            ->leftJoin('labors', 'labors.id', '=', 'personal_informations.id')
+            ->leftJoin('pesticides', 'pesticides.id', '=', 'personal_informations.id')
+            ->leftJoin('transports', 'transports.id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.id', '=', 'personal_informations.id')
+           
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*', // Select all columns from machineries_useds
+                'seeds.*',
+                'fertilizers.*',
+                'labors.*',
+                'pesticides.*',
+                'transports.*',
+                'variable_costs.*',
+                'last_production_datas.*', 
+                ) ->first();
+          
+            return view('agent.allfarmersinfo.profile',compact('allfarmers'));
+        } catch (\Exception $ex) {
+            // Log the exception for debugging purposes
+            dd($ex);
+            return redirect()->back()->with('message', 'Something went wrong');
+        }
+    
+    
+    
+    }
+
+
+
+
+
 }

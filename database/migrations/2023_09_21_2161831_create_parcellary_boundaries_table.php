@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('agri_districts_id')->nullable();
             $table->foreignId('ricefield_boarders_id')->nullable();
             $table->string('parcel_name',50);
-            $table->string('area',50)->nullable();
+            $table->double('area',50)->nullable();
+            $table->double('range',15,8)->nullable();
             $table->string('series',50);
             $table->string('tct_no',50);
             $table->string('brgy_name',50);
@@ -44,7 +45,18 @@ return new class extends Migration
             $table->double('parseven_longitude',15,8)->nullable();
             $table->double('pareight_latitude',15,8)->nullable();
             $table->double('pareight_longitude',15,8)->nullable();
+            
+            $table->double('parnine_latitude',15,8)->nullable();
+            $table->double('parnine_longitude',15,8)->nullable();
+            $table->double('parten_latitude',15,8)->nullable();
+            $table->double('parten_longitude',15,8)->nullable();
+            $table->double('pareleven_latitude',15,8)->nullable();
+            $table->double('pareleven_longitude',15,8)->nullable();
+            $table->double('partwelve_latitude',15,8)->nullable();
+            $table->double('partwelve_longitude',15,8)->nullable();
+            $table->string('parcolor',50);
             $table->timestamps();
+
         });
     }
 

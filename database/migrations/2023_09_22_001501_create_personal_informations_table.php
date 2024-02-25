@@ -41,8 +41,8 @@ return new class extends Migration
             $table->string('member_ofany_farmers_ass_org_coop',50);
             $table->string('nameof_farmers_ass_org_coop',50);
             $table->string('name_contact_person',50);
-            $table->string('cp_tel_no');
-            
+            $table->string('cp_tel_no,50');
+            $table->string('personal_photo');
             $table->timestamps();
             
             // $table->id();

@@ -42,6 +42,7 @@ class PersonalInformations extends Model
        'name_contact_person',
        'cp_tel_no',
        'users_id',
+      'personal_photo',
       
     ];
     public function user()

@@ -112,6 +112,11 @@ class PersonalInformationsRequest extends FormRequest
                 'string',
                 'max:50',
             ],
+            'id_type'=>[
+                'required',
+                'string',
+                'max:50',
+            ],
             'gov_id_no'=>[
                 'required',
                 'string',
@@ -159,6 +164,7 @@ class PersonalInformationsRequest extends FormRequest
             'person_with_disability.required'=> 'Please choose yes or no',
             'pwd_id_no.required'=> 'Please input your pwd id no. if you chose yes, if no write n/a',
             'government_issued_id.required'=> 'Please choose yes or no if applicable government_issued_id',
+            'id_type.required'=> 'Please choose applicable Id Type',
             'gov_id_no.required'=> 'Please input your gov id no. if you chose yes, if no write n/a',
             'member_ofany_farmers_ass_org_coop.required'=> 'Please choose yes or no if member_ofany_farmers_ass_org_coop applicable',
             'nameof_farmers_ass_org_coop.required'=> 'Please input your name of farmers ass/org/coop. if you chose yes, if no write n/a',

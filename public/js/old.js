@@ -2,6 +2,7 @@ let map; // Declare the map variable to make it accessible globally
 let markers = []; // Global array to track markers
 let polygons = []; // Global array to track markers
 let infoWindows = []; // Global array to track info windows
+let parcels = []; // Global array to track markers
 function initMap() {
     // Create LatLng objects for different locations
     let map; // Global map variable
@@ -52,11 +53,12 @@ function initMap() {
     }
 
     class farmprofiles {
-        constructor(latitude, longitude, district) {
+        constructor(latitude, longitude, district, description) {
 
             this.latitude = latitude;
             this.longitude = longitude;
             this.district = district;
+            this.description = description;
 
         }
     }
@@ -68,7 +70,8 @@ function initMap() {
         let lat = location.getAttribute("data-lat")
         let long = location.getAttribute("data-lng")
         let loc = location.getAttribute("data-location")
-        listOfprofiles.push(new farmprofiles(parseFloat(lat), parseFloat(long), loc));
+        let description = location.getAttribute("data-description")
+        listOfprofiles.push(new farmprofiles(parseFloat(lat), parseFloat(long), loc, description));
     })
 
     //farmers locations
@@ -76,7 +79,8 @@ function initMap() {
         constructor(latitude, longitude, district, gps_latitude, gps_longitude, last_name, mothers_maiden_name,
             home_address, nameof_farmers_ass_org_coops, tenurial_status, no_of_years_as_farmers, land_title_no,
             lot_no, area_prone_to, ecosystem, type_rice_variety, prefered_variety, plant_schedule_wetseason,
-            plant_schedule_dryseason, no_of_cropping_yr, yield_kg_ha, source_of_capital) {
+            plant_schedule_dryseason, no_of_cropping_yr, yield_kg_ha, source_of_capital, rsba_register,
+            pcic_insured, government_assisted, sex, total_physical_area_has, rice_area_cultivated_has, description) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.location_name = district;
@@ -99,6 +103,15 @@ function initMap() {
             this.no_of_cropping_yr = no_of_cropping_yr;
             this.yield_kg_ha = yield_kg_ha;
             this.source_of_capital = source_of_capital;
+            this.rsba_register = rsba_register;
+            this.pcic_insured = pcic_insured;
+            this.government_assisted = government_assisted;
+            this.sex = sex;
+            this.total_physical_area_has = total_physical_area_has;
+            this.rice_area_cultivated_has = rice_area_cultivated_has;
+            this.description = description;
+
+
 
         }
     }
@@ -129,9 +142,17 @@ function initMap() {
         let cropping = location.getAttribute("data-cropping")
         let yieldha = location.getAttribute("data-yieldha")
         let capital = location.getAttribute("data-capital")
+        let description = location.getAttribute("data-description")
+
+        let rsba = location.getAttribute("data-rsba")
+        let pcic = location.getAttribute("data-pcic")
+        let assisted = location.getAttribute("data-assisted")
+        let sex = location.getAttribute("data-sex")
+        let area_has = location.getAttribute("data-area_has")
+        let cultivated_has = location.getAttribute("data-cultivated_has")
         listOfFarm.push(new farmdistricts(parseFloat(lat), parseFloat(long), loc, parseFloat(farm_lat), parseFloat(farm_long), last, mother, address,
             farm_org, status, parseFloat(years), parseFloat(landtitle), parseFloat(lotno), areaprone, ecosystem, typevariety,
-            prefered, wetseason, dryseason, cropping, yieldha, capital));
+            prefered, wetseason, dryseason, cropping, yieldha, capital, rsba, pcic, assisted, sex, area_has, cultivated_has, description));
     })
 
     //polygons
@@ -139,7 +160,7 @@ function initMap() {
         constructor(verone_latitude, verone_longitude, vertwo_latitude, vertwo_longitude, verthree_latitude, verthree_longitude,
             vertfour_latitude, vertfour_longitude, verfive_latitude, verfive_longitude, versix_latitude,
             versix_longitude, verseven_latitude, verseven_longitude, vereight_latitude, verteight_longitude,
-            strokecolor, area, perimeter) {
+            strokecolor, area, perimeter, poly_name) {
             this.verone_latitude = verone_latitude;
             this.verone_longitude = verone_longitude;
             this.vertwo_latitude = vertwo_latitude;
@@ -159,12 +180,13 @@ function initMap() {
             this.strokecolor = strokecolor;
             this.area = area;
             this.perimeter = perimeter;
+            this.poly_name = poly_name;
         }
     }
 
     const listOfPolygon = []
 
-    const dataBoundary = document.querySelectorAll(".test")
+    const dataBoundary = document.querySelectorAll(".newpolygo")
     dataBoundary.forEach((location, index) => {
         let verone_lat = location.getAttribute("data-verone_lat")
         let verone_long = location.getAttribute("data-verone_lng")
@@ -185,11 +207,12 @@ function initMap() {
         let color = location.getAttribute("data-color")
         let area = location.getAttribute("data-area")
         let perimeter = location.getAttribute("data-perimeter")
+        let polyname = location.getAttribute("data-polyname")
         listOfPolygon.push(new districtPolygon(parseFloat(verone_lat), parseFloat(verone_long),
             parseFloat(vertwo_lat), parseFloat(vertwo_long), parseFloat(verthree_lat), parseFloat(verthree_long),
             parseFloat(vertfour_lat), parseFloat(vertfour_long), parseFloat(verfive_lat), parseFloat(verfive_long),
             parseFloat(versix_lat), parseFloat(versix_long), parseFloat(verseven_lat), parseFloat(verseven_long),
-            parseFloat(vereight_lat), parseFloat(verteight_long), color, area, perimeter,
+            parseFloat(vereight_lat), parseFloat(verteight_long), color, area, perimeter, polyname
         ));
     })
 
@@ -239,7 +262,7 @@ function initMap() {
         let partwolat = parcel.getAttribute("data-partwolat")
         let partwolong = parcel.getAttribute("data-partwolong")
         let parthreelat = parcel.getAttribute("data-parthreelat")
-        let parthreelong = parcel.getAttribute("parthree_longitude")
+        let parthreelong = parcel.getAttribute("data-parthreelong")
         let parfourlat = parcel.getAttribute("data-parfourlat")
         let parfourlong = parcel.getAttribute("data-parfourlong")
         let parfivelat = parcel.getAttribute("data-parfivelat")
@@ -261,8 +284,8 @@ function initMap() {
         let partwelvelong = parcel.getAttribute("data-pareightlong")
 
 
-        let parcolors = parcel.getAttribute("data-parcolor")
-        let parname = parcel.getAttribute("data-parcel_name")
+        let parcolors = parcel.getAttribute("data-parcolors")
+        let parname = parcel.getAttribute("data-parname")
 
         listOfParcels.push(new parcelboarders(parseFloat(paronelat), parseFloat(paronelong),
             parseFloat(partwolat), parseFloat(partwolong), parseFloat(parthreelat), parseFloat(parthreelong),
@@ -286,61 +309,235 @@ function initMap() {
 
     //Districts informations info window
     function districtContent(profiles) {
+        const userRole = getCurrentUserRole();
+        let editButton = '';
+
+        if (userRole === 'agent' || userRole === 'admin') {
+            editButton = `<button onclick="editFarm(${profiles.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
+        }
         return `
-        <div>
-        
-        <strong> ${profiles.district}</strong><br>
-        Latitude: ${profiles.latitude}<br>
-        Longitude: ${profiles.longitude}<br>
-    
-        </div>
+        <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+        <h4 style="margin-bottom: 10px;Align-tex:center;">Agri-District</h4>
+        <table style="width:100%; border-collapse: collapse;">
+        <tr style="background-color: #c6e2ff;">
+            <td style="padding: 8px;"><strong>District Name:</strong></td>
+            <td style="padding: 8px;">${profiles.district}</td>
+        </tr>
+        <tr style="background-color:#eaf7fa;">
+            <td style="padding: 8px; "><strong>Description:</strong></td>
+            <td style="padding: 8px;">${profiles.description}</td>
+        </tr>
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong>Location:</strong></td>
+        <td style="padding: 8px;">${profiles.latitude}</td>
+    </tr>
+    <tr style="background-color:#eaf7fa;">
+    <td style="padding: 8px; "><strong>Location :</strong></td>
+    <td style="padding: 8px;">${profiles.longitude}</td>
+</tr>
+    </table>
+    ${editButton} 
+    </div>
         `;
     }
 
     //Farmers demographic informations functions info window
+    function getCurrentUserRole() {
+        // Implement logic to fetch the current user's role from your authentication system
+        // For this example, I'm just returning a hardcoded role
+        return 'agent'; // or 'admin', 'user', etc.
+    }
+
     function generateInfoWindowContent(farm) {
+        const userRole = getCurrentUserRole();
+        let editButton = '';
+
+        if (userRole === 'agent' || userRole === 'admin') {
+            editButton = `<button onclick="editFarm(${farm.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
+        }
         return `
-            <div>
-                
-                Name: <strong>${farm.last_name}</strong><br>
-                Mother's maidensName: ${farm.mothers_maiden_name}<br>
-                Home Address: ${farm.home_address}<br>
-                GPS_Latitude: ${farm.gps_latitude ? farm.gps_latitude : farm.latitude}<br>
-                GPS_Longitude: ${farm.gps_longitude ? farm.gps_longitude : farm.longitude}<br>
-               farmers_org/assoc/coop: ${farm.nameof_farmers_ass_org_coops}<br>
-               Tenurial status: ${farm.tenurial_status}<br>
-               No. of years as farmers; ${farm.no_of_years_as_farmers}<br>
-               Land Title no.: ${farm.land_title_no}<br>
-               Lot No.: ${farm.lot_no}<br>
-               Area Prone to: ${farm.area_prone_to}<br>
-               Ecosystem: ${farm.ecosystem}<br>
-               Type of rice variety: ${farm.type_rice_variety}<br>
-               prefered variety: ${farm.prefered_variety}<br>
-               Plant Schedule(wetseason): ${farm.plant_schedule_wetseason}<br>
-               Plant Schedule(dryseason):${farm.plant_schedule_dryseason}<br>
-               No.cropping/yr:${farm.no_of_cropping_yr}<br>
-               Yield kg/has: ${farm.yield_kg_ha}<br>
-               Source of Capaital: ${farm.source_of_capital}<br>
-                <!-- Add more farmer-specific information as needed -->
-            </div>
+        <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+        <h4 style="margin-bottom: 10px;Align-tex:center;">Farmer Informations</h4>
+        <table style="width:100%; border-collapse: collapse;">
+        <tr style="background-color: #c6e2ff;">
+            <td style="padding: 8px;"><strong>FullName:</strong></td>
+            <td style="padding: 8px;">${farm.last_name}</td>
+        </tr>
+        <tr style="background-color:#eaf7fa;">
+            <td style="padding: 8px; "><strong>Mother's Maiden Name:</strong></td>
+            <td style="padding: 8px;">${farm.mothers_maiden_name}</td>
+        </tr>
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong>Sex:</strong></td>
+        <td style="padding: 8px;">${farm.sex}</td>
+    </tr>
+        <tr style="background-color: #eaf7fa;">
+            <td style="padding: 8px;"><strong>Home Address:</strong></td>
+            <td style="padding: 8px;">${farm.home_address}</td>
+        </tr>
+        <tr style="background-color:#c6e2ff;">
+            <td style="padding: 8px;"><strong>Tenurial Status:</strong></td>
+            <td style="padding: 8px;">${farm.tenurial_status}</td>
+        </tr >
+        <tr style="background-color: #eaf7fa;">
+            <td style="padding: 8px; "><strong>No. of Years as farmers:</strong></td>
+            <td style="padding: 8px;">${farm.no_of_years_as_farmers}</td>
+        </tr>
+        <tr style="background-color: #c6e2ff;">
+            <td style="padding: 8px;"><strong>GPS Latitude:</strong></td>
+            <td style="padding: 8px;">${farm.gps_latitude ? farm.gps_latitude : farm.latitude}</td>
+        </tr >
+        <tr style="background-color: #eaf7fa;">
+            <td style="padding: 8px; "><strong>GPS Longitude:</strong></td>
+            <td style="padding: 8px;">${farm.gps_longitude ? farm.gps_longitude : farm.longitude}</td>
+        </tr>
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong>Land Title No.:</strong></td>
+        <td style="padding: 8px;">${farm.land_title_no}</td>
+        </tr>
+        <tr style="background-color: #eaf7fa;">
+            <td style="padding: 8px;"><strong>Land No.:</strong></td>
+            <td style="padding: 8px;">${farm.lot_no}</td>
+        </tr >
+        <tr style="background-color:#c6e2ff;">
+        <td style="padding: 8px;"><strong> Area Prone to:</strong></td>
+        <td style="padding: 8px;">${farm.area_prone_to}</td>
+        </tr>
+        <tr style="background-color: #eaf7fa;">
+            <td style="padding: 8px;"><strong>Ecosystem:</strong></td>
+            <td style="padding: 8px;">${farm.ecosystem}</td>
+        </tr >
+        <tr style="background-color:#c6e2ff;">
+        <td style="padding: 8px;"><strong> Type of Rice Variety:</strong></td>
+        <td style="padding: 8px;">${farm.type_rice_variety}</td>
+        </tr>
+        <tr style="background-color: #eaf7fa;">
+            <td style="padding: 8px;"><strong>Preferred Variety:</strong></td>
+            <td style="padding: 8px;">${farm.prefered_variety}</td>
+        </tr >
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong>Plant Schedule(wetseason):</strong></td>
+        <td style="padding: 8px;">${farm.plant_schedule_wetseason}</td>
+        </tr>
+        <tr style="background-color: #eaf7fa;">
+            <td style="padding: 8px;"><strong> Plant Schedule(dryseason):</strong></td>
+            <td style="padding: 8px;">${farm.plant_schedule_dryseason}</td>
+        </tr >
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong> No. Cropping/yr:</strong></td>
+        <td style="padding: 8px;">${farm.no_of_cropping_yr}</td>
+        </tr>
+        <tr style="background-color: #eaf7fa;">
+            <td style="padding: 8px;"><strong>  Yield (kg/has):</strong></td>
+            <td style="padding: 8px;">${farm.yield_kg_ha}</td>
+        </tr >
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong>RSBA Registered:</strong></td>
+        <td style="padding: 8px;">${farm.rsba_register}</td>
+        </tr>
+        <tr style="background-color: #eaf7fa;">
+        <td style="padding: 8px;"><strong> PCIC Insured:</strong></td>
+        <td style="padding: 8px;">${farm.pcic_insured}</td>
+        </tr >
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong>Gov. Assisted:</strong></td>
+        <td style="padding: 8px;">${farm.government_assisted}</td>
+        </tr>
+
+        <tr style="background-color: #eaf7fa;">
+        <td style="padding: 8px;"><strong>Total Physical Area(Has):</strong></td>
+        <td style="padding: 8px;">${farm.total_physical_area_has}</td>
+        </tr >
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong>Rice Cultivated Area(Has):</strong></td>
+        <td style="padding: 8px;">${farm.rice_area_cultivated_has}</td>
+        </tr>
+    </table>
+    ${editButton} 
+    </div>
         `;
     }
 
     //Districts informations info window
     function PolygonInfo(polygon) {
-        return `
-                <div>
-                
-             
-               Area(m^2): <strong> ${polygon.area}</strong><br>
-               Perimeter: <strong> ${polygon.perimeter}</strong><br>
-             
 
-                </div>
-                `;
+        const userRole = getCurrentUserRole();
+        let editButton = '';
+
+        if (userRole === 'agent' || userRole === 'admin') {
+            editButton = `<button onclick="editFarm(${polygon.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
+        }
+        return `
+        <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+        <h4 style="margin-bottom: 10px;Align-tex:center;">Polygons</h4>
+        <table style="width:100%; border-collapse: collapse;">
+                <tr style="background-color: #c6e2ff;">
+                    <td style="padding: 8px;"><strong>PolyName:</strong></td>
+                    <td style="padding: 8px;">${polygon.poly_name}</td>
+                </tr>
+                <tr style="background-color:#eaf7fa;">
+                    <td style="padding: 8px; "><strong>Area:</strong></td>
+                    <td style="padding: 8px;">${polygon.area}</td>
+                </tr>
+                <tr style="background-color: #c6e2ff;">
+                <td style="padding: 8px;"><strong>Perimeter:</strong></td>
+                <td style="padding: 8px;">${polygon.perimeter}</td>
+                </tr>
+                <tr style="background-color:#eaf7fa;">
+                <td style="padding: 8px; "><strong>Area:</strong></td>
+                <td style="padding: 8px;">${polygon.area}</td>
+            </tr>
+                <tr style="background-color: #c6e2ff;">
+                <td style="padding: 8px;"><strong>Perimeter:</strong></td>
+                <td style="padding: 8px;">${polygon.perimeter}</td>
+                </tr>
+                <tr style="background-color:#eaf7fa;">
+                <td style="padding: 8px; "><strong>Area:</strong></td>
+                <td style="padding: 8px;">${polygon.area}</td>
+                </tr>
+    </table>
+    ${editButton} 
+    </div>
+        `;
     }
 
+    //Parcels informations info window
+    function ParcelInfo(parcelary) {
+        const userRole = getCurrentUserRole();
+        let editButton = '';
 
+        if (userRole === 'agent' || userRole === 'admin') {
+            editButton = `<button onclick="editFarm(${parcelary.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
+        }
+        return `
+        <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+        <h4 style="margin-bottom: 10px;Align-tex:center;">Parcellary Boarders</h4>
+        <table style="width:100%; border-collapse: collapse;">
+        <tr style="background-color: #c6e2ff;">
+            <td style="padding: 8px;"><strong>Parcel Name:</strong></td>
+            <td style="padding: 8px;">${parcelary.parcel_name}</td>
+        </tr>
+        <tr style="background-color:#eaf7fa;">
+            <td style="padding: 8px; "><strong>Description:</strong></td>
+            <td style="padding: 8px;">${parcelary.description}</td>
+        </tr>
+        <tr style="background-color: #c6e2ff;">
+        <td style="padding: 8px;"><strong>Location:</strong></td>
+        <td style="padding: 8px;">${parcelary.latitude}</td>
+    </tr>
+    <tr style="background-color:#eaf7fa;">
+    <td style="padding: 8px; "><strong>Location :</strong></td>
+    <td style="padding: 8px;">${parcelary.longitude}</td>
+</tr>
+    </table>
+    ${editButton} 
+    </div>
+        `;
+    }
     // Access the KML file name from the global window object
 
     // Add this code for the KML layer (if needed)
@@ -397,6 +594,7 @@ function initMap() {
         const position = {
             lat: profiles.latitude,
             lng: profiles.longitude,
+
 
 
         };
@@ -530,8 +728,8 @@ function initMap() {
         console.log(parcelary.pareleven_longitude)
         console.log(parcelary.partwelve_latitude)
         console.log(parcelary.partwelve_longitude)
-
         console.log(parcelary.parcolor)
+
 
 
         //coordinates of per points using lang
@@ -553,7 +751,7 @@ function initMap() {
 
 
         //polygons fetcing of for each data from databases then display it in the map
-        const permDistrictPolygon = new google.maps.Polygon({
+        const permDistrictParcel = new google.maps.Polygon({
             paths: permParcelCoordinates,
             strokeColor: parcelary.parcolor,
             strokeOpacity: 0.8,
@@ -561,16 +759,16 @@ function initMap() {
             fillColor: 'transparent', // Set fillColor to transparent
             fillOpacity: 0.1 // Set fillOpacity to 0 for transparency
         });
-        permDistrictPolygon.setMap(map);
+        permDistrictParcel.setMap(map);
 
 
-        const infoWindowContent = PolygonInfo(parcelary);
+        const infoWindowContent = ParcelInfo(parcelary);
 
         const infoWindow = new google.maps.InfoWindow({
             content: infoWindowContent,
         });
 
-        permDistrictPolygon.addListener('click', function(event) {
+        permDistrictParcel.addListener('click', function(event) {
             // Close all other open info windows
             infoWindows.forEach(info => info.close());
 
@@ -584,7 +782,7 @@ function initMap() {
             infoWindows.push(infoWindow);
         });
 
-        polygons.push(permDistrictPolygon);
+        parcels.push(permDistrictParcel);
 
     });
 

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('landingpage', function (Blueprint $table) {
             $table->id();
             $table->string('logo',100);
-            $table->string('imageslider',100);
-            $table->string('description',100);
+            $table->string('imageslider');
+            $table->string('description');
             $table->timestamps();
         });
     }

@@ -40,15 +40,16 @@ class RegisteredUserController extends Controller
             'email' => $request->input('email'),
             'agri_district' => $request->input('agri_district'),
             'password' => $request->input('password'),
-           
+            'role' => $request->input('role'),
            
         ]);
+       
         $users->save();
-        return redirect('/')->with('message','Registered uccesssfully');
+        return redirect('/login')->with('message','Registered uccesssfully');
     
     }
     catch(\Exception $ex){
-        dd($ex);
+        // dd($ex);
         return redirect('/register')->with('message','Someting went wrong');
     }
 

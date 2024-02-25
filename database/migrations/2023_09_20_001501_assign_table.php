@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('assign', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id')->unique();
-            $table->foreignId('agent_id')->unique();
-            $table->foreignId('uacc_id_id')->unique();
+            $table->foreignId('admin_id')->nullable();
+            $table->foreignId('agent_id')->nullable();
+            $table->foreignId('uacc_id_id')->nullable();
             $table->timestamps();
     
           

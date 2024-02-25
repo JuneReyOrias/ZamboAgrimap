@@ -18,7 +18,7 @@ return new class extends Migration
         $table->string('district',50);
         $table->string('role',30);
         $table->string('passwords');
-        $table->foreignId('user_id')->unique();
+        $table->foreignId('user_id')->nullable();
         $table->timestamps();
 
     });

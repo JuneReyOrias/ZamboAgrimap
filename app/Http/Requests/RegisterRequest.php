@@ -41,14 +41,14 @@ class RegisterRequest extends FormRequest
             'email'=>[
                 'required',
                 'string',
-                'max:250',
+                'max:150',
                 'unique:'.User::class,
             ],
             
             'agri_district'=>[
                 'required',
                 'string',
-                'max:10',
+                'max:50',
             ],
             'password'=>[
                 'required',
@@ -63,10 +63,10 @@ class RegisterRequest extends FormRequest
     }
     public function messages(){
        return [
-            'name.required'=>'Please input name',
-            'email.required'=>'Please input email',
-            'agri_district.required'=>'Please input agri_district',
-            'password.required'=>'Please input password',
+            'name.required'=>'Please input your Fullname',
+            'email.required'=>'Please input your email',
+            'agri_district.required'=>'Please choose your agri_district you belong',
+            'password.required'=>'Please input your password',
            
             
        ];

@@ -20,7 +20,7 @@
                
             @endif
             
-            <h6 class="card-title"><span>VI.</span>Last Production Data Update</h6>
+            <h6 class="card-title"><span>VI.</span>Last Production Data</h6>
   
             <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
          

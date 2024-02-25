@@ -54,6 +54,7 @@
 				<div class="row w-100 mx-0 auth-page">
 					<div class="col-md-8 col-xl-6 mx-auto">
 						<div class="card-register">
+              
 							<div class="row">
                 <div class="col-md-4 pe-md-0">
                   <div class="auth-side-wrapper">
@@ -63,13 +64,16 @@
                 <div class="col-md-8 ps-md-0">
                   <div class="auth-form-wrapper px-4 py-5">
                     <a href="" class="noble-ui-logo logo-light d-block mb-2">Web<span>Agrimap</span></a>
-                    <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5>
+                    <h5 class="text-muteds fw-normal mb-4">Welcome back! Log in to your account.</h5>
 
                    <form class="forms-sample " method="post" action="{{ route('login') }}">
                       @csrf
                     <div class="mb-3">
                         <label for="login" class="form-label">Email address</label>
                         <input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username">
+                        @error('email')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                       </div>
                       <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
@@ -77,20 +81,28 @@
                         type="password"
                         name="password"
                         required autocomplete="current-password">
+                        <div class="form-check mb-3">
+                          <input type="checkbox" class="form-check-input"id="togglePasswordVisibilityCheckbox">
+                          <label class="form-check-label" for="togglePasswordVisibilityCheckbox">Show Password</label>
+                        </div>
+
+                        @error('password')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                       </div>
-                      <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="authCheck">
-                        <label class="form-check-label" for="authCheck">
+                      {{-- <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input"id="togglePasswordVisibilityCheckbox">
+                        <label class="form-check-label" for="togglePasswordVisibilityCheckbox">
                           Remember me
                         </label>
-                      </div>
+                      </div> --}}
                       <div>
                        <!-- <a href="../../dashboard.html" class="btn btn-primary me-2 mb-2 mb-md-0 text-white">Login</a>-->
                        <button type="submit" class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
                           Login
                         </button>
                       </div>
-                      <a href="{{route('register')}}" class="d-block mt-3 text-muted">Create Account? Sign up</a>
+                      <a href="{{route('register')}}" class="d-block mt-3 text-muteds">Create Account? Sign up</a>
                     </form>
                   </div>
                 </div>
@@ -102,6 +114,18 @@
 			</div>
 		</div>
 	</div>
+  <script>
+    document.getElementById("togglePasswordVisibilityCheckbox").addEventListener("change", function () {
+        var passwordInput = document.getElementById("password");
+
+        if (this.checked) {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    });
+</script>
+
 
 	<!-- core:js -->
 	<script src="{{asset('../../../assets/vendors/core/core.js')}}"></script>

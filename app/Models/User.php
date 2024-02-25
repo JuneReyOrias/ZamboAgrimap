@@ -26,7 +26,7 @@ class User extends Authenticatable
         'agri_district',
         'password',
         'role',
-        'image'
+        'image',
 
       
     ];

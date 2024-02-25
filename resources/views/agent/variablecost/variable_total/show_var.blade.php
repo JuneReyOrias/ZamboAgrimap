@@ -19,9 +19,8 @@
             </div>
                
             @endif
-            <h6 class="card-title"><span>III.</span>Fixed Cost Update</h6><div class="navbar-collapse">
-                    
-              
+            <h6 class="card-title"><span>VI.</span>Variable Cost</h6>
+            <h5 class="card-title"><span>F.</span>Variable Cost Total</h5>
             
        
             <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
@@ -32,7 +31,7 @@
                 <thead class="thead-light">
                     <tr >
                         <th>No.</th>
-                        <th>Variable id.</th>
+                        <th>seeds id.</th>
                         <th>Personl Info id.</th>
                         <th>farm profile id</th>
                         <th>seed id</th>

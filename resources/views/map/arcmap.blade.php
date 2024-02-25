@@ -13,13 +13,14 @@
    
     {{-- <!-- File input for uploading files -->
     <input type="file" id="fileInput" accept=".kml, .kmz, .geojson"> --}}
-    <input type="file" id="fileInput" accept=".kml,.kmz">
+    <input type="hidden" id="fileInput" accept=".kml,.kmz">
  
     @foreach($farmLocation as $location)
     <div class="test" 
       data-lat="{{ $location->latitude }}" 
       data-lng="{{ $location->longitude }}" 
       data-location="{{ $location->district}}" 
+      data-description="{{ $location->description}}" 
       data-lastname="{{ $location->last_name.', '.$location->first_name.', '.$location->middle_name}}" 
       data-mothers="{{ $location->mothers_maiden_name}}" 
       data-address="{{$location->home_address}}"
@@ -94,6 +95,105 @@
     data-vertfour_lng="{{ $location->vertfour_longitude }}" ></div>
 
 @endforeach  --}}
+<div>
+  @php
+$id = Auth::id();
+
+// Find the user by their ID and eager load the personalInformation relationship
+$location= App\Models\Polygon::all();
+
+@endphp
+@foreach ($location as $location)
+    <div class="newpolygo"
+      data-verone_lat="{{ $location->verone_latitude }}" 
+      data-verone_lng="{{ $location->verone_longitude }}" 
+      data-vertwo_lat="{{ $location->vertwo_latitude }}" 
+      data-vertwo_lng="{{ $location->vertwo_longitude }}" 
+      data-verthree_lat="{{ $location->verthree_latitude }}" 
+      data-verthree_lng="{{ $location->verthree_longitude }}" 
+      data-vertfour_lat="{{ $location->vertfour_latitude }}" 
+      data-vertfour_lng="{{ $location->vertfour_longitude }}" 
+      data-verfive_lat="{{ $location->verfive_latitude }}" 
+      data-verfive_lng="{{ $location->verfive_longitude }}" 
+      data-versix_lat="{{ $location->versix_latitude }}" 
+      data-versix_lng="{{ $location->versix_longitude }}" 
+      data-verseven_lat="{{ $location->verseven_latitude }}" 
+      data-verseven_lng="{{ $location->verseven_longitude }}" 
+      data-vereight_lat="{{ $location->vereight_latitude }}" 
+      data-verteight_lng="{{ $location->verteight_longitude }}"
+      data-color="{{ $location->strokecolor }}"
+      data-area= "{{$location->area}}"
+      data-perimeter= "{{$location->perimeter}}"
+      data-polyname= "{{$location->poly_name}}"
+     >
+    
+
+    </div>
+@endforeach
+</div>
+
+
+
+
+
+
+
+
+<div>
+@php
+$id = Auth::id();
+
+// Find the user by their ID and eager load the personalInformation relationship
+$parcels= App\Models\ParcelBoarder::all();
+
+@endphp
+@foreach ($parcels as $parcel )
+  
+
+<div class="newparcel" 
+      
+      data-paronelat ={{$parcel->parone_latitude}}
+      data-paronelong ={{$parcel->parone_longitude}}
+      data-partwolat ={{$parcel->partwo_latitude}}
+      data-partwolong ={{$parcel->partwo_longitude}}
+      data-parthreelat ={{$parcel->parthree_latitude}}
+      data-parthreelong ={{$parcel->parthree_longitude}}
+      data-parfourlat ={{$parcel->parfour_latitude}}
+      data-parfourlong ={{$parcel->parfour_longitude}}
+      data-parfivelat ={{$parcel->parfive_latitude}}
+      data-parfivelong ={{$parcel->parfive_longitude}}
+      data-parsixlat ={{$parcel->parsix_latitude}}
+      data-parsixlong ={{$parcel->parsix_longitude}}
+      data-parsevenlat ={{$parcel->parseven_latitude}}
+      data-parsevenlong ={{$parcel->parseven_longitude}}
+      data-pareightlat ={{$parcel->pareight_latitude}}
+      data-pareightlong ={{$parcel->pareight_longitude}}
+      data-parninelat ={{$parcel->parnine_latitude}}
+      data-parninelong ={{$parcel->parnine_longitude}}
+      data-partenlat ={{$parcel->parten_latitude}}
+      data-partenlong ={{$parcel->parten_longitude}}
+      data-parelevenlat ={{$parcel->pareleven_latitude}}
+      data-parelevenlong ={{$parcel->pareleven_longitude}}
+      data-paronetwelvelat ={{$parcel->partwelve_latitude}}
+      data-partwelvelong ={{$parcel->partwelve_longitude}}
+      data-parcolors ={{$parcel->parcolor}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+      data-parname ={{$parcel->parcel_name}}
+
+
+></div>
+
+@endforeach
+
+</div> 
 
   </nav>
 

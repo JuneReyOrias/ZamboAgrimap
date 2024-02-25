@@ -47,11 +47,13 @@ class FarmProfile extends Model
             'yield_kg_ha',
             'rsba_register',
             'pcic_insured',
+            'government_assisted',
             'source_of_capital',
             'remarks_recommendation',
             'oca_district_office',
             'name_technicians',
             'date_interview',
+        '    farm_images',
   'user_id', 
   'personal_informations_id',
     ];

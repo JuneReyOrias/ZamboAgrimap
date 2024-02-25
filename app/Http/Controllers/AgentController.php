@@ -126,7 +126,7 @@ class AgentController extends Controller
         
         }
         catch(\Exception $ex){
-            dd($ex); // Debugging statement to inspect the exception
+            // dd($ex); // Debugging statement to inspect the exception
             return redirect('/add-personal-info')->with('message','Someting went wrong');
             
         }   
@@ -146,25 +146,25 @@ public function fetchtables()
         // Fetch farm locations with related data
         $farmLocation = DB::table('personal_informations')
             ->join('agri_districts', 'personal_informations.agri_districts_id', '=', 'agri_districts.id')
-            ->leftJoin('polygons', 'personal_informations.polygons_id', '=', 'polygons.id')
-            ->select('personal_informations.*', 'agri_districts.*', 'polygons.*')
+            // ->leftJoin('polygons', 'personal_informations.polygons_id', '=', 'polygons.id')
+            ->select('personal_informations.*', 'agri_districts.*',)
             ->get();
 
         // Initialize arrays to store agri_district_ids and polygons_ids
         $agriDistrictIds = [];
-        $polygonsIds = [];
+        
 
         // Loop through each row of the result to extract agri_district_id and polygons_id
         foreach ($farmLocation as $location) {
             $agriDistrictIds[] = $location->id; // Assuming id refers to agri_district_id
-            $polygonsIds[] = $location->id; // Assuming id refers to polygons_id
+           
         }
 
         // Pass data to the view
         return view('agent.farmprofile.add_profile', [
             'farmLocation' => $farmLocation,
             'agriDistrictIds' => $agriDistrictIds,
-            'polygonsIds' => $polygonsIds,
+           
         ]);
     } catch (\Exception $ex) {
         // Log the exception for debugging purposes
@@ -235,6 +235,7 @@ public function AddFarmProfile(FarmProfileRequest $request)
        'yield_kg_ha' => request('yield_kg_ha'),
        'rsba_register' => request('rsba_register'),
        'pcic_insured' => request('pcic_insured'),
+       'government_assisted' => request('government_assisted'),
        'source_of_capital' => request('source_of_capital'),
        'remarks_recommendation' => request('remarks_recommendation'),
        'oca_district_office' => request('oca_district_office'),
@@ -245,8 +246,7 @@ public function AddFarmProfile(FarmProfileRequest $request)
             
 
 
-
-$farmProfile->save();
+// $farmProfile->save();
 
          
     
@@ -254,7 +254,7 @@ $farmProfile->save();
 return redirect('/add-fixed-cost')->with('message', 'Farm Profile added successfully');
 } catch (\Exception $ex) {
     // Handle the exception
-    dd($ex);
+//    dd($ex);
     return redirect('/add-farm-profile')->with('message', 'Something went wrong');
 }
        
@@ -360,7 +360,7 @@ public function AddMused(MachineriesUsedtRequest $request)
         ]);
         // dd($machineused);
         $machineused->save();
-        return redirect('/add-last-production')->with('message','Fixed Cost added successsfully');
+        return redirect('/add-variable-cost-seed')->with('message','Fixed Cost added successsfully');
     
     }
     catch(\Exception $ex){
@@ -425,7 +425,7 @@ public function AddNewProduction(LastProductionDatasRequest $request)
         
             ]);
             $lastproduction->save();
-            return redirect('/add-variable-cost-seed')->with('message','Last Production Data added successsfully');
+            return redirect('/add-personal-info')->with('message','Rice Survey Form Completed!');
         
         }
         catch(\Exception $ex){
@@ -595,9 +595,9 @@ public function AddNewVartotal(VariableCostRequest $request)
                 'total_variable_cost' => request('total_variable_cost'),
                ]);
 
-            //    dd($vartotal);
+              
                $vartotal->save();
-                return redirect('/add-personal-info')->with('message','Rice Form Survey Completed Successfully');
+                return redirect('/add-last-production')->with('message','Rice Form Survey Completed Successfully');
             
             }
             catch(\Exception $ex){
@@ -1134,13 +1134,13 @@ public function vardelete($id) {
 
 
 
-public function AdminProfile(){
+public function AgentProfile(){
     $id =Auth::user()->id;
-    $profileData = User:: find($id);
-    return view('agent.profile.agent_profiles', compact('profileData'));
+    $agent = User:: find($id);
+    return view('agent.profile.agent_profiles', compact('agent'));
 }
 
-public function updateAdmin(Request $request){
+public function Agentupdate(Request $request){
    
     try {
          $id =Auth::user()->id;
@@ -1166,17 +1166,16 @@ public function updateAdmin(Request $request){
             $data->image = $imagename;
         }
 
-
     $data->name= $request->name;
     $data->email= $request->email;
     $data->agri_district= $request->agri_district;
-  
+    $data->password= $request->password;
     $data->role= $request->role;
-    dd($data);
+ 
      
    $data->save();
      // Redirect back after processing
-     return redirect()->route('/agent/profile')->with('message', 'Profile updated successfully');
+     return redirect()->route('agent.profile.agent_profiles')->with('message', 'Profile updated successfully');
     } else {
         // Redirect back with error message if product not found
         return redirect()->back()->with('error', 'Product not found');
@@ -1191,10 +1190,368 @@ public function updateAdmin(Request $request){
 
 
 
+// Seeds data update and view accessed by agent
+
+public function SeedDataView(){
+    $seeds= Seed::orderBy('id','desc')->paginate(10);
+    return view('agent.variablecost.seed.show_seeds_data',compact('seeds'));
+}
 
 
 
 
+
+public function SeedsUpdate($id){
+    $seeds= Seed::find($id);
+    return view('agent.variablecost.seed.seeds_form_edit',compact('seeds'));
+}
+
+public function SeedDataupdate(SeedRequest $request,$id)
+{
+
+   try{
+       
+
+       $data= $request->validated();
+       $data= $request->all();
+       
+       $data=Seed::find($id);
+
+       $data->seed_name = $request->seed_name;  
+       $data->seed_type = $request->seed_type;
+       $data->unit = $request->unit;
+       $data->quantity = $request->quantity;
+       $data->unit_price = $request->unit_price;
+
+       $data->total_seed_cost = $request->total_seed_cost;
+
+       $data->save();     
+       
+   
+       return redirect('/show-variable-cost-seed')->with('message','Seeds Data Updated successsfully');
+   
+   }
+   catch(\Exception $ex){
+    //    dd($ex); // Debugging statement to inspect the exception
+       return redirect('/update-variable-cost-seed/{seeds}')->with('message','Someting went wrong');
+       
+   }   
+} 
+
+
+
+
+
+
+public function SeedsDelete($id) {
+   try {
+       // Find the personal information by ID
+       $seeds= Seed::find($id);
+
+       // Check if the personal information exists
+       if (! $seeds) {
+           return redirect()->back()->with('error', 'Farm Profilenot found');
+       }
+
+       // Delete the personal information data from the database
+      $seeds->delete();
+
+       // Redirect back with success message
+       return redirect()->back()->with('message', 'Seed data deleted Successfully');
+
+   } catch (\Exception $e) {
+    //    dd($e);// Handle any exceptions and redirect back with error message
+       return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+   }
+}
+
+
+
+// labors data edit and view by agentt
+
+
+public function LaborsDataView(){
+    $labors= Labor::orderBy('id','desc')->paginate(10);
+    return view('agent.variablecost.labor.show_laborData',compact('labors'));
+}
+
+
+
+
+
+public function LaborUpdate($id){
+    $labors= Labor::find($id);
+    return view('agent.variablecost.labor.formEdit_labors',compact('labors'));
+}
+
+public function LaborDataupdate(LaborRequest $request,$id)
+{
+
+   try{
+       
+
+       $data= $request->validated();
+       $data= $request->all();
+       
+       $data=Labor::find($id);
+
+       $data->no_of_person = $request->no_of_person;  
+       $data->rate_per_person = $request->rate_per_person;
+       $data->total_labor_cost = $request->total_labor_cost;
+       
+
+       $data->save();     
+       
+   
+       return redirect('/show-variable-cost-labor')->with('message','Labor Data Updated successsfully');
+   
+   }
+   catch(\Exception $ex){
+    //    dd($ex); // Debugging statement to inspect the exception
+       return redirect('/update-variable-cost-labor/{labors}')->with('message','Someting went wrong');
+       
+   }   
+} 
+
+
+
+
+
+
+public function LaborsDelete($id) {
+   try {
+       // Find the personal information by ID
+       $labors= Labor::find($id);
+
+       // Check if the personal information exists
+       if (! $labors) {
+           return redirect()->back()->with('error', 'Farm Profilenot found');
+       }
+
+       // Delete the personal information data from the database
+      $labors->delete();
+
+       // Redirect back with success message
+       return redirect()->back()->with('message', 'labor data deleted Successfully');
+
+   } catch (\Exception $e) {
+    //    dd($e);// Handle any exceptions and redirect back with error message
+       return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+   }
+}
+
+
+
+// eidt ,view and delete of fertilizer
+
+
+public function FertilizerDataView(){
+    $fertilizers= Fertilizer::orderBy('id','desc')->paginate(10);
+    return view('agent.variablecost.fertilizers.show_fertilizeData',compact('fertilizers'));
+}
+
+
+
+
+
+public function FertilizerUpdate($id){
+    $fertilizers= Fertilizer::find($id);
+    return view('agent.variablecost.fertilizers.formsEdit_fertilizeData',compact('fertilizers'));
+}
+
+public function FertilizerDataupdate(FertilizerRequest $request,$id)
+{
+
+   try{
+       
+
+       $data= $request->validated();
+       $data= $request->all();
+       
+       $data=Fertilizer::find($id);
+
+       $data->name_of_fertilizer = $request->name_of_fertilizer;  
+       $data->type_of_fertilizer = $request->type_of_fertilizer;
+       $data->no_ofsacks = $request->no_ofsacks;
+       $data->unitprice_per_sacks = $request->unitprice_per_sacks;
+       $data->total_cost_fertilizers = $request->total_cost_fertilizers;
+
+       $data->save();     
+       
+   
+       return redirect('/show-variable-cost-fertilizers')->with('message','Fertilizer Data Updated successsfully');
+   
+   }
+   catch(\Exception $ex){
+    //    dd($ex); // Debugging statement to inspect the exception
+       return redirect('/update-variable-cost-fertilizers/{fertilizers}')->with('message','Someting went wrong');
+       
+   }   
+} 
+
+
+public function FertilizerDelete($id) {
+   try {
+       // Find the personal information by ID
+       $fertilizers= Fertilizer::find($id);
+
+       // Check if the personal information exists
+       if (! $fertilizers) {
+           return redirect()->back()->with('error', 'Farm Profilenot found');
+       }
+
+       // Delete the personal information data from the database
+      $fertilizers->delete();
+
+       // Redirect back with success message
+       return redirect()->back()->with('message', 'Fertilizer data deleted Successfully');
+
+   } catch (\Exception $e) {
+    //    dd($e);// Handle any exceptions and redirect back with error message
+       return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+   }
+}
+
+
+
+// edit, delete and view 0f pesticides data by agent
+
+
+public function PesticideDataView(){
+    $pesticides= Pesticide::orderBy('id','desc')->paginate(10);
+    return view('agent.variablecost.pesticides.show_pesticidesData',compact('pesticides'));
+}
+
+
+
+
+
+public function PesticideUpdate($id){
+    $pesticides= Pesticide::find($id);
+    return view('agent.variablecost.pesticides.formsEdit_pesticidesData',compact('pesticides'));
+}
+
+public function PesticideDataupdate(PesticidesRequest $request,$id)
+{
+
+   try{
+       
+
+       $data= $request->validated();
+       $data= $request->all();
+       
+       $data=Pesticide::find($id);
+
+       $data->pesticides_name = $request->pesticides_name;  
+       $data->type_ofpesticides = $request->type_ofpesticides;
+       $data->no_of_l_kg = $request->no_of_l_kg;
+       $data->unitprice_ofpesticides = $request->unitprice_ofpesticides;
+       $data->total_cost_pesticides = $request->total_cost_pesticides;
+              
+       $data->save();     
+       
+   
+       return redirect('/show-variable-cost-pesticides')->with('message','Pesticide Data Updated successsfully');
+   
+   }
+   catch(\Exception $ex){
+    //    dd($ex); // Debugging statement to inspect the exception
+       return redirect('/update-variable-cost-pesticides/{pesticides}')->with('message','Someting went wrong');
+       
+   }   
+} 
+
+
+public function PesticideDelete($id) {
+   try {
+       // Find the personal information by ID
+       $pesticides= Pesticide::find($id);
+
+       // Check if the personal information exists
+       if (! $pesticides) {
+           return redirect()->back()->with('error', 'Farm Profilenot found');
+       }
+
+       // Delete the personal information data from the database
+      $pesticides->delete();
+
+       // Redirect back with success message
+       return redirect()->back()->with('message', 'Pesticiddes data deleted Successfully');
+
+   } catch (\Exception $e) {
+    //    dd($e);// Handle any exceptions and redirect back with error message
+       return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+   }
+}
+
+// view, edit of transport by agent
+
+public function TransportDataView(){
+    $transports= Transport::orderBy('id','desc')->paginate(10);
+    return view('agent.variablecost.transport.show_ttransportsData',compact('transports'));
+}
+
+
+
+
+
+public function TransportUpdate($id){
+    $transports= Transport::find($id);
+    return view('agent.variablecost.transport.formsEdit_transportsData',compact('transports'));
+}
+
+public function TransportDataupdate(TransportRequest $request,$id)
+{
+
+   try{
+       
+
+       $data= $request->validated();
+       $data= $request->all();
+       
+       $data=Transport::find($id);
+
+       $data->name_of_vehicle = $request->name_of_vehicle;  
+       $data->type_of_vehicle = $request->type_of_vehicle;
+     
+       $data->total_transport_per_deliverycost;
+      
+              
+       $data->save();     
+       
+   
+       return redirect('/show-variable-cost-transport')->with('message','Transport Data Updated successsfully');
+   
+   }
+   catch(\Exception $ex){
+    //    dd($ex); // Debugging statement to inspect the exception
+       return redirect('/update-variable-cost-transports/{transports}')->with('message','Someting went wrong');
+       
+   }   
+} 
+
+
+public function TransportDelete($id) {
+   try {
+       // Find the personal information by ID
+       $transports= Transport::find($id);
+
+       // Check if the personal information exists
+       if (! $transports) {
+           return redirect()->back()->with('error', 'Farm Profilenot found');
+       }
+
+       // Delete the personal information data from the database
+      $transports->delete();
+
+       // Redirect back with success message
+       return redirect()->back()->with('message', 'Transports data deleted Successfully');
+
+   } catch (\Exception $e) {
+    //    dd($e);// Handle any exceptions and redirect back with error message
+       return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+   }
+}
 
 
 

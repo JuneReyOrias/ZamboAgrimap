@@ -43,7 +43,7 @@
                         <th>total machinery fuel_cost</th>
                         <th>gross income palay</th>
                         <th>gross income rice</th>
-                       
+                        <th>action</th>
 
                       
                     </tr>
@@ -70,15 +70,14 @@
                            <td>{{ $allfarmer->gross_income_rice }}</td>
                           
                         <td>
-                           
-                             {{-- <a href="{{route('agent.farmprofile.farm_update',  $allfarmer->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
-                
-                             <form  action="{{ route('agent.farmprofile.delete',  $allfarmer->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                           {{-- <a href="{{route('agent.allfarmersinfo.profile',  $allfarmer->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                 --}}
+                             {{-- <form  action="{{ route('agent.farmprofile.delete',  $allfarmer->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                               @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                            </form>
-                             --}}
+                            </form> --}}
+                            
                         </td>
                     </tr>
                 @endforeach

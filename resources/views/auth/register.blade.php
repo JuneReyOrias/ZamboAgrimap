@@ -36,13 +36,7 @@
  
 </head>
 <body>
-  @if($errors->any())
-  <ul class="alert alert-warning">
-    @foreach ($errors->all() as $error)
-    <li>{{$error}}</li>
-    @endforeach
-  </ul>
-  @endif
+  
     <div class="main-wrapper">
 		<div class="page-wrapper full-pages">
 			<div class="page-contents d-flex align-items-center justify-content-center">
@@ -59,45 +53,84 @@
                 <div class="col-md-8 ps-md-0">
                   <div class="auth-form-wrapper px-4 py-5">
                     <a href="#" class="noble-ui-logo logo-light d-block mb-2">Web<span>AgriMap</span></a>
-                    <h5 class="text-muted fw-normal mb-4">Create a free account.</h5>
+                    <h5 class="text-muteds fw-normal mb-4">Create a free account.</h5>
                     <form class="forms-sample " method="post" action="{{ route('register') }}">
                         @csrf
                       <div class="mb-3">
-                        <label for="exampleInputUsername1" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="exampleInputUsername1" name ="name"autocomplete="name" placeholder="name" >
+                        <label for="exampleInputUsername1" class="form-label">FullName</label>
+                        <input type="text" class="form-control  @error('name') is-invalid @enderror" id="exampleInputUsername1" name ="name"autocomplete="name" placeholder="Fullname" value="{{ old('name') }}">
+                        @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                       </div>
                       <div class="mb-3">
                         <label for="userEmail" class="form-label">Email address</label>
-                        <input type="email" name="email" class="form-control" id="userEmail" placeholder="Email">
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="userEmail" placeholder="Email" value="{{ old('email') }}">
+                        @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                       </div>
                       <div class="mb-3">
                         <label for="agri_district" class="form-label">Agri District</label>
-                        <input type="text" name="agri_district" class="form-control" id="userEmail" placeholder="Agri_District">
+
+                        <select class="form-select @error('agri_district') is-invalid @enderror"  name="agri_district"id="validationCustom01" aria-label="Floating label select e">
+                          <option selected disabled>Select Agri-District</option>
+                          <option value="Ayala Distict" {{ old('agri_district') == 'Ayala Distict' ? 'selected' : '' }}>Ayala Distict</option>
+                          <option value="Tumaga District" {{ old('agri_district') == 'Tumaga District' ? 'selected' : '' }}>Tumaga District</option>
+                          <option value="Culianan" {{ old('agri_district') == 'Culianan' ? 'selected' : '' }}>Culianan</option>
+                          <option value="Manicahan" {{ old('agri_district') == 'Manicahan' ? 'selected' : '' }}>Manicahan</option>
+                          <option value="Curuan" {{ old('agri_district') == 'Curuan' ? 'selected' : '' }}>Curuan</option>
+                          <option value="Vitali" {{ old('agri_district') == 'Vitali' ? 'selected' : '' }}>Vitali</option>
+                        </select>
+                        @error('agri_district')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                       </div>
                       <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="password" autocomplete="current-password" placeholder="Password">
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" autocomplete="current-password" placeholder="Password" value="{{ old('password') }}"> 
+                        <div class="form-check mb-3">
+                          <input type="checkbox" class="form-check-input"id="togglePasswordVisibilityCheckbox">
+                          <label class="form-check-label" for="togglePasswordVisibilityCheckbox">Show Password</label>
+                        </div>
+
+                        @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                       </div>
+                     
                       <div class="mb-3">
                         <label for="password" class="form-label">confirm Password</label>
-                        <input type="password" name="password" class="form-control" id="password" autocomplete="current-password" placeholder="Password">
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" autocomplete="current-password" placeholder="Password" value="{{ old('password') }}">
+                        {{-- <div class="form-check mb-3">
+                          <input type="checkbox" class="form-check-input"id="togglePasswordVisibilityCheckbox">
+                          <label class="form-check-label" for="togglePasswordVisibilityCheckbox">Show Password</label>
+                        </div> --}}
+
+                        @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                       </div>
                       <div class="mb-3">
                         <label for="role" class="form-label">Role</label>
-                        <input type="text" name="role" class="form-control" id="userEmail" placeholder="Role">
+                    
+                        <select class="form-select" name="role"id="validationCustom01" aria-label="Floating label select e">
+                          <option selected disabled>Select role</option>
+                          <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>admin</option>
+                          <option value="agent" {{ old('role') == 'agent' ? 'selected' : '' }}>agent</option>
+                          <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>user</option>
+                        
+                        </select>
+                    
+                    
                       </div>
-                      <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="authCheck">
-                        <label class="form-check-label" for="authCheck">
-                          Remember me
-                        </label>
-                      </div>
+                    
                       <div>
                         <button type="submit"  class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
                             Sign up
                           </button>
                       </div>
-                      <a href={{url('/')}} class="d-block mt-3 text-muted">have already account? Log in</a>
+                      <a href={{url('/')}} class="d-block mt-3 text-muteds">have already account? Log in</a>
                     </form>
                   </div>
                 </div>
@@ -110,6 +143,18 @@
 		</div>
 	</div>
  
+
+  <script>
+    document.getElementById("togglePasswordVisibilityCheckbox").addEventListener("change", function () {
+        var passwordInput = document.getElementById("password");
+
+        if (this.checked) {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    });
+</script>
 	<!-- core:js -->
 	<script src="{{asset('../../../assets/vendors/core/core.js')}}"></script>
 	<!-- endinject -->

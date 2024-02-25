@@ -13,13 +13,14 @@
    
     {{-- <!-- File input for uploading files -->
     <input type="file" id="fileInput" accept=".kml, .kmz, .geojson"> --}}
-    <input type="file" id="fileInput" accept=".kml,.kmz">
+    <input type="hidden" id="fileInput" accept=".kml,.kmz">
  
     @foreach($farmLocation as $location)
     <div class="test" 
       data-lat="{{ $location->latitude }}" 
       data-lng="{{ $location->longitude }}" 
       data-location="{{ $location->district}}" 
+      data-description="{{ $location->description}}" 
       data-lastname="{{ $location->last_name.', '.$location->first_name.', '.$location->middle_name}}" 
       data-mothers="{{ $location->mothers_maiden_name}}" 
       data-address="{{$location->home_address}}"
@@ -38,7 +39,12 @@
       data-cropping="{{$location->no_of_cropping_yr}}"
       data-yieldha="{{$location->yield_kg_ha}}"
       data-capital="{{$location->source_of_capital}}"
-
+      data-rsba="{{$location->rsba_register}}"
+      data-pcic="{{$location->pcic_insured}}"
+      data-assisted="{{$location->government_assisted}}"
+      data-sex="{{$location->sex}}"
+      data-area_has="{{$location->total_physical_area_has}}"
+      data-cultivated_has="{{$location->rice_area_cultivated_has}}"
 
       data-verone_lat="{{ $location->verone_latitude }}" 
       data-verone_lng="{{ $location->verone_longitude }}" 
@@ -94,7 +100,51 @@
     data-vertfour_lng="{{ $location->vertfour_longitude }}" ></div>
 
 @endforeach  --}}
+<div>
+  @php
+$id = Auth::id();
 
+// Find the user by their ID and eager load the personalInformation relationship
+$location= App\Models\Polygon::all();
+
+@endphp
+@foreach ($location as $location)
+    <div class="newpolygo"
+      data-verone_lat="{{ $location->verone_latitude }}" 
+      data-verone_lng="{{ $location->verone_longitude }}" 
+      data-vertwo_lat="{{ $location->vertwo_latitude }}" 
+      data-vertwo_lng="{{ $location->vertwo_longitude }}" 
+      data-verthree_lat="{{ $location->verthree_latitude }}" 
+      data-verthree_lng="{{ $location->verthree_longitude }}" 
+      data-vertfour_lat="{{ $location->vertfour_latitude }}" 
+      data-vertfour_lng="{{ $location->vertfour_longitude }}" 
+      data-verfive_lat="{{ $location->verfive_latitude }}" 
+      data-verfive_lng="{{ $location->verfive_longitude }}" 
+      data-versix_lat="{{ $location->versix_latitude }}" 
+      data-versix_lng="{{ $location->versix_longitude }}" 
+      data-verseven_lat="{{ $location->verseven_latitude }}" 
+      data-verseven_lng="{{ $location->verseven_longitude }}" 
+      data-vereight_lat="{{ $location->vereight_latitude }}" 
+      data-verteight_lng="{{ $location->verteight_longitude }}"
+      data-color="{{ $location->strokecolor }}"
+      data-area= "{{$location->area}}"
+      data-perimeter= "{{$location->perimeter}}"
+      data-polyname= "{{$location->poly_name}}"
+     >
+    
+
+    </div>
+@endforeach
+</div>
+
+
+
+
+
+
+
+
+<div>
 @php
 $id = Auth::id();
 
@@ -138,6 +188,11 @@ $parcels= App\Models\ParcelBoarder::all();
 ></div>
 
 @endforeach
+
+</div> 
+
+
+
 
 
   </nav>

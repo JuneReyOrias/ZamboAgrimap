@@ -39,11 +39,14 @@ return new class extends Migration
             $table->double('yield_kg_ha',15,4);
             $table->string('rsba_register',50);
             $table->string('pcic_insured',50);
+            $table->string('government_assisted',100);
+           
             $table->string('source_of_capital',50);
             $table->string('remarks_recommendation',100);
             $table->string('oca_district_office',50);
             $table->string('name_technicians',50);
             $table->string('date_interview',50);
+            $table->string('farm_images');
             
             $table->timestamps();
             

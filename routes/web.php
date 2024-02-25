@@ -63,12 +63,14 @@ Route::get('user/dashboard', function () {
 // Route::post('/form-checking/{perinfo}',[AgentController::class, 'updatePerinfo']);
 // Route::get('/form-checking',[AgentController::class, 'viewpersoninfo'])->name('agent.formvalidation.valpersonal.personinfo_edit');
 
-Route::get('/agent/profile', [AgentController::class, 'AdminProfile'])->name('agent.profile.agent_profiles');
-Route::post('/agent/{profileData}',[AgentController::class,'updateAdmin']);
+Route::get('/agent-profile',[AgentController::class, 'AgentProfile'])->name('agent.profile.agent_profiles');
+Route::post('/agent-profile',[AgentController::class, 'Agentupdate']);
 
 
+// aall data fetch of farmers profile
+Route::get('/farmers-data',[PersonalInformationsController::class,'alldataform'])->name('agent.allfarmersinfo.forms_info');
+Route::get('/farmer-profile',[PersonalInformationsController::class,'profileFarmer'])->name('agent.allfarmersinfo.profile');
 
-Route::get('farmers-data',[PersonalInformationsController::class,'alldataform'])->name('agent.allfarmersinfo.forms_info');
 // for user 
 Route::get('/user-all-farmers',[PersonalInformationsController::class,'forms'])->name('user.forms_data');
 
@@ -76,34 +78,69 @@ Route::get('/user-all-farmers',[PersonalInformationsController::class,'forms'])-
 Route::get('/add-variable-cost-vartotal',[AgentController::class, 'variableVartotal'])->name('agent.variablecost.variable_total.add_vartotal');
 Route::post('/add-variable-cost-vartotal',[AgentController::class, 'AddNewVartotal']);
 
+//fetching the data Vaible cost total in variable cost
+Route::get('/show-variable-cost',[AgentController::class,'displayvar'])->name('agent.variablecost.variable_total.show_var');
+Route::delete('/delete-variable-cost/{variable}',[AgentController::class,'vardelete'])->name('agent.variablecost.variable_total.delete'); //deleteing 
+Route::get('/update-variable-cost/{variables}',[AgentController::class,'varupdate'])->name('agent.variablecost.variable_total.var_edited');
+Route::post('/update-variable-cost/{variable}',[AgentController::class,'updatevaria']);
+
+
+
 // add variable cost transport by agent
 Route::get('/add-variable-cost-transport',[AgentController::class, 'variableTransport'])->name('agent.variablecost.transport.add_transports');
 Route::post('/add-variable-cost-transport',[AgentController::class, 'AddNewTransport']);
+
+// edit and view of transport data by agent
+Route::get('/show-variable-cost-transport',[AgentController::class,'TransportDataView'])->name('agent.variablecost.transport.show_ttransportsData');
+Route::delete('/delete-variable-cost-transport/{pesticides}',[AgentController::class,'TransportDelete'])->name('agent.variablecost.transport.delete'); //deleteing 
+Route::get('/update-variable-cost-transport/{pesticides}',[AgentController::class,'TransportUpdate'])->name('agent.variablecost.transport.formsEdit_transportsData');
+Route::post('/update-variable-cost-transport/{pesticides}',[AgentController::class,'TransportDataupdate']);
 
 
 // add variable cost pesticides by agent
 Route::get('/add-variable-cost-pesticides',[AgentController::class, 'variablePesticides'])->name('agent.variablecost.pesticides.add_pesticide');
 Route::post('/add-variable-cost-pesticides',[AgentController::class, 'AddNewPesticide']);
 
+// edit and view of pesticides data by agent
+Route::get('/show-variable-cost-pesticides',[AgentController::class,'PesticideDataView'])->name('agent.variablecost.pesticides.show_pesticidesData');
+Route::delete('/delete-variable-cost-pesticides/{pesticides}',[AgentController::class,'PesticideDelete'])->name('agent.variablecost.pesticides.delete'); //deleteing 
+Route::get('/update-variable-cost-pesticides/{pesticides}',[AgentController::class,'PesticideUpdate'])->name('agent.variablecost.pesticides.formsEdit_pesticidesData');
+Route::post('/update-variable-cost-pesticides/{pesticides}',[AgentController::class,'PesticideDataupdate']);
+
+
 
 // add variable cost fertilizers by agent
 Route::get('/add-variable-cost-fertilizers',[AgentController::class, 'variableFertilizers'])->name('agent.variablecost.fertilizers.add_fertilizer');
 Route::post('/add-variable-cost-fertilizers',[AgentController::class, 'AddNewfertilizers']);
 
+// edit and view of FERTILIZERS data by agent
+Route::get('/show-variable-cost-fertilizers',[AgentController::class,'FertilizerDataView'])->name('agent.variablecost.fertilizers.show_fertilizeData');
+Route::delete('/delete-variable-cost-fertilizers/{fertilizers}',[AgentController::class,'FertilizerDelete'])->name('agent.variablecost.fertilizers.delete'); //deleteing 
+Route::get('/update-variable-cost-fertilizers/{fertilizers}',[AgentController::class,'FertilizerUpdate'])->name('agent.variablecost.fertilizers.formsEdit_fertilizeData');
+Route::post('/update-variable-cost-fertilizers/{fertilizers}',[AgentController::class,'FertilizerDataupdate']);
+
+
+
 // add variable cost labor by agent
 Route::get('/add-variable-cost-labor',[AgentController::class, 'variableLabor'])->name('agent.variablecost.labor.add_labors');
 Route::post('/add-variable-cost-labor',[AgentController::class, 'AddNewLabor']);
+
+// edit and view of labors data by agent
+Route::get('/show-variable-cost-labor',[AgentController::class,'LaborsDataView'])->name('agent.variablecost.labor.show_laborData');
+Route::delete('/delete-variable-cost-labor/{labors}',[AgentController::class,'LaborsDelete'])->name('agent.variablecost.labor.delete'); //deleteing 
+Route::get('/update-variable-cost-labor/{labors}',[AgentController::class,'LaborUpdate'])->name('agent.variablecost.labor.formEdit_labors');
+Route::post('/update-variable-cost-labor/{labors}',[AgentController::class,'LaborDataupdate']);
 
 
 // add variable cost seed by agent
 Route::get('/add-variable-cost-seed',[AgentController::class, 'variableSeed'])->name('agent.variablecost.seed.add_seeds');
 Route::post('/add-variable-cost-seed',[AgentController::class, 'AddNewSeeed']);
 
-//fetching the data in variable cost
-Route::get('/show-variable-cost',[AgentController::class,'displayvar'])->name('agent.variablecost.variable_total.show_var');
-Route::delete('/delete-variable-cost/{variable}',[AgentController::class,'vardelete'])->name('agent.variablecost.variable_total.delete'); //deleteing 
-Route::get('/update-variable-cost/{variables}',[AgentController::class,'varupdate'])->name('agent.variablecost.variable_total.var_edited');
-Route::post('/update-variable-cost/{variable}',[AgentController::class,'updatevaria']);
+// edit and view of seed data by agent
+Route::get('/show-variable-cost-seed',[AgentController::class,'SeedDataView'])->name('agent.variablecost.seed.show_seeds_data');
+Route::delete('/delete-variable-cost-seed/{seeds}',[AgentController::class,'SeedsDelete'])->name('agent.variablecost.seed.delete'); //deleteing 
+Route::get('/update-variable-cost-seed/{seeds}',[AgentController::class,'SeedsUpdate'])->name('agent.variablecost.seed.seeds_form_edit');
+Route::post('/update-variable-cost-seed/{seeds}',[AgentController::class,'SeedDataupdate']);
 
 
 // add last production by agent
@@ -144,7 +181,7 @@ Route::get('/add-farm-profile',[AgentController::class, 'farmprofiles'])->name('
 Route::post('/add-farm-profile',[AgentController::class, 'AddFarmProfile']);
 
 // fetching of data from 3 tables to be inserted in farm profiles
-Route::get('/add-farm-profile',[AgentController::class, 'fetchtables'])->name('agent.farmprofile.add_profile');
+// Route::get('/add-farm-profile',[AgentController::class, 'fetchtables'])->name('agent.farmprofile.add_profile');
 Route::get('/show-farm-profile',[AgentController::class,'showfarm'])->name('agent.farmprofile.farm_view');
 Route::delete('/delete-farm-profile/{farmprofiles}',[AgentController::class,'farmdelete'])->name('agent.farmprofile.delete');
 Route::get('/update-farm-profile/{farmprofiles}',[AgentController::class,'farmUpdate'])->name('agent.farmprofile.farm_update');
@@ -222,7 +259,7 @@ Route::get('/category', [AgriDistrictController:: class,'Category'])->name('cate
 //agridistricts router
 Route::get('/district', [AgriDistrictController::class,'DisplayAgri'])->name('agri_districts.display');
 Route::post('/district', [AgriDistrictController::class,'store']);
-Route::get('/district', [UserController::class,'Mapping'])->name('agri_districts.insertdata');
+// Route::get('/district', [UserController::class,'Mapping'])->name('agri_districts.insertdata');
 // Route::post('/savePolyline', [PolygonController::class, 'savePolyline']);
 // Route::post('/save',[PolygonsController::class,'save']);
 

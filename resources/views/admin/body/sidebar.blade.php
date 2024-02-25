@@ -209,9 +209,9 @@
               <li class="nav-item">
                 <a href="" class="nav-link">Ricefield Boarders</a>
               </li>
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{route('agri_districts.insertdata')}}" class="nav-link">Agri-Districts</a>
-              </li>
+              </li> --}}
               <li class="nav-item">
                 <a href="{{route('categorize.index')}}" class="nav-link">Categorize Create</a>
               </li>

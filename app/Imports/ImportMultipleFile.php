@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use App\Imports\ImportFarmProfile;
+use App\Models\PersonalInformations;
 
 class ImportMultipleFile implements WithMultipleSheets, WithHeadingRow
 {
@@ -16,11 +18,12 @@ class ImportMultipleFile implements WithMultipleSheets, WithHeadingRow
     
     public function sheets():array
     {
+        $personalInformation = PersonalInformations::find($id); 
         return
         [
            
             'Personal Informations'=> new PersonalInformationsImport(),
-            'FarmProfile'=> new ImportFarmProfile(),
+            'FarmProfile'=> new ImportFarmProfile($personalInformation),
             'Fixed Cost'=> new ImportFixedCost(),
             'Machineries Used'=> new ImportMachineriesUseds(),
             'Variable Cost'=>new ImportVariableCost(),

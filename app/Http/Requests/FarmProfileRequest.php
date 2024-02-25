@@ -120,6 +120,11 @@ class FarmProfileRequest extends FormRequest
                 'string',
                 'max:50',
             ],
+            'government_assisted'=>[
+                'required',
+                'string',
+                'max:50',
+            ],
             'source_of_capital'=>[
                 'required',
                 'string',
@@ -169,6 +174,7 @@ class FarmProfileRequest extends FormRequest
             'yield_kg_ha.required'=> 'Please input your yield(kg/ha)',
             'rsba_register.required'=> 'Please choose yes or no if applicable',
             'pcic_insured.required'=> 'Please choose yes or no if applicable',
+            'government_assisted'=> 'Please choose yes or no if applicable',
             'source_of_capital.required'=> 'Please choose your source of capital',
             'remarks_recommendation.required'=> 'Please input your remarks/recommendation',
             'oca_district_office.required'=> 'Please input your OCA district office',

@@ -135,16 +135,19 @@
               <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Variable Cost </a>
             </li> 
             <li class="nav-item">
-              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Seeds </a>
+              <a href="{{route('agent.variablecost.seed.show_seeds_data')}}" class="nav-link">Seeds </a>
             </li>
             <li class="nav-item">
-              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Labor </a>
+              <a href="{{route('agent.variablecost.labor.show_laborData')}}" class="nav-link">Labor </a>
             </li>
             <li class="nav-item">
-              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Fertilizers</a>
+              <a href="{{route('agent.variablecost.fertilizers.show_fertilizeData')}}" class="nav-link">Fertilizers</a>
             </li>
             <li class="nav-item">
-              <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Pesticides</a>
+              <a href="{{route('agent.variablecost.pesticides.show_pesticidesData')}}" class="nav-link">Pesticides</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('agent.variablecost.transport.show_ttransportsData')}}" class="nav-link">Transport</a>
             </li>
             <li class="nav-item">
               <a href="{{route('agent.lastproduction.view_prod')}}" class="nav-link">Last Production Data </a>
@@ -162,7 +165,7 @@
         <div class="collapse" id="charts">
           <ul class="nav sub-menu">
             <li class="nav-item">
-              <a href="pages/charts/apex.html" class="nav-link">Inbred</a>
+              <a href="{{route('agent.allfarmersinfo.profile')}}" class="nav-link">Inbred</a>
             </li>
             <li class="nav-item">
               <a href="pages/charts/chartjs.html" class="nav-link">Jasmin Rice</a>

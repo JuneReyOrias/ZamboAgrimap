@@ -8,10 +8,10 @@
         
       </ol>
     </nav>
-    <div class="progress mb-3">
+    {{-- <div class="progress mb-3">
       <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 45%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">45% Complete</div>
   
-    </div>
+    </div> --}}
     <div class="row">
       <div class="col-md-12 grid-margin">
         <div class="card">
@@ -31,125 +31,78 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        
+        <h4 class="card-titles" style="display: flex;text-align: center; "><span></span>Rice Survey Form Zamboanga City</h4>
+        <br>
             <h6 class="card-title"><span>III.</span>Fixed Cost</h6>
             <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
          
 
            <form  action{{url('AddFcost')}} method="post"  >
               @csrf
-
               <div class="row mb-3">
-                
-                <div class="col-md-3">
-
+                <h2 class="card-title"><span>a.</span>Rice Farmers Fixed Cost:</h2>
+                <div class="col-md-3 mb-3">    
                   @php
-                  $id = Auth::id();
+                $id = Auth::id();
 
-              // Find the user by their ID and eager load the personalInformation relationship
-              $profile= App\Models\PersonalInformations::find($id)->all();
+            // Find the user by their ID and eager load the personalInformation relationship
+            $profile= App\Models\PersonalInformations::where('users_id', $id)->latest()->first();
 
-                @endphp
-                  <div class="form-floating mb-4 mb-md-0"> 
-                     <select class="form-control mb-4 mb-md-0" name="personal_informations_id" aria-label="personal_informations_id">
-                          @foreach ($profile->sortByDesc('id') as $location)
-                              <option value="{{ $location->id }}">{{ $location->first_name.' '. $location->last_name}}</option>
-                          @endforeach
-                      </select>
-                      <label for="personal_informations_id">Farmers Name</label>
-                  </div>
-                
+              @endphp
+                  <label class="form-expand" for="personal_informations_id">Farmers Name:</label>
+                  <select class="form-control placeholder-text" name="personal_informations_id" aria-label="personal_informations_id">
+                        
+                    <option value="{{ $profile->id }}">{{ $profile->first_name.' '. $profile->last_name}}</option>
               
-          </div>
-              <div class="col-md-3">
-  
-             @php
-                    $id = Auth::id();
+            </select>
+                </div>
+                <div class="col-md-3 mb-3">    
+                  @php
+                $id = Auth::id();
 
-                // Find the user by their ID and eager load the personalInformation relationship
-                $farmprofile= App\Models\FarmProfile::find($id)->all();
+            // Find the user by their ID and eager load the personalInformation relationship
+            $farmprofile= App\Models\FarmProfile::where('id', $id)->latest()->first();
 
-                  @endphp
-                <div class="form-floating mb-4 mb-md-0"> 
-                   <select class="form-control mb-4 mb-md-0" name="farm_profiles_id" aria-label="farm_profiles_id">
-                    @foreach ( $farmprofile->sortByDesc('id') as  $farmprofile)
+              @endphp
+                  <label class="form-expand" for="farm_profiles_id">FarmProfile:</label>
+                  <select class="form-control mb-4 mb-md-0" name="farm_profiles_id" aria-label="farm_profiles_id">
+                 
                             <option value="{{ $farmprofile->id }}">{{ $farmprofile->tenurial_status }}</option>
-                        @endforeach
+                      
                     </select>
-                    <label for="farm_profiles_id">FarmProfile:</label>
                 </div>
+                <div class="col-md-3 mb-3">
+                  <label class="form-expand" for="particular">Particular (Fixed Cost):</label>
+                  <input type="text" class="form-control placeholder-text " name="particular" id="validationCustom01" placeholder=" enter Particular fixed Cost" value="{{ old('particular') }}" >
+                </div>
+                  <div class="col-md-3 mb-3">
+                    <label class="form-expand" for="no_of_ha">No. of Has:</label>
+                    <input type="text" class="form-control placeholder-text @error('no_of_ha') is-invalid @enderror" name="no_of_ha" id="validationCustom01" placeholder="Enter No. of Has" value="{{ old('no_of_ha') }}" >
+                    @error('no_of_ha')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                  </div>
+               
+                <div class="col-md-3 mb-3">
+                  <label class="form-expand" for="cost_per_ha">Cost/Has(Has):</label>
+                  <input type="text" class="form-control placeholder-text @error('cost_per_ha') is-invalid @enderror" name="cost_per_ha" id="validationCustom01" placeholder="Enter Cost/Has" value="{{ old('cost_per_ha') }}" >
+                  @error('cost_per_ha')
+                  <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+                </div>
+               
+                <div class="col-md-3 mb-3">
+                  <label class="form-expand" for="total_amount">Total Amount:</label>
+                  <input type="text" class="form-control placeholder-text @error('total_amount') is-invalid @enderror" name="total_amount" id="validationCustom01" placeholder="Enter No. of Years" value="{{ old('total_amount') }}" >
+                  @error('total_amount')
+                  <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+                </div>
+              </div>
+             
+
               
-            
-        </div>
-    
-        {{-- <div class="col-md-3">
-          @php
-          $id = Auth::id();
-
-      // Find the user by their ID and eager load the personalInformation relationship
-      $polygons= App\Models\Polygon::find($id)->all();
-
-        @endphp
-                  
-          <div class="form-floating mb-4 mb-md-0"> 
-             <select class="form-control mb-4 mb-md-0" name="polygons_id" aria-label="User ID">
-                  @foreach ( $polygons as  $polygons)
-                      <option value="{{  $polygons->id }}">{{  $polygons->id}}</option>
-                  @endforeach
-              </select>
-              <label for="polygons_id">Polygon:</label>
-          </div>
-         --}}
-      {{-- </div>  --}}
-          {{-- <div class="col-md-3">
   
-                  
-          <div class="form-floating mb-4 mb-md-0"> 
-             <select class="form-control mb-4 mb-md-0" name="agri_districts_id"aria-label="agri_districts_id">
-                  @foreach ( $agriDistrictIds as  $agriDistrictIds)
-                      <option value="{{  $agriDistrictIds }}">{{$agriDistrictIds
-  
-                       }}</option>
-                         
-                  @endforeach
-              </select>
-              <label for="agri_districts_id">Agri-District:</label>
-          </div>
-        
-      
-  </div> --}}
-                </div>
-
-              <div class="row mb-3">
-                     
-                <div class="col-md-3">
-  
-                  <div class="form-floating mb-4 mb-md-0">
-                  <input id="lastname" class="form-control mb-4 mb-md-0" name="particular" placeholder="Lastname" type="text" aria-label="Lastname"id="particular">
-                  <label for="floatingInput" >Particulars:</label>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-floating mb-4 mb-md-0">
-                <input id="lastname" class="form-control mb-4 mb-md-0" name="no_of_ha" placeholder="Lastname" type="text" aria-label="ExtensionName"id="noofha">
-                <label for="floatingInput" >No. of Has:</label>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-floating mb-4 mb-md-0">
-              <input  class="form-control mb-4 mb-md-0" name="cost_per_ha" placeholder="Lastname" type="text" aria-label="MiddlName"id="costperhas">
-              <label for="floatingInput" >Cost/Has(has):</label>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-floating mb-4 mb-md-0">
-            <input  class="form-control mb-4 mb-md-0" name="total_amount" placeholder="Lastname" type="text" aria-label="MiddlName"id="totalamount">
-            <label for="floatingInput" >Total Amount(P):</label>
-          </div>
-        </div>
-     </div>
-    
-  </div>
   <div  class="d-grid gap-2 d-md-flex justify-content-md-end">
     {{-- <a  href="{{route('agent.farmprofile.add_profile')}}"button  class="btn btn-success me-md-2">Back</button></a></p> --}}
     <button  type="submit" class="btn btn-success me-md-2">Next</button></a></p>
