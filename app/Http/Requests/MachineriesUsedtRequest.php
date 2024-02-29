@@ -25,27 +25,27 @@ class MachineriesUsedtRequest extends FormRequest
             'plowing_cost'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'harrowing_cost'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'harvesting_cost'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'post_harvest_cost'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'total_cost_for_machineries'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
            
         ];

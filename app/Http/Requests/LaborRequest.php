@@ -35,17 +35,17 @@ class LaborRequest extends FormRequest
             'no_of_person'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'rate_per_person'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'total_labor_cost'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
            
         ];

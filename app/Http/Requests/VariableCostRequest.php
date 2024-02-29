@@ -35,12 +35,12 @@ class VariableCostRequest extends FormRequest
             'total_machinery_fuel_cost'=>[
              'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'total_variable_cost'=>[
              'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             // 'total_labor_cost'=>[
             //     'required',

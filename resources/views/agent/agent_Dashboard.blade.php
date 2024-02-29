@@ -17,24 +17,33 @@
   <!-- End fonts -->
 
   
-	<!-- core:css -->
-	<link rel="stylesheet" href="{{asset('../assets/vendors/core/core.css')}}">
-	<!-- endinject -->
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <!-- End fonts -->
 
-	<!-- Plugin css for this page -->
-	<link rel="stylesheet" href="{{asset('../assets/fonts/feather-font/css/iconfont.css')}}">
-	<!-- End plugin css for this page -->
+	<!-- core:css -->	
+<!-- core:css -->
+<link rel="stylesheet" href="../assets/vendors/core/core.css">
+<!-- endinject -->
 
-	<!-- inject:css -->
-	<link rel="stylesheet" href="{{asset('../assets/fonts/feather-font/css/iconfont.css')}}">
-	<link rel="stylesheet" href="{{asset('../assets/vendors/flag-icon-css/css/flag-icon.min.css')}}">
-	<!-- endinject -->
+<!-- Plugin css for this page -->
+<link rel="stylesheet" href="../assets/vendors/flatpickr/flatpickr.min.css">
+<!-- End plugin css for this page -->
 
-  <!-- Layout styles -->  
-	<link rel="stylesheet" href="{{asset('../assets/css/demo2/style.css')}}">
-  <!-- End layout styles -->
+<!-- inject:css -->
+<link rel="stylesheet" href="../assets/fonts/feather-font/css/iconfont.css">
+<link rel="stylesheet" href="../assets/vendors/flag-icon-css/css/flag-icon.min.css">
+{{-- <link rel="stylesheet" href="../assets/vendors/font-awesome/css/flag-icon.min.css"> --}}
+<!-- endinject -->
 
-  <link rel="shortcut icon" href="../assets/logo/logo.png" />
+<!-- Layout styles -->  
+<link rel="stylesheet" href="../assets/css/demo2/style.css">
+<!-- End layout styles -->
+
+<link rel="shortcut icon" href="../assets/logo/logo.png" />
+
 </head>
 <body>
 	<div class="main-wrapper">
@@ -43,7 +52,16 @@
 	   @include('agent.body.sidebar')
    
 		<!-- partial -->
-   
+        {{-- <nav class="settings-sidebar">
+            <div class="sidebar-body">
+             
+              </a>
+              <div class="theme-wrapper">
+                
+                </a>
+              </div>
+            </div>
+          </nav> --}}
 	
 		<div class="page-wrapper">
 					
@@ -52,15 +70,14 @@
 			<!-- partial -->
 
             @yield('agent')
-
-			<!-- partial:partials/_footer.html -->
-		@include('agent.body.footer')
-			<!-- partial -->
 			
+			<!-- partial:partials/_footer.html -->
+		{{-- @include('admin.body.footer') --}}
+			<!-- partial -->
+		
 		</div>
 	</div>
 
-	
 	<!-- core:js -->
 	<script src="../assets/vendors/core/core.js"></script>
 	<!-- endinject -->
@@ -80,5 +97,7 @@
 	<!-- Custom js for this page -->
   <script src="../assets/js/dashboard-dark.js"></script>
 	<!-- End custom js for this page -->
+
+
 </body>
 </html>    

@@ -307,7 +307,7 @@ public function AddFcost(FixedCostRequest $request)
         $fixedcost->save();
 
 
-        return redirect('/add-machinereies-used')->with('message','Fixed Cost added successsfully');
+        return redirect('/add-machinereies-used')->with('message','Machineries Cost added successsfully');
     
     }
     catch(\Exception $ex){

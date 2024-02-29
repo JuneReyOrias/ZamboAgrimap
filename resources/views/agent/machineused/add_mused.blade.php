@@ -18,22 +18,20 @@
           <div class="card-body">
 
 
-            @if($errors->any())
-            <ul class="alert alert-warning">
-              @foreach ($errors->all() as $error)
-              <li>{{$error}}</li>
-            
-              @endforeach
-              <button type="button"  class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </ul>
+            @if (session('message'))
+            <div class="alert alert-success" role="alert">
+              {{ session('message')}}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+               
             @endif
+           
             @if(session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
         <h4 class="card-titles" style="display: flex;text-align: center; "><span></span>Rice Survey Form Zamboanga City</h4>
         <br>
 

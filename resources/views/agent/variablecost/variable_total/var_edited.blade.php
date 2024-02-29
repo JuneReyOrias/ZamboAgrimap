@@ -1,6 +1,7 @@
 
 @extends('agent.agent_Dashboard')
 @section('agent') 
+<div class="page-content">
 <nav class="page-breadcrumb">
   
 </nav>

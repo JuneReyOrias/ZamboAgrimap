@@ -12,7 +12,6 @@
       <div class="col-md-12 grid-margin">
         <div class="card">
           <div class="card-body">
-
             @if (session('message'))
             <div class="alert alert-success" role="alert">
               {{ session('message')}}
@@ -20,6 +19,13 @@
             </div>
                
             @endif
+           
+            @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
             <h6 class="card-title"><span>II.</span>Farm Profile</h6>
             <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
          

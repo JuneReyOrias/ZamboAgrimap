@@ -35,17 +35,17 @@ class FertilizerRequest extends FormRequest
             'no_ofsacks'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'unitprice_per_sacks'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'total_cost_fertilizers'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
            
         ];

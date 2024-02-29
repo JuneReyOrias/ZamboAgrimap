@@ -98,7 +98,7 @@ public function updateslabor(LaborRequest $request,$id)
 
 
 
-public function LaborsDelete($id) {
+public function deletel($id) {
    try {
        // Find the personal information by ID
        $labors= Labor::find($id);

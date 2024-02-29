@@ -80,7 +80,7 @@ Route::post('/add-variable-cost-vartotal',[AgentController::class, 'AddNewVartot
 
 //fetching the data Vaible cost total in variable cost
 Route::get('/show-variable-cost',[AgentController::class,'displayvar'])->name('agent.variablecost.variable_total.show_var');
-Route::delete('/delete-variable-cost/{variable}',[AgentController::class,'vardelete'])->name('agent.variablecost.variable_total.delete'); //deleteing 
+Route::delete('/delete-variable-cost/{variables}',[AgentController::class,'vardelete'])->name('agent.variablecost.variable_total.delete'); //deleteing 
 Route::get('/update-variable-cost/{variables}',[AgentController::class,'varupdate'])->name('agent.variablecost.variable_total.var_edited');
 Route::post('/update-variable-cost/{variable}',[AgentController::class,'updatevaria']);
 
@@ -92,9 +92,9 @@ Route::post('/add-variable-cost-transport',[AgentController::class, 'AddNewTrans
 
 // edit and view of transport data by agent
 Route::get('/show-variable-cost-transport',[AgentController::class,'TransportDataView'])->name('agent.variablecost.transport.show_ttransportsData');
-Route::delete('/delete-variable-cost-transport/{pesticides}',[AgentController::class,'TransportDelete'])->name('agent.variablecost.transport.delete'); //deleteing 
-Route::get('/update-variable-cost-transport/{pesticides}',[AgentController::class,'TransportUpdate'])->name('agent.variablecost.transport.formsEdit_transportsData');
-Route::post('/update-variable-cost-transport/{pesticides}',[AgentController::class,'TransportDataupdate']);
+Route::delete('/delete-variable-cost-transport/{transports}',[AgentController::class,'TransportDelete'])->name('agent.variablecost.transport.delete'); //deleteing 
+Route::get('/update-variable-cost-transport/{tranports}',[AgentController::class,'TransportUpdate'])->name('agent.variablecost.transport.formsEdit_transportsData');
+Route::post('/update-variable-cost-transport/{transports}',[AgentController::class,'TransportDataupdate']);
 
 
 // add variable cost pesticides by agent
@@ -103,7 +103,7 @@ Route::post('/add-variable-cost-pesticides',[AgentController::class, 'AddNewPest
 
 // edit and view of pesticides data by agent
 Route::get('/show-variable-cost-pesticides',[AgentController::class,'PesticideDataView'])->name('agent.variablecost.pesticides.show_pesticidesData');
-Route::delete('/delete-variable-cost-pesticides/{pesticides}',[AgentController::class,'PesticideDelete'])->name('agent.variablecost.pesticides.delete'); //deleteing 
+Route::post('/delete-variable-cost-pesticides/{pesticides}',[AgentController::class,'PesticideDelete'])->name('agent.variablecost.pesticides.delete'); //deleteing 
 Route::get('/update-variable-cost-pesticides/{pesticides}',[AgentController::class,'PesticideUpdate'])->name('agent.variablecost.pesticides.formsEdit_pesticidesData');
 Route::post('/update-variable-cost-pesticides/{pesticides}',[AgentController::class,'PesticideDataupdate']);
 
@@ -127,7 +127,7 @@ Route::post('/add-variable-cost-labor',[AgentController::class, 'AddNewLabor']);
 
 // edit and view of labors data by agent
 Route::get('/show-variable-cost-labor',[AgentController::class,'LaborsDataView'])->name('agent.variablecost.labor.show_laborData');
-Route::delete('/delete-variable-cost-labor/{labors}',[AgentController::class,'LaborsDelete'])->name('agent.variablecost.labor.delete'); //deleteing 
+Route::post('/delete-variable-cost-labor/{labor}',[AgentController::class,'LaborsDelete'])->name('agent.variablecost.labor.delete'); //deleteing 
 Route::get('/update-variable-cost-labor/{labors}',[AgentController::class,'LaborUpdate'])->name('agent.variablecost.labor.formEdit_labors');
 Route::post('/update-variable-cost-labor/{labors}',[AgentController::class,'LaborDataupdate']);
 
@@ -419,7 +419,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/view-variable-cost-labor',[LaborController::class, 'laborView'])->name('variable_cost.labor.labors_view');
 Route::get('/edit-variable-cost-labor/{labors}',[ LaborController::class, 'editlabor'])->name('variable_cost.labor.labors_edit');
 Route::post('/edit-variable-cost-labor/{labors}', [LaborController::class, 'updateslabor']);
-Route::delete('/delete-variable-cost-labor/{labors}', [LaborController::class,'labordelete'])->name('variable_cost.labor.delete');
+Route::delete('/delete-variable-cost-labor/{labors}', [LaborController::class,'deletel'])->name('variable_cost.labor.delete');
 
 
 

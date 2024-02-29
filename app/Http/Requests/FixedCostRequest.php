@@ -30,17 +30,17 @@ class FixedCostRequest extends FormRequest
             'no_of_ha'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'cost_per_ha'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'total_amount'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
            
         ];

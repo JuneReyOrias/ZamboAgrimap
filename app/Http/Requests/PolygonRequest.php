@@ -25,83 +25,83 @@ class PolygonRequest extends FormRequest
             'verone_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'verone_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'vertwo_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'vertwo_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'verthree_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'verthree_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ], 
             'vertfour_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'vertfour_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'verfive_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'verfive_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'versix_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'versix_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'verseven_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'verseven_longitude'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'vereight_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
            
             'verteight_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'strokecolor'=>[
                 'required',
@@ -111,12 +111,12 @@ class PolygonRequest extends FormRequest
             'area'=>[
                 'numeric',
                  'regex:/^\d+(\.\d+)?$/',
-                 'max:180',
+                
              ],
              'perimeter'=>[
                 'numeric',
                  'regex:/^\d+(\.\d+)?$/',
-                 'max:180',
+                
              ],
         ];
         return $rule;

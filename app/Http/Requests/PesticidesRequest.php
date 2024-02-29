@@ -35,17 +35,17 @@ class PesticidesRequest extends FormRequest
             'no_of_l_kg'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'unitprice_ofpesticides'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'total_cost_pesticides'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
            
         ];

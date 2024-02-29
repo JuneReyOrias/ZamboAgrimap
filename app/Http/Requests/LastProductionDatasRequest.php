@@ -30,7 +30,7 @@ class LastProductionDatasRequest extends FormRequest
             'seeds_used_in_kg'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'seed_source'=>[
                 'required',
@@ -40,17 +40,17 @@ class LastProductionDatasRequest extends FormRequest
             'no_of_fertilizer_used_in_bags'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'no_of_pesticides_used_in_l_per_kg'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'no_of_insecticides_used_in_l'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'area_planted'=>[
                 'required',
@@ -70,17 +70,17 @@ class LastProductionDatasRequest extends FormRequest
             'yield_tons_per_kg'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'unit_price_palay_per_kg'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'unit_price_rice_per_kg'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'type_of_product'=>[
                 'required',
@@ -101,13 +101,13 @@ class LastProductionDatasRequest extends FormRequest
             'gross_income_palay'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
                 
             ],
             'gross_income_rice'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             
         ];

@@ -26,127 +26,127 @@ class ParcellaryBoundariesRequest extends FormRequest
             'parone_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parone_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'partwo_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'partwo_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parthree_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parthree_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ], 
             'parfour_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parfour_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parfive_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parfive_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parsix_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parsix_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parseven_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parseven_longitude'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'pareight_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
            
             'pareight_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parnine_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
            
             'parnine_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'parten_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
            
             'parten_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'pareleven_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
            
             'pareleven_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             'partwelve_latitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
            
             'partwelve_longitude'=>[
                'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                
             ],
             
            
