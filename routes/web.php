@@ -92,7 +92,7 @@ Route::post('/add-variable-cost-transport',[AgentController::class, 'AddNewTrans
 
 // edit and view of transport data by agent
 Route::get('/show-variable-cost-transport',[AgentController::class,'TransportDataView'])->name('agent.variablecost.transport.show_ttransportsData');
-Route::delete('/delete-variable-cost-transport/{transports}',[AgentController::class,'TransportDelete'])->name('agent.variablecost.transport.delete'); //deleteing 
+Route::post('/delete-variable-cost-transport/{transport}',[AgentController::class,'TransportDelete'])->name('agent.variablecost.transport.delete'); //deleteing 
 Route::get('/update-variable-cost-transport/{tranports}',[AgentController::class,'TransportUpdate'])->name('agent.variablecost.transport.formsEdit_transportsData');
 Route::post('/update-variable-cost-transport/{transports}',[AgentController::class,'TransportDataupdate']);
 

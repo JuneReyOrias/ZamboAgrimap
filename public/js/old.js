@@ -613,6 +613,9 @@ function initMap() {
     const imagedistrict = "../assets/images/district.png";
     //profiles of districts 
     listOfprofiles.forEach(profiles => {
+        console.log(profiles.latitude)
+        console.log(profiles.longitude)
+
         const position = {
             lat: profiles.latitude,
             lng: profiles.longitude,
