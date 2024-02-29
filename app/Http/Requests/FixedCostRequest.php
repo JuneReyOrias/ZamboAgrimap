@@ -28,19 +28,19 @@ class FixedCostRequest extends FormRequest
                 'max:50',
             ],
             'no_of_ha'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'cost_per_ha'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'total_amount'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
            
         ];
@@ -48,10 +48,10 @@ class FixedCostRequest extends FormRequest
     }
     public function messages(){
        return [
-            'particular.required'=>'Please input particular',
-            'no_of_ha.required'=>'Please input your no of ha',
-            'cost_per_ha.required'=>'Please input cost per ha',
-            'gps_longitude.required'=>'Please input total amount',
+            'particular.numeric'=>'Please input particular',
+            'no_of_ha.numeric'=>'Please input your no of ha, field must be a number',
+            'cost_per_ha.numeric'=>'Please input cost per ha, field must be a number',
+            'gps_longitude.numeric'=>'Please input total amount, field must be a number',
             
        ];
     

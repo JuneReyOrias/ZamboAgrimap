@@ -61,7 +61,7 @@
                 $id = Auth::id();
 
             // Find the user by their ID and eager load the personalInformation relationship
-            $farmprofile= App\Models\FarmProfile::where('id', $id)->latest()->first();
+            $farmprofile= App\Models\FarmProfile::find($id)->latest()->first();
 
               @endphp
                   <label class="form-expand" for="farm_profiles_id">FarmProfile:</label>
@@ -77,7 +77,7 @@
                 </div>
                   <div class="col-md-3 mb-3">
                     <label class="form-expand" for="no_of_ha">No. of Has:</label>
-                    <input type="text" class="form-control placeholder-text @error('no_of_ha') is-invalid @enderror" name="no_of_ha" id="validationCustom01" placeholder="Enter No. of Has" value="{{ old('no_of_ha') }}" >
+                    <input type="text" class="form-control placeholder-text @error('no_of_ha') is-invalid @enderror" name="no_of_ha" id="no_of_ha" placeholder="Enter No. of Has" value="{{ old('no_of_ha') }}" >
                     @error('no_of_ha')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -85,7 +85,7 @@
                
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="cost_per_ha">Cost/Has(Has):</label>
-                  <input type="text" class="form-control placeholder-text @error('cost_per_ha') is-invalid @enderror" name="cost_per_ha" id="validationCustom01" placeholder="Enter Cost/Has" value="{{ old('cost_per_ha') }}" >
+                  <input type="text" class="form-control placeholder-text @error('cost_per_ha') is-invalid @enderror" name="cost_per_ha" id="cost_per_ha" placeholder="Enter Cost/Has" value="{{ old('cost_per_ha') }}" >
                   @error('cost_per_ha')
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -93,7 +93,7 @@
                
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="total_amount">Total Amount:</label>
-                  <input type="text" class="form-control placeholder-text @error('total_amount') is-invalid @enderror" name="total_amount" id="validationCustom01" placeholder="Enter No. of Years" value="{{ old('total_amount') }}" >
+                  <input type="text" class="form-control placeholder-text @error('total_amount') is-invalid @enderror" name="total_amount" id="total_amount" placeholder="Enter No. of Years" value="{{ old('total_amount') }}" >
                   @error('total_amount')
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -117,4 +117,33 @@
   
   
   </div>
+  <script>
+    // Get references to the input fields
+    const no_of_ha = document.getElementById('no_of_ha');
+    const cost_per_ha = document.getElementById('cost_per_ha');
+    const total_amount = document.getElementById('total_amount');
+   
+    
+    // Function to calculate and display the total cost
+    function calculateTotalCost() {
+        const nooFhas = parseFloat(no_of_ha.value) || 0;
+        const costPerHAS= parseFloat(cost_per_ha.value) || 0;
+      
+       
+    
+        const totalCost = nooFhas * costPerHAS
+    
+        // Display the total cost in the total cost input field
+        totalCostInput.value = totalCost.toFixed(2); // You can adjust the number of decimal places as needed
+    }
+    
+    // Calculate the total cost whenever any of the input fields change
+    no_of_ha.addEventListener('input', calculateTotalCost);
+    cost_per_ha.addEventListener('input', calculateTotalCost);
+  
+   
+    
+    // Initial calculation when the page loads
+    calculateTotalCost();
+    </script>
   @endsection

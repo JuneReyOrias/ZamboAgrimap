@@ -33,19 +33,19 @@ class PesticidesRequest extends FormRequest
             //     'max:50',
             // ],
             'no_of_l_kg'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'unitprice_ofpesticides'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'total_cost_pesticides'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
            
         ];
@@ -55,9 +55,9 @@ class PesticidesRequest extends FormRequest
        return [
             // 'pesticides_name.required'=>'Please input pesticides name',
             // 'type_ofpesticides.required'=>'Please input type of pesticides',
-            'no_of_l_kg.required'=>'Please input  no of l kg',
-            'unitprice_ofpesticides.required'=>'Please input unit price of pesticides',
-            'total_cost_pesticides.required'=>'Please input total cost pesticides',
+            'no_of_l_kg.numeric'=>'Please input  no of l kg, field must be a number',
+            'unitprice_ofpesticides.numeric'=>'Please input unit price of pesticides, field must be a number',
+            'total_cost_pesticides.numeric'=>'Please input total cost pesticides, field must be a number',
        ];
     
     }

@@ -27,7 +27,7 @@
             <h5 class="card-title"><span>b.</span>Labor Update</h5>
             <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
         
-           <form action{{url('AddNewLabor')}} method="post">
+           <form action{{url('LaborDataupdate')}} method="post">
               @csrf
             {{-- adding new labor data --}}
             <div class="row mb-3">

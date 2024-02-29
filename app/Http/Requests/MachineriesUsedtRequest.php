@@ -23,29 +23,29 @@ class MachineriesUsedtRequest extends FormRequest
     {
         $rule= [
             'plowing_cost'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'harrowing_cost'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'harvesting_cost'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'post_harvest_cost'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'total_cost_for_machineries'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
            
         ];
@@ -53,11 +53,11 @@ class MachineriesUsedtRequest extends FormRequest
     }
     public function messages(){
        return [
-            'plowing_cost.required'=>'Please input plowing cost',
-            'harrowing_cost.required'=>'Please input harrowing cost',
-            'harvesting_cost.required'=>'Please input harvesting cost',
-            'post_harvest_cost.required'=>'Please input post harvest cost',
-            'total_cost_for_machineries.required'=>'Please input total_cost for machineries',
+            'plowing_cost.numeric'=>'Please input plowing cost, field must be a number',
+            'harrowing_cost.numeric'=>'Please input harrowing cost, field must be a number',
+            'harvesting_cost.numeric'=>'Please input harvesting cost, field must be a number',
+            'post_harvest_cost.numeric'=>'Please input post harvest cost, field must be a number',
+            'total_cost_for_machineries.numeric'=>'Please input total_cost for machineries, field must be a number',
        ];
     
     }

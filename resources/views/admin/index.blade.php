@@ -50,7 +50,7 @@
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
-                  <h3 class="mb-2">1,431.00</h3>
+                  <h3 class="mb-2">{{ number_format($totalfarms, 2) }}</h3>
                   <div class="d-flex align-items-baseline">
                     {{-- <p class="text-success">
                       <span>+3.3%</span>
@@ -59,7 +59,7 @@
                   </div>
                 </div>
                 <div class="col-6 col-md-12 col-xl-7">
-                  <div id="customersChart" class="mt-md-3 mt-xl-0"></div>
+                  <div id="totalFarmsChart" class="mt-md-3 mt-xl-0"></div>
                 </div>
               </div>
             </div>
@@ -85,7 +85,7 @@
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
-                  <h3 class="mb-2">1,787.05</h3>
+                  <h3 class="mb-2">{{ number_format($totalAreaPlanted, 2) }}</h3>
                   <div class="d-flex align-items-baseline">
                     {{-- <p class="text-danger">
                       <span>-2.8%</span>
@@ -120,7 +120,7 @@
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
-                  <h3 class="mb-2">4,876,918.00</h3>
+                  <h3 class="mb-2">{{ number_format($totalAreaYield, 2) }}</h3>
                   <div class="d-flex align-items-baseline">
                     {{-- <p class="text-success">
                       <span>+2.8%</span>
@@ -164,7 +164,7 @@
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
-                  <h3 class="mb-2">71,578,574.60</h3>
+                  <h3 class="mb-2">{{ number_format($totalCost, 2) }}</h3>
                   <div class="d-flex align-items-baseline">
                     {{-- <p class="text-success">
                       <span>+3.3%</span>
@@ -199,7 +199,7 @@
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
-                  <h3 class="mb-2">2,999.41</h3>
+                  <h3 class="mb-2">{{ number_format($yieldPerAreaPlanted, 2) }}</h3>
                   <div class="d-flex align-items-baseline">
                     {{-- <p class="text-danger">
                       <span>-2.8%</span>
@@ -234,7 +234,7 @@
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
-                  <h3 class="mb-1">43,363.18</h3>
+                  <h3 class="mb-1">{{ number_format($averageCostPerAreaPlanted, 2) }}</h3>
                   <div class="d-flex align-items-baseline">
                     {{-- <p class="text-success">
                       <span>+2.8%</span>

@@ -25,33 +25,7 @@ public function __construct() {
 
 
 // join table for farmprfofiles
-public function FarmProfiles(){
-    try {
-   
-$farmLocation = DB::table('personal_informations')
-->Join('agri_districts', 'personal_informations.agri_districtS_id', '=', 'agri_districts.id')
-->leftJoin('polygons', 'personal_informations.polygons_id', '=', 'polygons.id')
-->select('personal_informations.*', 'agri_districts.*' , 'polygons.*')
-->get();
-$agriDistrictIds = [];
-$polygonsIds = [];
 
-    
-    // // Loop through each row of the result
-    foreach ($farmLocation as $location) {
-        // Extract agri_district_id and polygons_id from each row
-        $agriDistrictIds[] = $location->id;
-        $polygonsIds[] = $location->id;
-    }
-       return view('farm_profile.farm_index', ['farmLocation' => $farmLocation,
-       'agriDistrictIds' => $agriDistrictIds,   'polygonsIds' => $polygonsIds,
-    ]);
-   } catch (\Exception $ex) {
-       // Log the exception for debugging purposes
-       dd($ex);
-       return redirect()->back()->with('message', 'Something went wrong');
-   }
-    }
 
     //join all table and then fetch specific column
 public function Personalfarms() {
@@ -132,11 +106,57 @@ public function Personalfarms() {
       
         try{
         
-            $data= $request->validated();
-            $data= $request->all();
-            PersonalInformations::create($data);
-    
-            return redirect('/farmprofile')->with('message','Personal informations added successsfully');
+            $existingPersonalInformations = PersonalInformations::where([
+                ['first_name', '=', $request->input('first_name')],
+                ['middle_name', '=', $request->input('middle_name')],
+                ['last_name', '=', $request->input('last_name')],
+               
+               
+            
+              
+                // Add other fields here
+            ])->first();
+            
+            if ($existingPersonalInformations) {
+                // FarmProfile with the given personal_informations_id and other fields already exists
+                // You can handle this scenario here, for example, return an error message
+                return redirect('/add-personal-info')->with('error', 'Personal informations with this information already exists.');
+            }
+            
+                    $data= $request->validated();
+                    $data= $request->all();
+                    PersonalInformations::create(
+                        [
+                            'users_id' => $request->input('users_id'),
+                            'first_name' => $request->input('first_name'),
+                            'middle_name' => $request->input('middle_name'),
+                            'last_name' => request('last_name'),
+                            'extension_name' => request('extension_name'),
+                            'home_address' => request('home_address'),
+                            'sex' => request('sex'),
+                            'religion' => request('religion'),
+                            'date_of_birth' => request('date_of_birth'),
+                            'place_of_birth' => request('place_of_birth'),
+                            'contact_no' => request('contact_no'),
+                            'civil_status' => request('civil_status'),
+                            'name_legal_spouse' => request('name_legal_spouse'),
+                            'no_of_children' => request('no_of_children'),
+                            'mothers_maiden_name' => request('mothers_maiden_name'),
+                            'highest_formal_education' => request('highest_formal_education'),
+                            'person_with_disability' => request('person_with_disability'),
+                            'pwd_id_no' => request('pwd_id_no'),
+                            'government_issued_id' => request('government_issued_id'),
+                            'id_type' => request('id_type'),
+                            'gov_id_no' => request('gov_id_no'),
+                            'member_ofany_farmers_ass_org_coop' => request('member_ofany_farmers_ass_org_coop'),
+                            'nameof_farmers_ass_org_coop' => request('nameof_farmers_ass_org_coop'),
+                            'name_contact_person' => request('name_contact_person'),
+                            'oca_district_office' => request('oca_district_office'),
+                            'cp_tel_no' => request('cp_tel_no'),
+                        ]
+                    );
+            
+            return redirect('/farmprofile')->with('message','Personal informations Added successsfully');
         
         }
         catch(\Exception $ex){
@@ -153,94 +173,98 @@ public function Personalfarms() {
 } 
     
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(personalInformations $personalInformations): View
-    {
-        // $personalInformations = PersonalInformations::find($id);
-        return view('personalinfo.create')->with('personalInformations',$personalInformations);
-    }
-    
-    public function showPersonalInfo()
-    {
-        // Fetch personal information data
-        $personalInformations = PersonalInformations::select('id', 'first_name', 'last_name')->get();
+        // view the personalinfo by admin
+        public function PersonalInfoView(){
+            $personalinfos=PersonalInformations::OrderBy('id','desc')->paginate(20);
+            return view('personalinfo.create',compact('personalinfos'));
+        }
+        // edit page for admin
+        public function PersonalInfoEdit($id){
+            $personalinfos= PersonalInformations::find($id);
+            return view('personalinfo.edit_info',compact('personalinfos'));
+        }
 
-        // Pass the data to the view
-        return view('farm_profile.farm_index', compact('personalInformation'));
-    }
+        // new update store by admin FOR PERSONAL INFO
+        public function PersonalInfoUpdate(PersonalInformationsRequest $request,$id)
+        {
+  
+             try{
+        
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($personal_information_id)
-    {
-        // dd($farmer_no);
-        $personalInformations = PersonalInformations::where('personal_information_id',$personal_information_id)->first();
-        // // $personalInformation = PersonalInformations::findOrFail($personalInformation);
-        return view('personalinfo.edit')->with('personalInformation',$personalInformations);
-       ;
-    }
+                    $data= $request->validated();
+                    $data= $request->all();
+                    $data= PersonalInformations::find($id);
+                    
+                    $data->first_name = $request->first_name;
+                    $data->middle_name = $request->middle_name;
+                    $data->last_name = $request->last_name;
+                    $data->extension_name = $request->extension_name;
+                    $data->home_address = $request->home_address;
+                    $data->sex = $request->sex;
+                    $data->religion = $request->religion;
+                    $data->date_of_birth = $request->date_of_birth;
+                    $data->place_of_birth = $request->place_of_birth;
+                    $data->contact_no = $request->contact_no;
+                    $data->civil_status = $request->civil_status;
+                    $data->name_legal_spouse = $request->name_legal_spouse;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePersonalInformationRequest $request,  $farmer_no)
-    {
-            // dd(($request->all()));
-            try {
-                // Get validated data from the request (if you're using validation rules)
-                $data = $request->validated();
+                    $data->no_of_children = $request->no_of_children;
+                    $data->mothers_maiden_name = $request->mothers_maiden_name;
+                    $data->highest_formal_education = $request->highest_formal_education;
+                    $data->person_with_disability = $request->person_with_disability;
+                    $data->pwd_id_no = $request->pwd_id_no;
+                    $data->government_issued_id = $request->government_issued_id;
+                    $data->id_type = $request->id_type;
+                    $data->gov_id_no = $request->gov_id_no;
+                    $data->member_ofany_farmers_ass_org_coop = $request->member_ofany_farmers_ass_org_coop;
+                    $data->nameof_farmers_ass_org_coop = $request->nameof_farmers_ass_org_coop;
+                    $data->name_contact_person = $request->name_contact_person;
+                    $data->cp_tel_no = $request->cp_tel_no;
+                    $data->cp_tel_no = $request->cp_tel_no;
+
+                
+                    $data->save();     
+                    
+                
+                    return redirect('/view-personalinfo')->with('message','Personal informations Updated successsfully');
+                
+                }
+                catch(\Exception $ex){
+                    // dd($ex); // Debugging statement to inspect the exception
+                    return redirect('/update-personalinfo/{personalinfos}')->with('message','Someting went wrong');
+                    
+                }   
+            } 
+
+            // deleting personal info by admin
+            public function infodelete($id) {
+                try {
+                    // Find the personal information by ID
+                    $personalinformations = PersonalInformations::find($id);
             
-                // If you want to use all data, use this line instead of the above line.
-                // $data = $request->all();
+                    // Check if the personal information exists
+                    if (!$personalinformations) {
+                        return redirect()->back()->with('error', 'Personal information not found');
+                    }
             
-                // Update the PersonalInformations table
-                PersonalInformations::where('farmer_no', $farmer_no)->update($data);
+                    // Delete the personal information data from the database
+                    $personalinformations->delete();
             
-                // Optionally, you can return a response indicating success
-                return redirect('/personalinfo/create')->with('message','Personal informations updated successsfully');
-            } catch (\Exception $e) {
-                // Handle any exceptions that might occur during the update process
-                return response()->json(['message' => 'Error updating record: ' . $e->getMessage()], 500);
+                    // Redirect back with success message
+                    return redirect()->back()->with('message', 'Personal information deleted successfully');
+            
+                } catch (\Exception $e) {
+                    // Handle any exceptions and redirect back with error message
+                    return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+                }
             }
 
-    
-           
-        }
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy( $id)
-    {
-        try {
-            $personalInformations = PersonalInformations::where('id', $id);
-        
-            if ($personalInformations) {
-                $personalInformations->delete();
-                return redirect()->route('personalinfo.create')
-                                 ->with('message', 'Personal Informations deleted successfully');
-            } else {
-                return redirect()->route('personalinfo.create')
-                                 ->with('message', 'Personal Informations not found');
-            }
-        } catch (\Exception $e) {
-            return redirect()->route('personalinfo.create')
-                             ->with('message', 'Error deleting Personal Informations : ' . $e->getMessage());
-        }
-        
-          
-    }
 
 
-    public function viewpersoninfo($id){
-        $perinfo = PersonalInformations::find($id);
-        return view('agent.formvalidation.valpersonal.personinfo_edit',compact('perinfo'));
-    }
-    
+
+    // Aggent view of all joint table of the six table to personal info
     public function alldataform() {
-// agent all data form 
+
         try { 
     
         $allfarmers = DB::table('personal_informations')
@@ -281,9 +305,9 @@ public function Personalfarms() {
 }
 
 
-
+// all farmers data view ny the users 
 public function forms() {
-// agent all data form 
+
     try { 
 
     $allfarmers = DB::table('personal_informations')
@@ -323,10 +347,9 @@ public function forms() {
 
 }
 
-
-
+// viewing the all farmers in farm profile
 public function profileFarmer($id) {
-    // agent all data form 
+   
             try { 
         
             $allfarmers =PersonalInformations:: find($id)

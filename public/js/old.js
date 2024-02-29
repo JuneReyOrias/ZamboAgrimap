@@ -65,7 +65,7 @@ function initMap() {
 
     const listOfprofiles = []
 
-    const datadistricts = document.querySelectorAll('.test')
+    const datadistricts = document.querySelectorAll('.newdistrict')
     datadistricts.forEach((location, index) => {
         let lat = location.getAttribute("data-lat")
         let long = location.getAttribute("data-lng")
@@ -80,7 +80,7 @@ function initMap() {
             home_address, nameof_farmers_ass_org_coops, tenurial_status, no_of_years_as_farmers, land_title_no,
             lot_no, area_prone_to, ecosystem, type_rice_variety, prefered_variety, plant_schedule_wetseason,
             plant_schedule_dryseason, no_of_cropping_yr, yield_kg_ha, source_of_capital, rsba_register,
-            pcic_insured, government_assisted, sex, total_physical_area_has, rice_area_cultivated_has, description) {
+            pcic_insured, government_assisted, sex, total_physical_area_has, rice_area_cultivated_has, description, ) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.location_name = district;
@@ -110,6 +110,8 @@ function initMap() {
             this.total_physical_area_has = total_physical_area_has;
             this.rice_area_cultivated_has = rice_area_cultivated_has;
             this.description = description;
+
+
 
 
 
@@ -222,7 +224,8 @@ function initMap() {
             parfour_latitude, parfour_longitude, parfive_latitude, parfive_longitude, parsix_latitude,
             parsix_longitude, parseven_latitude, parseven_longitude, pareight_latitude, pareight_longitude,
             parnine_latitude, parnine_longitude, parten_latitude, parten_longitude,
-            pareleven_latitude, pareleven_longitude, partwelve_latitude, partwelve_longitude, parcolor, parcel_name) {
+            pareleven_latitude, pareleven_longitude, partwelve_latitude, partwelve_longitude, parcolor, parcel_name,
+            arpowner_na, brgy_name, lot_no, pkind_desc, puse_desc, actual_used, tct_no) {
             this.parone_latitude = parone_latitude;
             this.parone_longitude = parone_longitude;
             this.partwo_latitude = partwo_latitude;
@@ -250,6 +253,13 @@ function initMap() {
             this.partwelve_longitude = partwelve_longitude;
             this.parcolor = parcolor;
             this.parcel_name = parcel_name;
+            this.arpowner_na = arpowner_na;
+            this.brgy_name = brgy_name;
+            this.lot_no = lot_no;
+            this.pkind_desc = pkind_desc;
+            this.puse_desc = puse_desc;
+            this.actual_used = actual_used;
+            this.tct_no = tct_no;
         }
     }
 
@@ -286,14 +296,21 @@ function initMap() {
 
         let parcolors = parcel.getAttribute("data-parcolors")
         let parname = parcel.getAttribute("data-parname")
-
+        let arpowner_na = parcel.getAttribute("data-arpowner_na")
+        let brgy_name = parcel.getAttribute("data-brgy_name")
+        let lot_no = parcel.getAttribute("data-lot_no")
+        let pkind_desc = parcel.getAttribute("data-pkind_desc")
+        let puse_desc = parcel.getAttribute("data-puse_desc")
+        let actual_used = parcel.getAttribute("data-actual_used")
+        let tct_no = parcel.getAttribute("data-tct_no")
         listOfParcels.push(new parcelboarders(parseFloat(paronelat), parseFloat(paronelong),
             parseFloat(partwolat), parseFloat(partwolong), parseFloat(parthreelat), parseFloat(parthreelong),
             parseFloat(parfourlat), parseFloat(parfourlong), parseFloat(parfivelat), parseFloat(parfivelong),
             parseFloat(parsixlat), parseFloat(parsixlong), parseFloat(parsevenlat), parseFloat(parsevenlong),
             parseFloat(pareightlat), parseFloat(pareightlong), parseFloat(parninelat), parseFloat(parninelong),
             parseFloat(partenlat), parseFloat(partenlong), parseFloat(parelevenlat), parseFloat(parelevenlong),
-            parseFloat(paronetwelvelat), parseFloat(partwelvelong), parcolors, parname,
+            parseFloat(paronetwelvelat), parseFloat(partwelvelong), parcolors, parname, arpowner_na, brgy_name, lot_no, pkind_desc,
+            puse_desc, actual_used, tct_no
         ));
     })
     const locationZC = { lat: 6.9214, lng: 122.0790 }; // ZAMBOANGA CITY LATLANG
@@ -485,19 +502,7 @@ function initMap() {
                 <tr style="background-color: #c6e2ff;">
                 <td style="padding: 8px;"><strong>Perimeter:</strong></td>
                 <td style="padding: 8px;">${polygon.perimeter}</td>
-                </tr>
-                <tr style="background-color:#eaf7fa;">
-                <td style="padding: 8px; "><strong>Area:</strong></td>
-                <td style="padding: 8px;">${polygon.area}</td>
-            </tr>
-                <tr style="background-color: #c6e2ff;">
-                <td style="padding: 8px;"><strong>Perimeter:</strong></td>
-                <td style="padding: 8px;">${polygon.perimeter}</td>
-                </tr>
-                <tr style="background-color:#eaf7fa;">
-                <td style="padding: 8px; "><strong>Area:</strong></td>
-                <td style="padding: 8px;">${polygon.area}</td>
-                </tr>
+                
     </table>
     ${editButton} 
     </div>
@@ -515,24 +520,41 @@ function initMap() {
         return `
         <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
 
-        <h4 style="margin-bottom: 10px;Align-tex:center;">Parcellary Boarders</h4>
+        <h4 style="margin-bottom: 10px;Align-tex:center;">Parcel Boarders</h4>
         <table style="width:100%; border-collapse: collapse;">
-        <tr style="background-color: #c6e2ff;">
-            <td style="padding: 8px;"><strong>Parcel Name:</strong></td>
-            <td style="padding: 8px;">${parcelary.parcel_name}</td>
-        </tr>
-        <tr style="background-color:#eaf7fa;">
-            <td style="padding: 8px; "><strong>Description:</strong></td>
-            <td style="padding: 8px;">${parcelary.description}</td>
-        </tr>
-        <tr style="background-color: #c6e2ff;">
-        <td style="padding: 8px;"><strong>Location:</strong></td>
-        <td style="padding: 8px;">${parcelary.latitude}</td>
-    </tr>
-    <tr style="background-color:#eaf7fa;">
-    <td style="padding: 8px; "><strong>Location :</strong></td>
-    <td style="padding: 8px;">${parcelary.longitude}</td>
-</tr>
+                <tr style="background-color: #c6e2ff;">
+                    <td style="padding: 8px;"><strong>ParcelName:</strong></td>
+                    <td style="padding: 8px;">${parcelary.parcel_name}</td>
+                </tr>
+                <tr style="background-color:#eaf7fa;">
+                    <td style="padding: 8px; "><strong>ARPOwner Name:</strong></td>
+                    <td style="padding: 8px;">${parcelary.arpowner_na}</td>
+                </tr>
+                <tr style="background-color: #c6e2ff;">
+                <td style="padding: 8px;"><strong>Brgy. Name:</strong></td>
+                <td style="padding: 8px;">${parcelary.brgy_name}</td>
+                </tr>
+                <tr style="background-color:#eaf7fa;">
+                <td style="padding: 8px; "><strong>Land Title no.:</strong></td>
+                <td style="padding: 8px;">${parcelary.tct_no}</td>
+            </tr>
+            <tr style="background-color: #c6e2ff;">
+            <td style="padding: 8px;"><strong>Lot No.:</strong></td>
+            <td style="padding: 8px;">${parcelary.lot_no}</td>
+            </tr>
+                <tr style="background-color: #eaf7fa;">
+                <td style="padding: 8px;"><strong>Pkind Desc:</strong></td>
+                <td style="padding: 8px;">${parcelary.pkind_desc}</td>
+                </tr>
+                <tr style="background-color:#c6e2ff;">
+                <td style="padding: 8px; "><strong>Pused Desc:</strong></td>
+                <td style="padding: 8px;">${parcelary.puse_desc}</td>
+                </tr>
+                <tr style="background-color:#eaf7fa;">
+                <td style="padding: 8px;"><strong>Actual Used:</strong></td>
+                <td style="padding: 8px;">${parcelary.actual_used}</td>
+                </tr>
+               
     </table>
     ${editButton} 
     </div>

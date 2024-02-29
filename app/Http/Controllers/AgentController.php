@@ -18,7 +18,7 @@ use App\Http\Requests\UpdateMachineriesUsedRequest;
 use App\Http\Requests\LastProductionDatasRequest;
 use App\Http\Requests\UpdateLastProductiondatasRequest;
 use App\Http\Requests\SeedRequest;
-use App\Http\Requests\laborRequest;
+use App\Http\Requests\LaborRequest;
 use App\Http\Requests\FertilizerRequest;
 use App\Http\Requests\PesticidesRequest;
 use App\Http\Requests\TransportRequest;
@@ -40,7 +40,14 @@ class AgentController extends Controller
 
 
     public function AgentDashboard(){
-        return view('agent.agent_index');
+        $totalfarms= FarmProfile::count();
+        $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+        $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+        $totalCost= VariableCost::sum('total_variable_cost');
+
+        $yieldPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalAreaYield / $totalAreaPlanted : 0;
+        $averageCostPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalCost / $totalAreaPlanted : 0;
+        return view('agent.agent_index',compact('totalfarms','totalAreaPlanted','totalAreaYield','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted'));
     }
     public function agentlog(Request $request)
     {
@@ -631,8 +638,27 @@ public function updateinfo(PersonalInformationsRequest $request,$id)
         $data= $request->validated();
         $data= $request->all();
         $data= PersonalInformations::find($id);
-           
-        $data->first_name = $request->first_name;
+                                    
+                // Check if a file is present in the request and if it's valid
+                if ($request->hasFile('personal_photo') && $request->file('personal_photo')->isValid()) {
+                    // Retrieve the personal_photo file from the request
+                    $personal_photo = $request->file('personal_photo');
+
+                    // Generate a unique personal_photo name using current timestamp and file extension
+                    $imagename = time() . '.' . $personal_photo->getClientOriginalExtension();
+
+                    // Move the uploaded personal_photo to the 'productimages' directory with the generated name
+                    $personal_photo->move('farmimages', $imagename);
+
+                    // Delete the previous personal_photo file, if exists
+                    if ($data->personal_photo) {
+                        Storage::delete('farmimages/' . $data->personal_photo);
+                    }
+
+                    // Set the personal_photo name in the Product data
+                    $data->personal_photo = $imagename;
+                }
+            $data->first_name = $request->first_name;
         $data->middle_name = $request->middle_name;
         $data->last_name = $request->last_name;
         $data->extension_name = $request->extension_name;
@@ -713,7 +739,7 @@ public function farmUpdate($id){
     return view('agent.farmprofile.farm_update',compact('farmprofiles'));
 }
 
-// agent farm profile update data 
+
 // agent farm profile update data
     public function updatesFarm(FarmProfileRequest $request,$id)
     {
@@ -726,6 +752,25 @@ public function farmUpdate($id){
             
             $data= FarmProfile::find($id);
 
+ // Check if a file is present in the request and if it's valid
+ if ($request->hasFile('farm_images') && $request->file('farm_images')->isValid()) {
+    // Retrieve the farm_images file from the request
+    $farm_images = $request->file('farm_images');
+
+    // Generate a unique farm_images name using current timestamp and file extension
+    $imagename = time() . '.' . $farm_images->getClientOriginalExtension();
+
+    // Move the uploaded farm_images to the 'productimages' directory with the generated name
+    $farm_images->move('farmimages', $imagename);
+
+    // Delete the previous farm_images file, if exists
+    if ($data->farm_images) {
+        Storage::delete('farmimages/' . $data->farm_images);
+    }
+
+    // Set the farm_images name in the Product data
+    $data->farm_images = $imagename;
+}
             $data->personal_informations_id = $request->personal_informations_id;  
             $data->agri_districts_id = $request->agri_districts_id;
             $data->tenurial_status = $request->tenurial_status;
@@ -1048,7 +1093,7 @@ public function ProductionDelete($id) {
     }
 }
 
-// varaible cost
+// varaible cost view, edit, update and delete access by agent
 public function  displayvar(){
     $variable= VariableCost::orderBy('id','desc')->paginate(10);
     return view('agent.variablecost.variable_total.show_var',compact('variable'));
@@ -1131,7 +1176,7 @@ public function vardelete($id) {
 
 
 
-
+// agent update profile
 
 
 public function AgentProfile(){

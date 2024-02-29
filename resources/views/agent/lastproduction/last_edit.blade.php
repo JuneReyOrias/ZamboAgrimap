@@ -38,7 +38,7 @@
   
             <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
            
-           <form  action{{url('AddNewProduction')}} method="post"  >
+           <form  action{{url('Proddataupdate')}} method="post"  >
               @csrf
               <div class="row mb-3">
                 <h2 class="card-title"><span>a.</span>Seed info and Usage details:</h2>
@@ -65,7 +65,7 @@
                
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="seeds_used_in_kg">Seeds in kgs/bag used:</label>
-                  <input type="text" class="form-control placeholder-text @error('seeds_used_in_kg') is-invalid @enderror"value="{{ $productions->seeds_used_in_kg}}" name="seeds_used_in_kg" id="seeds_used_in_kg" placeholder="Enter seeds kg/bag used" value="{{ old('seeds_used_in_kg') }}" >
+                  <input type="number" class="form-control placeholder-text @error('seeds_used_in_kg') is-invalid @enderror"value="{{ $productions->seeds_used_in_kg}}" name="seeds_used_in_kg" id="seeds_used_in_kg" placeholder="Enter seeds kg/bag used" value="{{ old('seeds_used_in_kg') }}" >
                   @error('seeds_used_in_kg')
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -86,7 +86,7 @@
                
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="no_of_fertilizer_used_in_bags">No. of fertilizer used in bags:</label>
-                  <input type="text" class="form-control placeholder-text @error('no_of_fertilizer_used_in_bags') is-invalid @enderror"value="{{ $productions->no_of_fertilizer_used_in_bags}}" name="no_of_fertilizer_used_in_bags" id="no_of_fertilizer_used_in_bags" placeholder="Enter  No. of fertilizer" value="{{ old('no_of_fertilizer_used_in_bags') }}" >
+                  <input type="number" class="form-control placeholder-text @error('no_of_fertilizer_used_in_bags') is-invalid @enderror"value="{{ $productions->no_of_fertilizer_used_in_bags}}" name="no_of_fertilizer_used_in_bags" id="no_of_fertilizer_used_in_bags" placeholder="Enter  No. of fertilizer" value="{{ old('no_of_fertilizer_used_in_bags') }}" >
                   @error('no_of_fertilizer_used_in_bags')
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -94,7 +94,7 @@
 
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="no_of_pesticides_used_in_l_per_kg">No. of pesticides used in L/kg:</label>
-                  <input type="text" class="form-control placeholder-text @error('no_of_pesticides_used_in_l_per_kg') is-invalid @enderror"value="{{ $productions->no_of_pesticides_used_in_l_per_kg}}" name="no_of_pesticides_used_in_l_per_kg" id="no_of_pesticides_used_in_l_per_kg" placeholder="Enter no. of pesticides" value="{{ old('no_of_pesticides_used_in_l_per_kg') }}" >
+                  <input type="number" class="form-control placeholder-text @error('no_of_pesticides_used_in_l_per_kg') is-invalid @enderror"value="{{ $productions->no_of_pesticides_used_in_l_per_kg}}" name="no_of_pesticides_used_in_l_per_kg" id="no_of_pesticides_used_in_l_per_kg" placeholder="Enter no. of pesticides" value="{{ old('no_of_pesticides_used_in_l_per_kg') }}" >
                   @error('no_of_pesticides_used_in_l_per_kg')
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -102,7 +102,7 @@
                
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="no_of_insecticides_used_in_l">No. of insecticides used in L:</label>
-                  <input type="text" class="form-control placeholder-text @error('no_of_insecticides_used_in_l') is-invalid @enderror"value="{{ $productions->no_of_insecticides_used_in_l}}" name="no_of_insecticides_used_in_l" id="no_of_insecticides_used_in_l" placeholder="Enter no. of insecticides" value="{{ old('no_of_insecticides_used_in_l') }}" >
+                  <input type="number" class="form-control placeholder-text @error('no_of_insecticides_used_in_l') is-invalid @enderror"value="{{ $productions->no_of_insecticides_used_in_l}}" name="no_of_insecticides_used_in_l" id="no_of_insecticides_used_in_l" placeholder="Enter no. of insecticides" value="{{ old('no_of_insecticides_used_in_l') }}" >
                   @error('no_of_insecticides_used_in_l')
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -145,7 +145,7 @@
        
         <div class="col-md-3 mb-3">
           <label class="form-expand" for="yield_tons_per_kg">Yield (tons/kg):</label>
-          <input type="text" class="form-control placeholder-text @error('yield_tons_per_kg') is-invalid @enderror"value="{{ $productions->yield_tons_per_kg}}"  name="yield_tons_per_kg" id="harrowingCostInput" placeholder="Enter yields" value="{{ old('yield_tons_per_kg') }}" >
+          <input type="number" class="form-control placeholder-text @error('yield_tons_per_kg') is-invalid @enderror"value="{{ $productions->yield_tons_per_kg}}"  name="yield_tons_per_kg" id="harrowingCostInput" placeholder="Enter yields" value="{{ old('yield_tons_per_kg') }}" >
           @error('yield_tons_per_kg')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
@@ -161,7 +161,7 @@
  
         <div class="col-md-3 mb-3">
           <label class="form-expand" for="unit_price_palay_per_kg">Unit price of Palay per/kgs:</label>
-          <input type="text" class="form-control placeholder-text @error('unit_price_palay_per_kg') is-invalid @enderror"value="{{ $productions->unit_price_palay_per_kg}}" name="unit_price_palay_per_kg" id="unit_price_palay" placeholder="Enter unit price of palay" value="{{ old('unit_price_palay_per_kg') }}" >
+          <input type="number" class="form-control placeholder-text @error('unit_price_palay_per_kg') is-invalid @enderror"value="{{ $productions->unit_price_palay_per_kg}}" name="unit_price_palay_per_kg" id="unit_price_palay" placeholder="Enter unit price of palay" value="{{ old('unit_price_palay_per_kg') }}" >
           @error('unit_price_palay_per_kg')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
@@ -169,7 +169,7 @@
        
         <div class="col-md-3 mb-3">
           <label class="form-expand" for="unit_price_rice_per_kg">Unit price of Rice/kgs:</label>
-          <input type="text" class="form-control placeholder-text @error('unit_price_rice_per_kg') is-invalid @enderror"value="{{ $productions->unit_price_rice_per_kg}}" name="unit_price_rice_per_kg" id="unit_price_rice" placeholder="Enter unit price of rice" value="{{ old('unit_price_rice_per_kg') }}" >
+          <input type="number" class="form-control placeholder-text @error('unit_price_rice_per_kg') is-invalid @enderror"value="{{ $productions->unit_price_rice_per_kg}}" name="unit_price_rice_per_kg" id="unit_price_rice" placeholder="Enter unit price of rice" value="{{ old('unit_price_rice_per_kg') }}" >
           @error('unit_price_rice_per_kg')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
@@ -205,14 +205,14 @@
 
         <div class="col-md-3 mb-3">
           <label class="form-expand" for="gross_income_palay">Gross Income (Palay):</label>
-          <input type="text" class="form-control placeholder-text @error('gross_income_palay') is-invalid @enderror"value="{{ $productions->gross_income_palay}}" name="gross_income_palay" id="gross_income_palay" placeholder="Enter yields" value="{{ old('gross_income_palay') }}" >
+          <input type="number" class="form-control placeholder-text @error('gross_income_palay') is-invalid @enderror"value="{{ $productions->gross_income_palay}}" name="gross_income_palay" id="gross_income_palay" placeholder="Enter yields" value="{{ old('gross_income_palay') }}" >
           @error('gross_income_palay')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
         </div>
         <div class="col-md-3 mb-3">
           <label class="form-expand" for="gross_income_rice">Gross Income (Rice):</label>
-          <input type="text" class="form-control placeholder-text @error('gross_income_rice') is-invalid @enderror"value="{{ $productions->gross_income_rice}}" name="gross_income_rice" id="gross_income_rice" placeholder="Enter yields" value="{{ old('gross_income_rice') }}" >
+          <input type="number" class="form-control placeholder-text @error('gross_income_rice') is-invalid @enderror"value="{{ $productions->gross_income_rice}}" name="gross_income_rice" id="gross_income_rice" placeholder="Enter yields" value="{{ old('gross_income_rice') }}" >
           @error('gross_income_rice')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
@@ -223,7 +223,7 @@
   
  
   <div  class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <a  href="{{route('agent.lastproduction.view_prod')}}"button  class="btn btn-success me-md-2">Back</button></a></p>
+    <a  href="{{route('production_data.production_create')}}"button  class="btn btn-success me-md-2">Back</button></a></p>
     <button  type="submit" class="btn btn-success me-md-2">Next</button></a></p>
             </form>
          

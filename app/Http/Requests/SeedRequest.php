@@ -33,24 +33,24 @@ class SeedRequest extends FormRequest
             //     'max:50',
             // ],
             'unit'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'quantity'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'unit_price'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'total_seed_cost'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
            
         ];
@@ -60,10 +60,10 @@ class SeedRequest extends FormRequest
        return [
             // 'name_of_fertilizer.required'=>'Please input name of fertilizer',
             // 'type of fertilizer.required'=>'Please input type of fertilizer',
-            'unit.required'=>'Please input unit',
-            'quantity.required'=>'Please input quantity',
-            'unit_price.required'=>'Please input total labor cost',
-            'total_seed_cost.required'=>'Please input total seed cost',
+            'unit.numeric'=>'Please input unit, field must be a number',
+            'quantity.numeric'=>'Please input quantity, field must be a number',
+            'unit_price.numeric'=>'Please input total labor cost, field must be a number',
+            'total_seed_cost.numeric'=>'Please input total seed cost, field must be a number',
        ];
     }
 }

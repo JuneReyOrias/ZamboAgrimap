@@ -16,31 +16,31 @@ class UserTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             //admin
-            [
-                'name'=>'admin',
-                'email'=>'admin@gmail.com',
-                'agri_district'=>'Manicahan',
-                'password'=> Hash::make('222'),
-                'role'=> 'admin',
+            // [
+            //     'name'=>'admin',
+            //     'email'=>'admin@gmail.com',
+            //     'agri_district'=>'Manicahan',
+            //     'password'=> Hash::make('222'),
+            //     'role'=> 'admin',
 
-            ],
-            //agent
-            [
-                'name'=>'agent',
-                'email'=>'agent@gmail.com',
-               'agri_district'=>'Curuan',
-                'password'=> Hash::make('222'),
-                'role'=> 'agent',
+            // ],
+            // //agent
+            // [
+            //     'name'=>'agent',
+            //     'email'=>'agent@gmail.com',
+            //    'agri_district'=>'Curuan',
+            //     'password'=> Hash::make('222'),
+            //     'role'=> 'agent',
 
-            ],
-            //user
-            [
-                'name'=>'user',
-                'email'=>'user@gmail.com',
-               'agri_district'=>'Culianan',
-                'password'=> Hash::make('222'),
-                'role'=> 'user',
-            ]
+            // ],
+            // //user
+            // [
+            //     'name'=>'user',
+            //     'email'=>'user@gmail.com',
+            //    'agri_district'=>'Culianan',
+            //     'password'=> Hash::make('222'),
+            //     'role'=> 'user',
+            // ]
         ]);
     }
 }

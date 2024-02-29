@@ -139,7 +139,7 @@ class PersonalInformationsRequest extends FormRequest
             ],
             'cp_tel_no'=>[
                 'required',
-                'digits:11',
+                'max:12',
             ],
         ];
         return $rule;

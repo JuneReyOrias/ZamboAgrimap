@@ -38,79 +38,122 @@ class LastProductionDataController extends Controller
     public function store(LastProductionDatasRequest $request)
     {
         try{
-        
+            $existingLastProductionDatas =  LastProductionDatas::where([
+                ['personal_informations_id', '=', $request->input('personal_informations_id')],
+                ['farm_profiles_id', '=', $request->input('farm_profiles_id')],
+               
+            
+    
+                // Add other fields here
+            ])->first();
+            
+            if ($existingLastProductionDatas) {
+                // FarmProfile with the given personal_informations_id and other fields already exists
+                // You can handle this scenario here, for example, return an error message
+                return redirect('/production')->with('error', ' Last Production Data with this information already exists.');
+            }
             $data= $request->validated();
             $data= $request->all();
             LastProductionDatas::create($data);
     
-            return redirect('/seeds')->with('message','Fixed Cost added successsfully');
+            return redirect('/personalinformation')->with('message','Rice Survey Form Completed successsfully');
         
         }
         catch(\Exception $ex){
-            return redirect('/productiondata')->with('message','Someting went wrong');
+            return redirect('/production')->with('message','Someting went wrong');
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //$production_id
-    }
+  
+// last production view
+public function Productionview(){
+    $productions= LastProductionDatas::orderBy('id','desc')->paginate(20);
+    return view('production_data.production_create',compact('productions'));
+}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($production_id)
-    {
-        $lastproductiondata = LastProductionDatas::where('production_id',$production_id)->first();
-        return view('production_data.production_edit')->with('lastproductiondata',$lastproductiondata);
-    }
+// last prduction view update
+public function Prodedit($id){
+     $productions= LastProductionDatas::find($id);
+     return view('production_data.production_edit',compact('productions'));
+ }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateLastProductiondatasRequest $request, $production_id)
-    {
-        try {
-            // Get validated data from the request (if you're using validation rules)
-            $data = $request->validated();
+ public function Proddataupdate(LastProductionDatasRequest $request,$id)
+{
+
+    try{
         
-            // If you want to use all data, use this line instead of the above line.
-            // $data = $request->all();
+
+        $data= $request->validated();
+        $data= $request->all();
         
-            // Update the PersonalInformations table
-            LastProductionDatas::where('production_id', $production_id)->update($data);
+        $data=LastProductionDatas::find($id);
+
+        $data->personal_informations_id = $request->personal_informations_id;  
+        $data->farm_profiles_id = $request->farm_profiles_id;
+        $data->agri_districts_id = $request->agri_districts_id;
+
+        $data->seeds_typed_used = $request->seeds_typed_used;
+        $data->seeds_used_in_kg = $request->seeds_used_in_kg;
+        $data->seed_source = $request->seed_source;
         
-            // Optionally, you can return a response indicating success
-            return redirect('/production/create')->with('message','Last Production Data updated successsfully');
-        } catch (\Exception $e) {
-            // Handle any exceptions that might occur during the update process
-            return redirect()->route('production_data.create')
-            ->with('message', 'Error updating Last Production Data : ' . $e->getMessage());
+        $data->no_of_fertilizer_used_in_bags = $request->no_of_fertilizer_used_in_bags;
+        $data->no_of_pesticides_used_in_l_per_kg = $request->no_of_pesticides_used_in_l_per_kg;
+        $data->no_of_insecticides_used_in_l = $request->no_of_insecticides_used_in_l;
+
+        $data->area_planted = $request->area_planted;
+        $data->date_planted = $request->date_planted;
+        $data->date_harvested = $request->date_harvested;
+        $data->yield_tons_per_kg = $request->yield_tons_per_kg;
+        $data->unit_price_palay_per_kg = $request->unit_price_palay_per_kg;
+        $data->unit_price_rice_per_kg = $request->unit_price_rice_per_kg;
+        $data->type_of_product = $request->type_of_product;
+       
+        $data->sold_to = $request->sold_to;
+  
+        $data->if_palay_milled_where= $request->if_palay_milled_where;
+        
+        $data->gross_income_palay = $request->gross_income_palay;
+        
+        $data->gross_income_rice= $request->gross_income_rice;
+
+        
+        $data->save();     
+        
+    
+        return redirect('/view-production')->with('message','Last Production Data Updated successsfully');
+    
+    }
+    catch(\Exception $ex){
+        // dd($ex); // Debugging statement to inspect the exception
+        return redirect('/edit-production/{productions}')->with('message','Someting went wrong');
+        
+    }   
+} 
+
+
+
+
+
+
+public function ProdDestroy($id) {
+    try {
+        // Find the personal information by ID
+       $productions =LastProductionDatas::find($id);
+
+        // Check if the personal information exists
+        if (! $productions) {
+            return redirect()->back()->with('error', 'Farm Profilenot found');
         }
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($production_id)
-    {
-        try {
-             $lastproductiondata = LastProductionDatas::where('production_id', $production_id);
-        
-            if ( $lastproductiondata) {
-                 $lastproductiondata->delete();
-                return redirect()->route('production_data.create')
-                                 ->with('message', 'Last Production Data deleted successfully');
-            } else {
-                return redirect()->route('production_data.create')
-                                 ->with('message', 'Last Production Data not found');
-            }
-        } catch (\Exception $e) {
-            return redirect()->route('production_data.create')
-                             ->with('message', 'Error deleting Last Production Data : ' . $e->getMessage());
-        }
+        // Delete the personal information data from the database
+       $productions->delete();
+
+        // Redirect back with success message
+        return redirect()->back()->with('message', 'Last Production Data deleted Successfully');
+
+    } catch (\Exception $e) {
+        dd($e);// Handle any exceptions and redirect back with error message
+        return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
     }
+}
 }

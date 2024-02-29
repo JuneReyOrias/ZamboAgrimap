@@ -43,25 +43,10 @@ class PolygonController extends Controller
      */
     public function Polygons()
     {
-        // $agridistrictS= AgriDistrictController::latest()->get();
-     return view('polygon.polygon_create');
+        $polygons=Polygon::orderBy('id','desc')->paginate(10);
+     return view('polygon.polygon_create',compact('polygons'));
     }
 
-    public function Arcmap()
-    {
-        // $polygons= Polygon::all();
-        $farmLocation = DB::table('polygons')
-     ->Join ('agri_districts', 'polygons.agri_districtS_id', '=', 'agri_districts.id')
-     ->join('farm_profiles', 'polygons.farm_profiles_id', '=', 'farm_profiles.id')
-     ->select('polygons.*', 'agri_districts.*','farm_profiles.*')
-     ->get();
-
-
-    //  return view('map.arcmap',compact('farmprofile'));
-    // return  $farmLocation;
-    return view('map.arcmap', ['farmLocation' =>$farmLocation]);
- 
-     }
     /**
      * Store a newly created resource in storage.
      */
@@ -72,7 +57,7 @@ class PolygonController extends Controller
             $data= $request->validated();
             // $data= $request->all();
            Polygon::create([
-            'users_id' => $request->input('users_id'),
+         
             'agri_districts_id'=>$request->input('agri_districts_id'),
             'verone_latitude'=>$request->input('verone_latitude'),
             'verone_longitude'=>$request->input('verone_longitude'),
@@ -92,7 +77,8 @@ class PolygonController extends Controller
             'verteight_longitude'=>$request->input('verteight_longitude'),
             'strokecolor'=>$request->input('strokecolor'),
             'area'=>$request->input('area'),
-            'perimeter'=>$request->input('area'),
+            'perimeter'=>$request->input('perimeter'),
+            'poly_name'=>$request->input('poly_name'),
            ]);
     
             return redirect('/polygon/create')->with('message','Personal informations added successsfully');
@@ -104,70 +90,93 @@ class PolygonController extends Controller
             
         }   
     }
+// fixed cost view
+public function polygonshow(){
+    $polygons=Polygon::orderBy('id','desc')->paginate(10);
+    return view('polygon.polygons_show',compact('polygons'));
+}
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        return view('personalinfo.create')->with('personalInformations',$id);
-    }
+// fixed cost update
+public function polygonEdit($id){
+    $polygons=Polygon::find($id);
+    return view('polygon.polygons_edit',compact('polygons'));
+}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-       // dd($farmer_no);
-       $agridistricts = Polygon::where('personal_information_id',$id)->first();
-     
-       return view('personalinfo.edit')->with('personalInformation',$agridistricts);
-    }
+public function polygonUpdates(PolygonRequest $request,$id)
+{
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-    
-            // dd(($request->all()));
-            try {
-                // Get validated data from the request (if you're using validation rules)
-                $data = $request->validated();
-            
-                // If you want to use all data, use this line instead of the above line.
-                // $data = $request->all();
-            
-                // Update the PersonalInformations table
-               Polygon::where('agri_districts_id', $id)->update($data);
-            
-                // Optionally, you can return a response indicating success
-                return redirect('/personalinfo/create')->with('message','Personal informations updated successsfully');
-            } catch (\Exception $e) {
-                // Handle any exceptions that might occur during the update process
-                return response()->json(['message' => 'Error updating record: ' . $e->getMessage()], 500);
-            }
-        }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        try {
-            $agridistricts =Polygon::where('id', $id);
+    try{
         
-            if ($agridistricts) {
-                $agridistricts->delete();
-                return redirect()->route('personalinfo.create')
-                                 ->with('message', 'Personal Informations deleted successfully');
-            } else {
-                return redirect()->route('personalinfo.create')
-                                 ->with('message', 'Personal Informations not found');
-            }
-        } catch (\Exception $e) {
-            return redirect()->route('personalinfo.create')
-                             ->with('message', 'Error deleting Personal Informations : ' . $e->getMessage());
+
+        $data= $request->validated();
+        $data= $request->all();
+        
+        $data= Polygon::find($id);
+
+       
+        $data->agri_districts_id = $request->agri_districts_id;
+        $data->verone_latitude=$request->verone_latitude;
+        $data-> verone_longitude=$request->verone_longitude;
+        $data-> vertwo_latitude=$request->vertwo_latitude;
+        $data-> vertwo_longitude=$request->vertwo_longitude;
+        $data->verthree_latitude=$request->verthree_latitude;
+        $data-> verthree_longitude=$request->verthree_longitude;
+        $data->vertfour_latitude=$request->vertfour_latitude;
+        $data->vertfour_longitude=$request->vertfour_longitude;
+        $data->verfive_latitude=$request->verfive_latitude;
+        $data->verfive_longitude=$request->verfive_longitude;
+        $data->versix_latitude=$request->versix_latitude;
+        $data->versix_longitude=$request->versix_longitude;
+        $data->verseven_latitude=$request->verseven_latitude;
+        $data-> verseven_longitude=$request->verseven_longitude;
+        $data->vereight_latitude=$request->vereight_latitude;
+        $data->verteight_longitude=$request->verteight_longitude;
+        $data->strokecolor=$request->strokecolor;
+        $data->area=$request->area;
+        $data->perimeter=$request->perimeter;
+        $data->poly_name=$request->poly_name;
+       
+
+        
+        $data->save();     
+        
+    
+        return redirect('/view-polygon')->with('message','Fixed cost Data Updated successsfully');
+    
+    }
+    catch(\Exception $ex){
+        dd($ex); // Debugging statement to inspect the exception
+        return redirect('/edit-polygon/{polygons}')->with('message','Someting went wrong');
+        
+    }   
+} 
+
+
+
+
+
+
+public function polygondelete($id) {
+    try {
+        // Find the personal information by ID
+       $polygons = Polygon::find($id);
+
+        // Check if the personal information exists
+        if (!$polygons) {
+            return redirect()->back()->with('error', 'Farm Profilenot found');
         }
+
+        // Delete the personal information data from the database
+       $polygons->delete();
+
+        // Redirect back with success message
+        return redirect()->back()->with('message', 'Fixed Cost deleted Successfully');
+
+    } catch (\Exception $e) {
+        // Handle any exceptions and redirect back with error message
+        return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
     }
 }
+
+
+    }

@@ -1,9 +1,11 @@
 @extends('agent.agent_Dashboard')
 @section('agent') 
 
+<div class="page-content">
 
+ 
 <section style="background-color: #eee;">
-  <div class="container py-5">
+  <div class="container-profile py-5">
     <div class="row">
       <div class="col">
         <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
@@ -103,7 +105,15 @@
               </div>
             </div>
             <hr>
-         
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Agri-District</p>
+              </div>
+              <div class="col-sm-9">
+                <input type="text" class="form-control"name="agri_district" id="agri_district" autocomplete="off" value="{{$agent->agri_district}}">
+              </div>
+            </div>
+            <hr>
             <div class="row">
               <div class="col-sm-3">
                 <p class="mb-0">Role</p>
@@ -223,7 +233,7 @@
   </div>
 
 </section>
-
+</div>
 <script>
   document.getElementById("togglePasswordVisibilityCheckbox").addEventListener("change", function () {
       var passwordInput = document.getElementById("password");

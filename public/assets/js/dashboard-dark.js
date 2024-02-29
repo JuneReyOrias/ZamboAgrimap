@@ -200,8 +200,10 @@ $(function() {
 
 
     // New Customers Chart
-    if ($('#customersChart').length) {
-        var options1 = {
+    if ($('#totalFarmsChart').length) {
+        var totalFarmsData = [$totalfarms];
+
+        var options2 = {
             chart: {
                 type: "line",
                 height: 60,
@@ -211,7 +213,7 @@ $(function() {
             },
             series: [{
                 name: '',
-                data: [3844, 3855, 3841, 3867, 3822, 3843, 3821, 3841, 3856, 3827, 3843]
+                data: totalFarmsData
             }],
             xaxis: {
                 type: 'datetime',
@@ -224,10 +226,12 @@ $(function() {
             markers: {
                 size: 0
             },
-            colors: [colors.primary],
+            colors: [colors.primary], // Assuming colors is defined elsewhere
         };
-        new ApexCharts(document.querySelector("#customersChart"), options1).render();
+
+        new ApexCharts(document.querySelector("#totalFarmsChart"), options2).render();
     }
+
     // New Customers Chart - END
 
 

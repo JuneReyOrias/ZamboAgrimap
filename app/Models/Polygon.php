@@ -40,6 +40,7 @@ class Polygon extends Model
           'strokecolor',
           'area',
           'perimeter',
+          'poly_name',
        
     ];
     public function user()

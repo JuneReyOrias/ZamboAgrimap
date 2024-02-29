@@ -51,15 +51,10 @@
        
             <div >
 
-              @php
-              $id = Auth::id();
-
-          // Find the user by their ID and eager load the personalInformation relationship
-          $agent= App\Models\User::find($id);
-
-            @endphp
              
-             <input type="hidden" name="users_id" value="{{ $agent->id }}">
+             
+             <input type="hidden" name="users_id" value="{{ $personalinfos->id }}">{{ $personalinfos->id }}</input
+             >
             
           
       </div>
@@ -327,33 +322,6 @@
    
           </div>
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <div  class="d-grid gap-2 d-md-flex justify-content-md-end">

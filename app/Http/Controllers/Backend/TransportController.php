@@ -46,35 +46,73 @@ class TransportController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+   
+// view, edit of transport by agent
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+public function trasnportView(){
+    $transports= Transport::orderBy('id','desc')->paginate(10);
+    return view('variable_cost.transport.show',compact('transports'));
+}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+
+
+
+public function edittransport($id){
+    $transports= Transport::find($id);
+    return view('variable_cost.transport.update',compact('transports'));
+}
+
+public function updatestransport(TransportRequest $request,$id)
+{
+
+   try{
+       
+
+       $data= $request->validated();
+       $data= $request->all();
+       
+       $data=Transport::find($id);
+
+       $data->name_of_vehicle = $request->name_of_vehicle;  
+       $data->type_of_vehicle = $request->type_of_vehicle;
+     
+       $data->total_transport_per_deliverycost;
+      
+              
+       $data->save();     
+       
+   
+       return redirect('/view-variable-cost-transport')->with('message','Transport Data Updated successsfully');
+   
+   }
+   catch(\Exception $ex){
+    //    dd($ex); // Debugging statement to inspect the exception
+       return redirect('edit-variable-cost-transport/{transports}')->with('message','Someting went wrong');
+       
+   }   
+} 
+
+
+public function transportdelete($id) {
+   try {
+       // Find the personal information by ID
+       $transports= Transport::find($id);
+
+       // Check if the personal information exists
+       if (! $transports) {
+           return redirect()->back()->with('error', 'Farm Profilenot found');
+       }
+
+       // Delete the personal information data from the database
+      $transports->delete();
+
+       // Redirect back with success message
+       return redirect()->back()->with('message', 'Transports data deleted Successfully');
+
+   } catch (\Exception $e) {
+    //    dd($e);// Handle any exceptions and redirect back with error message
+       return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+   }
+}
 }

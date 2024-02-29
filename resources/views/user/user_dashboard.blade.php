@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <!-- End fonts -->
 
-	<!-- core:css -->
+	<!-- core:css -->	
 <!-- core:css -->
 <link rel="stylesheet" href="../assets/vendors/core/core.css">
 <!-- endinject -->
@@ -28,6 +28,7 @@
 <!-- inject:css -->
 <link rel="stylesheet" href="../assets/fonts/feather-font/css/iconfont.css">
 <link rel="stylesheet" href="../assets/vendors/flag-icon-css/css/flag-icon.min.css">
+{{-- <link rel="stylesheet" href="../assets/vendors/font-awesome/css/flag-icon.min.css"> --}}
 <!-- endinject -->
 
 <!-- Layout styles -->  
@@ -53,8 +54,8 @@
                 </a>
               </div>
             </div>
-          </nav>
-	 --}}
+          </nav> --}}
+	
 		<div class="page-wrapper">
 					
 			<!-- partial:partials/_navbar.html -->
@@ -64,7 +65,7 @@
             @yield('user')
 			
 			<!-- partial:partials/_footer.html -->
-		@include('user.body.footers')
+		{{-- @include('admin.body.footer') --}}
 			<!-- partial -->
 		
 		</div>
@@ -76,11 +77,13 @@
 
 	<!-- Plugin js for this page -->
   <script src="../assets/vendors/flatpickr/flatpickr.min.js"></script>
+  
   <script src="../assets/vendors/apexcharts/apexcharts.min.js"></script>
 	<!-- End plugin js for this page -->
 
 	<!-- inject:js -->
 	<script src="../assets/vendors/feather-icons/feather.min.js"></script>
+	
 	<script src="../assets/js/template.js"></script>
 	<!-- endinject -->
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ParcelBoarder extends Model
+class ParcellaryBoundaries extends Model
 {
     use HasFactory;
     protected $table="parcellary_boundaries";
@@ -15,7 +15,7 @@ class ParcelBoarder extends Model
         'ricefield_boarders_id',
         'parcel_name',
         'area',
-     'series',
+     'lot_no',
      'tct_no',
      'brgy_name',
      'atdn',
@@ -49,6 +49,7 @@ class ParcelBoarder extends Model
        'pareleven_longitude',
        'partwelve_latitude',
        'partwelve_longitude',
+       'parcolor',
         
     ];
     public function user()
@@ -65,3 +66,5 @@ class ParcelBoarder extends Model
     }
     
 }
+
+

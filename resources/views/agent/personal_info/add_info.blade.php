@@ -51,7 +51,7 @@
             <div >
 
               @php
-              $id = Auth::id();
+                $id = Auth::user()->id;
 
           // Find the user by their ID and eager load the personalInformation relationship
           $agent= App\Models\User::find($id);

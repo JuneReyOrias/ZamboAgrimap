@@ -73,14 +73,14 @@
                       <div class="mb-3">
                         <label for="agri_district" class="form-label">Agri District</label>
 
-                        <select class="form-select @error('agri_district') is-invalid @enderror"  name="agri_district"id="validationCustom01" aria-label="Floating label select e">
+                        <select class="form-control  @error('agri_district') is-invalid @enderror"  name="agri_district"id="validationCustom01" aria-label="Floating label select e">
                           <option selected disabled>Select Agri-District</option>
                           <option value="Ayala Distict" {{ old('agri_district') == 'Ayala Distict' ? 'selected' : '' }}>Ayala Distict</option>
                           <option value="Tumaga District" {{ old('agri_district') == 'Tumaga District' ? 'selected' : '' }}>Tumaga District</option>
-                          <option value="Culianan" {{ old('agri_district') == 'Culianan' ? 'selected' : '' }}>Culianan</option>
-                          <option value="Manicahan" {{ old('agri_district') == 'Manicahan' ? 'selected' : '' }}>Manicahan</option>
-                          <option value="Curuan" {{ old('agri_district') == 'Curuan' ? 'selected' : '' }}>Curuan</option>
-                          <option value="Vitali" {{ old('agri_district') == 'Vitali' ? 'selected' : '' }}>Vitali</option>
+                          <option value="Culianan District " {{ old('agri_district') == 'Culianan District' ? 'selected' : '' }}>Culianan District</option>
+                          <option value="Manicahan District" {{ old('agri_district') == 'Manicahan District' ? 'selected' : '' }}>Manicahan District</option>
+                          <option value="Curuan District" {{ old('agri_district') == 'Curuan District' ? 'selected' : '' }}>Curuan District</option>
+                          <option value="Vitali District" {{ old('agri_district') == 'Vitali District' ? 'selected' : '' }}>Vitali District</option>
                         </select>
                         @error('agri_district')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -114,7 +114,7 @@
                       <div class="mb-3">
                         <label for="role" class="form-label">Role</label>
                     
-                        <select class="form-select" name="role"id="validationCustom01" aria-label="Floating label select e">
+                        <select class="form-control " name="role"id="validationCustom01" aria-label="Floating label select e">
                           <option selected disabled>Select role</option>
                           <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>admin</option>
                           <option value="agent" {{ old('role') == 'agent' ? 'selected' : '' }}>agent</option>

@@ -36,7 +36,7 @@
             <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
          
 
-           <form  action{{url('AddFcost')}} method="post"  >
+           <form  action{{url(' UpdateFixedCost')}} method="post"  >
               @csrf
 
               <div class="row mb-3">

@@ -64,7 +64,7 @@
                 $id = Auth::id();
 
             // Find the user by their ID and eager load the personalInformation relationship
-            $farmprofile= App\Models\FarmProfile::where('id', $id)->latest()->first();
+            $farmprofile= App\Models\FarmProfile::find($id)->latest()->first();
 
               @endphp
                   <label class="form-expand" for="farm_profiles_id">FarmProfile:</label>

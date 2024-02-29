@@ -34,7 +34,7 @@
             <h5 class="card-title"><span>c.</span>Fertilizers update</h5>
             <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
         
-           <form action{{url('AddNewfertilizers')}} method="post">
+           <form action{{url('FertilizerDataupdate')}} method="post">
               @csrf
 
 

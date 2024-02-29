@@ -9,37 +9,25 @@ use Illuminate\Http\Request;
 
 class FixedCostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+   
+
     
-    public function FixedForms(){
-        $fixed= FixedCost::all();
-    return view('fixed_cost.fixed_index',compact('fixed'));
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-    public function FixedCostCrud()
-    {
-        $fixedcost= FixedCost::latest()->get();
-        return view('fixed_cost.fixed_create',compact('fixedcost'));
-    }
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(FixedCostRequest $request)
     {
         try{
-        
+            $existingFixedCost =  FixedCost::where([
+                ['personal_informations_id', '=', $request->input('personal_informations_id')],
+                ['farm_profiles_id', '=', $request->input('farm_profiles_id')],
+            
+    
+                // Add other fields here
+            ])->first();
+            
+            if ( $existingFixedCost) {
+                // FarmProfile with the given personal_informations_id and other fields already exists
+                // You can handle this scenario here, for example, return an error message
+                return redirect('/fixedcost')->with('error', 'Farm Profile with this information already exists.');
+            }
             $data= $request->validated();
             $data= $request->all();
             FixedCost::create($data);
@@ -51,70 +39,80 @@ class FixedCostController extends Controller
             return redirect('/fixedcost')->with('message','Someting went wrong');
         }
     }
-    public function FixedCost()
-    {
-        $fixedcost= FixedCost::latest()->get();
-        return view('fixed_cost.fixed_create',compact('fixedcost'));
-    }
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($fixed_id)
-    {
-        $fixedcost = FixedCost::where('fixed_id',$fixed_id)->first();
-        return view('fixed_cost.fixed_edit')->with('fixedcost',$fixedcost);
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateFixedCostRequest $request, $fixed_id)
+
+    // fixed cost view
+    public function FixedCostView(){
+        $fixedcosts=FixedCost::orderBy('id','desc')->paginate(20);
+        return view('fixed_cost.fixed_create',compact('fixedcosts'));
+    }
+    
+    // fixed cost update
+    public function editFixedcost($id){
+        $fixedcosts=FixedCost::find($id);
+        return view('fixed_cost.fixed_edit',compact('fixedcosts'));
+    }
+    
+    public function updateFixedcosts(FixedCostRequest $request,$id)
     {
-        try {
-            // Get validated data from the request (if you're using validation rules)
-            $data = $request->validated();
+    
+        try{
+            
+    
+            $data= $request->validated();
+            $data= $request->all();
+            
+            $data= FixedCost::find($id);
+    
+            $data->personal_informations_id = $request->personal_informations_id;  
+            $data->farm_profiles_id = $request->farm_profiles_id;
+            $data->particular = $request->particular;
+            $data->no_of_ha = $request->no_of_ha;
+            $data->cost_per_ha = $request->cost_per_ha;
+            $data->total_amount = $request->total_amount;
+      
+           
+    
+            
+            $data->save();     
+            
         
-            // If you want to use all data, use this line instead of the above line.
-            // $data = $request->all();
+            return redirect('/view-fixedcost')->with('message','Fixed cost Data Updated successsfully');
         
-            // Update the PersonalInformations table
-            FixedCost::where('fixed_id', $fixed_id)->update($data);
-        
-            // Optionally, you can return a response indicating success
-            return redirect('/fixedcost/create')->with('message','fixed cost updated successsfully');
-        } catch (\Exception $e) {
-            // Handle any exceptions that might occur during the update process
-            return response()->json(['message' => 'Error updating record: ' . $e->getMessage()], 500);
         }
-    }
+        catch(\Exception $ex){
+            // dd($ex); // Debugging statement to inspect the exception
+            return redirect('/edit-fixedcost/{fixedcost}')->with('message','Someting went wrong');
+            
+        }   
+    } 
+    
+    
+    
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($fixed_id)
-    {
+    // deleting the fixed data
+    
+    public function destroyFixedcost($id) {
         try {
-            $fixedcost = FixedCost::where('fixed_id', $fixed_id);
-        
-            if ($fixedcost) {
-                $fixedcost->delete();
-                return redirect()->route('fixed_cost.create')
-                                 ->with('message', 'Fixed Cost deleted successfully');
-            } else {
-                return redirect()->route('fixed_cost.create')
-                                 ->with('message', 'Fixed Cost not found');
+            // Find the personal information by ID
+           $fixedcosts = FixedCost::find($id);
+    
+            // Check if the personal information exists
+            if (!$fixedcosts) {
+                return redirect()->back()->with('error', 'Farm Profilenot found');
             }
+    
+            // Delete the personal information data from the database
+           $fixedcosts->delete();
+    
+            // Redirect back with success message
+            return redirect()->back()->with('message', 'Fixed Cost deleted Successfully');
+    
         } catch (\Exception $e) {
-            return redirect()->route('fixed_cost.create')
-                             ->with('message', 'Error deleting Fixed Cost : ' . $e->getMessage());
+            // Handle any exceptions and redirect back with error message
+            return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
         }
     }
+    
 }

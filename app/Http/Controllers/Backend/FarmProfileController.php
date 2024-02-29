@@ -13,44 +13,10 @@ use Illuminate\Support\Optional;
 
 class FarmProfileController extends Controller
 {
-    public function FarmProfiles(){
-        try {
-        //    Retrieve the necessary information from the personal_informations table
-    //        $farmLocation = PersonalInformations::select('id', 'first_name', 'last_name', 'mothers_maiden_name')
-    //        ->latest('id') // Order by id in descending order (latest first)
-    //     ->first()
-    // ->get();
-    $farmLocation = DB::table('personal_informations')
-    ->Join('agri_districts', 'personal_informations.agri_districtS_id', '=', 'agri_districts.id')
-    ->leftJoin('polygons', 'personal_informations.polygons_id', '=', 'polygons.id')
-    ->select('personal_informations.*', 'agri_districts.*' , 'polygons.*')
-    ->get();
-    $agriDistrictIds = [];
-    $polygonsIds = [];
-    
-        
-        // // Loop through each row of the result
-        foreach ($farmLocation as $location) {
-            // Extract agri_district_id and polygons_id from each row
-            $agriDistrictIds[] = $location->id;
-            $polygonsIds[] = $location->id;
-        }
-           return view('farm_profile.farm_index', ['farmLocation' => $farmLocation,
-           'agriDistrictIds' => $agriDistrictIds,   'polygonsIds' => $polygonsIds,
-        ]);
-       } catch (\Exception $ex) {
-           // Log the exception for debugging purposes
-           dd($ex);
-           return redirect()->back()->with('message', 'Something went wrong');
-       }
-        }
    
-    public function index()
-    {
-        //
-    }
+  
 
-    //arcmap for admin
+    //arcmap for admin for view and fetch of dattta
     public function Arcmap()
     {
         // $farmprofile= FarmProfile::all();
@@ -62,64 +28,63 @@ class FarmProfileController extends Controller
      ->get();
 
      // Initialize empty arrays
-$agriDistrictIds = [];
-$polygonsIds = [];
+            $agriDistrictIds = [];
+            $polygonsIds = [];
 
-// Loop through each row of the result
-foreach ($farmLocation as $location) {
-    // Extract agri_district_id and polygons_id from each row
-    $agriDistrictIds[] = $location->id;
-    $polygonsIds[] = $location->id;
-}
+            // Loop through each row of the result
+            foreach ($farmLocation as $location) {
+                // Extract agri_district_id and polygons_id from each row
+                $agriDistrictIds[] = $location->id;
+                $polygonsIds[] = $location->id;
+        }
 
+                return view('map.arcmap', [
+                    'farmLocation' => $farmLocation,
+                    'agriDistrictIds' => $agriDistrictIds,
+                'polygonsIds' => $polygonsIds,
 
-    //  return view('map.arcmap',compact('farmprofile'));
-    // return  $farmLocation;
-    return view('map.arcmap', [
-        'farmLocation' => $farmLocation,
-        'agriDistrictIds' => $agriDistrictIds,
-    'polygonsIds' => $polygonsIds,
-
-]);
+            ]);
 
      }
 
 
      
 
-     //gmap is for agent of 
+     //gmap is for agent arimap view of the farmers info and location per district
      public function Gmap()
      {
          // $farmprofile= FarmProfile::all();
-         $farmLocation = DB::table('farm_profiles')
-      ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
-      ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
-      ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-      ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*','personal_informations.*')
-      ->get();
- 
-      // Initialize empty arrays
- $agriDistrictIds = [];
- $polygonsIds = [];
- 
- // Loop through each row of the result
- foreach ($farmLocation as $location) {
-     // Extract agri_district_id and polygons_id from each row
-     $agriDistrictIds[] = $location->id;
-     $polygonsIds[] = $location->id;
- }
- 
- 
-     //  return view('map.arcmap',compact('farmprofile'));
-     // return  $farmLocation;
-     return view('map.gmap', [
-         'farmLocation' => $farmLocation,
-         'agriDistrictIds' => $agriDistrictIds,
-     'polygonsIds' => $polygonsIds,
- 
- ]);
+                    $farmLocation = DB::table('farm_profiles')
+                ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
+                ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+                ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*','personal_informations.*')
+                ->get();
+                            
+                    // Initialize empty arrays
+                $agriDistrictIds = [];
+                $polygonsIds = [];
+                
+                // Loop through each row of the result
+                foreach ($farmLocation as $location) {
+                    // Extract agri_district_id and polygons_id from each row
+                    $agriDistrictIds[] = $location->id;
+                    $polygonsIds[] = $location->id;
+                }
+                
+                
+                    //  return view('map.arcmap',compact('farmprofile'));
+                    // return  $farmLocation;
+                    return view('map.gmap', [
+                        'farmLocation' => $farmLocation,
+                        'agriDistrictIds' => $agriDistrictIds,
+                    'polygonsIds' => $polygonsIds,
+                
+                ]);
  
       }
+
+    //   users view of agrimap for all farmers info and location
       public function agrimap()
       {
           // $farmprofile= FarmProfile::all();
@@ -131,47 +96,42 @@ foreach ($farmLocation as $location) {
        ->get();
   
        // Initialize empty arrays
-  $agriDistrictIds = [];
-  $polygonsIds = [];
+            $agriDistrictIds = [];
+            $polygonsIds = [];
+            
+        // Loop through each row of the result
+            foreach ($farmLocation as $location) {
+                // Extract agri_district_id and polygons_id from each row
+                $agriDistrictIds[] = $location->id;
+                $polygonsIds[] = $location->id;
+            }
   
-  // Loop through each row of the result
-  foreach ($farmLocation as $location) {
-      // Extract agri_district_id and polygons_id from each row
-      $agriDistrictIds[] = $location->id;
-      $polygonsIds[] = $location->id;
-  }
-  
-  
-      //  return view('map.arcmap',compact('farmprofile'));
-      // return  $farmLocation;
-      return view('map.agrimap', [
-          'farmLocation' => $farmLocation,
-          'agriDistrictIds' => $agriDistrictIds,
-      'polygonsIds' => $polygonsIds,
+           return view('map.agrimap', [
+            'farmLocation' => $farmLocation,
+            'agriDistrictIds' => $agriDistrictIds,
+            'polygonsIds' => $polygonsIds,
   
   ]);}
-    public function searchfarm(Request $request){
- 
-        $gps_latitude=$request->gps_latitude;
-        $gps_longitude=$request->gps_longitude;
-
-        $farmprofile=FarmProfile::whereBetween('gps_latitude',[$gps_latitude-0.1,$gps_latitude+0.1])->whereBetween('gps_longitude',[$gps_longitude-0.1,$gps_longitude+0.1]);
-
-        return   $farmprofile;
-    }
-    public function FarmProfile(){
-        $farmprofile= FarmProfile::all();
-    return view('farm_profile.farm_index',compact('farmprofile'));
- }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    // search engien for mapping
+            public function searchfarm(Request $request){
+        
+                $gps_latitude=$request->gps_latitude;
+                $gps_longitude=$request->gps_longitude;
+
+                $farmprofile=FarmProfile::whereBetween('gps_latitude',[$gps_latitude-0.1,$gps_latitude+0.1])->whereBetween('gps_longitude',[$gps_longitude-0.1,$gps_longitude+0.1]);
+
+                return   $farmprofile;
+            }
+            public function FarmProfile(){
+                $farmprofile= FarmProfile::all();
+            return view('farm_profile.farm_index',compact('farmprofile'));
+        }
+
+
+   
+   
     public function FarmProfileCrud()
     {
         $farmprofile= FarmProfile::latest()->get();
@@ -180,7 +140,7 @@ foreach ($farmLocation as $location) {
     }
    
 
-
+    // insertion of new data into farm profile table by admin
     public function store(FarmProfileRequest $request)
     {
        
@@ -188,111 +148,151 @@ foreach ($farmLocation as $location) {
            
             $user = auth()->user();
             $data = $request->validated();
-            $personalInformationId = 1;
-
+           
        
-
-    // Check if the associated PersonalInformations record exists
-    // Access the primary key of the PersonalInformations model instance
-
-    $farmProfile = FarmProfile::create([
-             'personal_informations_id' => $request->input('personal_informations_id'),
-             'agri_districts_id' => $request->input('agri_districts_id'),
-             'polygons_id' => $request->input('polygons_id'),
-            'tenurial_status' => request('tenurial_status'),
-            'rice_farm_address' => request('rice_farm_address'),
-            'no_of_years_as_farmers' => request('no_of_years_as_farmers'),
-            'gps_longitude' => request('gps_longitude'),
-            'gps_latitude' => request('gps_latitude'),
-            'total_physical_area_has' => request('total_physical_area_has'),
-            'rice_area_cultivated_has' => request('rice_area_cultivated_has'),
-            'land_title_no' => request('land_title_no'),
-            'lot_no' => request('lot_no'),
-            'area_prone_to' => request('area_prone_to'),
-            'ecosystem' => request('ecosystem'),
-            'type_rice_variety' => request('type_rice_variety'),
-            'prefered_variety' => request('prefered_variety'),
-            'plant_schedule_wetseason' => request('plant_schedule_wetseason'),
-            'plant_schedule_dryseason' => request('plant_schedule_dryseason'),
-            'no_of_cropping_yr' => request('no_of_cropping_yr'),
-            'yield_kg_ha' => request('yield_kg_ha'),
-            'rsba_register' => request('rsba_register'),
-            'pcic_insured' => request('pcic_insured'),
-            'source_of_capital' => request('source_of_capital'),
-            'remarks_recommendation' => request('remarks_recommendation'),
-            'oca_district_office' => request('oca_district_office'),
-            'name_technicians' => request('name_technicians'),
-            'date_interview' => request('date_interview'),
-            ]);
+            // checking or filtering existed data in farm profiles ddatabase
+            $existingFarmProfile = FarmProfile::where([
+                ['personal_informations_id', '=', $request->input('personal_informations_id')],
+               
+            ])->first();
             
-// Retrieve the personal_information_id
-$personalInformationId = $farmProfile->getKey();
+            if ($existingFarmProfile) {
+                return redirect('/farmprofile')->with('error', 'Farm Profile with this information already exists.');
+            }
+            
+        
+            $farmProfile = FarmProfile::create([
+                'personal_informations_id' => $request->input('personal_informations_id'),
+                'users_id' => $request->input('users_id'),
+                'agri_districts_id' => $request->input('agri_districts_id'),
+                'polygons_id' => $request->input('polygons_id'),
+               'tenurial_status' => request('tenurial_status'),
+               'rice_farm_address' => request('rice_farm_address'),
+               'no_of_years_as_farmers' => request('no_of_years_as_farmers'),
+               'gps_longitude' => request('gps_longitude'),
+               'gps_latitude' => request('gps_latitude'),
+               'total_physical_area_has' => request('total_physical_area_has'),
+               'rice_area_cultivated_has' => request('rice_area_cultivated_has'),
+               'land_title_no' => request('land_title_no'),
+               'lot_no' => request('lot_no'),
+               'area_prone_to' => request('area_prone_to'),
+               'ecosystem' => request('ecosystem'),
+               'type_rice_variety' => request('type_rice_variety'),
+               'prefered_variety' => request('prefered_variety'),
+               'plant_schedule_wetseason' => request('plant_schedule_wetseason'),
+               'plant_schedule_dryseason' => request('plant_schedule_dryseason'),
+               'no_of_cropping_yr' => request('no_of_cropping_yr'),
+               'yield_kg_ha' => request('yield_kg_ha'),
+               'rsba_register' => request('rsba_register'),
+               'pcic_insured' => request('pcic_insured'),
+               'government_assisted' => request('government_assisted'),
+               'source_of_capital' => request('source_of_capital'),
+               'remarks_recommendation' => request('remarks_recommendation'),
+               'oca_district_office' => request('oca_district_office'),
+               'name_technicians' => request('name_technicians'),
+               'date_interview' => request('date_interview'),
+        
+            ]);
+                $farmProfile->save();
 
-// Associate the FarmProfile with PersonalInformations
-$personalInformation = PersonalInformations::find($personalInformationId);
-$farmProfile->personalInformations()->associate($personalInformation);
-$farmProfile->save();
-
-         
-    
-
-return redirect('/fixedcost')->with('message', 'Farm Profile added successfully');
-} catch (\Exception $ex) {
-    // Handle the exception
-    dd($ex);
-    return redirect('/farmprofile')->with('message', 'Something went wrong');
-}
+            return redirect('/fixedcost')->with('message', 'Farm Profile added successfully');
+            } catch (\Exception $ex) {
+                // Handle the exception
+                dd($ex);
+                return redirect('/farmprofile')->with('message', 'Something went wrong');
+            }
        
     }
     
      
    
-    
-    public function edit($farmprofile)
-    {
-        // dd($id);
-        $farmprofile = PersonalInformations::find($farmprofile);
-      
-      // $personalInformation = PersonalInformations::findOrFail($personalInformation);
-        return view('farm_profile.farm_edit')->with('farmprofile',$farmprofile);
-       ;
+    // farmers view of all the data from farm profile by admin 
+    public function ViewFarmProfile(){
+        $farmprofiles=FarmProfile::orderBy('id','desc')->paginate(20);
+        return view('farm_profile.farminfo_view',compact('farmprofiles'));
     }
-  
-
- 
-    public function update(UpdateFarmProfileRequest $request, $id)
-    {
-        try {
-            $data = $request->validated();
-            
-         
-            FarmProfile::where('id', $id)->update($data);
-    
-            return redirect('/farmprofile/create')->with('message', 'Farm Profile updated successfully');
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error updating record: ' . $e->getMessage()], 500);
-        }
+    // agent farm profile update data view
+    public function EditFarmProfile($id){
+        $farmprofiles=FarmProfile::find($id);
+        return view('farm_profile.farm_edit',compact('farmprofiles'));
     }
     
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        try {
-            $farmprofile = FarmProfile::where('id', $id);
+    
+    // agent farm profile update data
+        public function UpdateFarmProfiles(FarmProfileRequest $request,$id)
+        {
         
-            if ($farmprofile) {
-                $farmprofile->delete();
-                return redirect()->route('farm_profile.show')
-                                 ->with('message', 'Fixed Cost deleted successfully');
-            } else {
-                return redirect()->route('farm_profile.show')
-                                 ->with('message', 'Fixed Cost not found');
+            try{
+                
+    
+                $data= $request->validated();
+                $data= $request->all();
+                
+                $data= FarmProfile::find($id);
+    
+                $data->personal_informations_id = $request->personal_informations_id;  
+                $data->agri_districts_id = $request->agri_districts_id;
+                $data->tenurial_status = $request->tenurial_status;
+                $data->rice_farm_address = $request->rice_farm_address;
+                $data->no_of_years_as_farmers = $request->no_of_years_as_farmers;
+                $data->gps_longitude = $request->gps_longitude;
+                $data->gps_latitude = $request->gps_latitude;
+                $data->total_physical_area_has = $request->total_physical_area_has;
+                $data->rice_area_cultivated_has = $request->rice_area_cultivated_has;
+                $data->rice_area_cultivated_has = $request->rice_area_cultivated_has;
+                $data->land_title_no = $request->land_title_no;
+                $data->lot_no = $request->lot_no;
+                $data->area_prone_to= $request->area_prone_to;
+    
+                $data->ecosystem = $request->ecosystem;
+                $data->type_rice_variety = $request->type_rice_variety;
+                $data->prefered_variety = $request->prefered_variety;
+                $data->plant_schedule_wetseason = $request->plant_schedule_wetseason;
+                $data->plant_schedule_dryseason = $request->plant_schedule_dryseason;
+                $data->no_of_cropping_yr = $request->no_of_cropping_yr;
+                $data->yield_kg_ha = $request->yield_kg_ha;
+                $data->rsba_register = $request->rsba_register;
+                $data->pcic_insured = $request->pcic_insured;
+                $data->source_of_capital = $request->source_of_capital;
+                $data->remarks_recommendation = $request->remarks_recommendation;
+                $data->oca_district_office = $request->oca_district_office;
+                $data->name_technicians = $request->name_technicians;
+                $data->date_interview = $request->date_interview;
+    
+                
+                $data->save();     
+                
+            
+                return redirect('/view-farmprofile')->with('message','Farm Profile Data Update successsfully');
+            
             }
-        } catch (\Exception $e) {
-            return redirect()->route('farm_profile.show')
-                             ->with('message', 'Error deleting Fixed Cost : ' . $e->getMessage());
+            catch(\Exception $ex){
+                // dd($ex); // Debugging statement to inspect the exception
+                return redirect('/update-farmprofile/{farmprofiles}')->with('message','Someting went wrong');
+                
+            }   
+        } 
+    
+ // fFarm profile delete
+public function farmdelete($id) {
+    try {
+        // Find the personal information by ID
+        $farmprofiles = FarmProfile::find($id);
+
+        // Check if the personal information exists
+        if (!$farmprofiles) {
+            return redirect()->back()->with('error', 'Farm Profilenot found');
         }
+
+        // Delete the personal information data from the database
+        $farmprofiles->delete();
+
+        // Redirect back with success message
+        return redirect()->back()->with('message', 'Farm Profile deleted successfully');
+
+    } catch (\Exception $e) {
+        // Handle any exceptions and redirect back with error message
+        return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
     }
+}
 }

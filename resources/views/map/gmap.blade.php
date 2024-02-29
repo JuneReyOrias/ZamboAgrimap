@@ -100,6 +100,24 @@
     data-vertfour_lng="{{ $location->vertfour_longitude }}" ></div>
 
 @endforeach  --}}
+
+
+<div>
+  @php
+$id = Auth::id();
+
+// Find the user by their ID and eager load the personalInformation relationship
+$location= App\Models\AgriDistrict::all();
+
+@endphp
+@foreach ($location as $location)
+<div class="newdistrict"
+        data-lat="{{ $location->latitude }}" 
+        data-lng="{{ $location->longitude }}" 
+        data-location="{{ $location->district}}" 
+        data-description="{{ $location->description}}"></div>
+@endforeach
+</div>
 <div>
   @php
 $id = Auth::id();
@@ -149,7 +167,7 @@ $location= App\Models\Polygon::all();
 $id = Auth::id();
 
 // Find the user by their ID and eager load the personalInformation relationship
-$parcels= App\Models\ParcelBoarder::all();
+$parcels= App\Models\ParcellaryBoundaries::all();
 
 @endphp
 @foreach ($parcels as $parcel )
@@ -183,8 +201,15 @@ $parcels= App\Models\ParcelBoarder::all();
       data-partwelvelong ={{$parcel->partwelve_longitude}}
       data-parcolors ={{$parcel->parcolor}}
       data-parname ={{$parcel->parcel_name}}
-
-
+      data-arpowner_na ={{$parcel->arpowner_na}}
+      data-brgy_name  ={{$parcel->brgy_name }}
+      
+      data-lot_no ={{$parcel->lot_no}}
+      data-tct_no ={{$parcel->tct_no}}
+      data-pkind_desc ={{$parcel->pkind_desc  }}
+      data-puse_desc ={{$parcel->puse_desc  }}
+      data-actual_used ={{$parcel->actual_used  }}
+     
 ></div>
 
 @endforeach

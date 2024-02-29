@@ -37,7 +37,7 @@
             <h5 class="card-title"><span>a.</span>Seeds Update</h5>
             <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
         
-           <form action{{url('AddNewSeeed')}} method="post">
+           <form action{{url('SeedDataupdate')}} method="post">
               @csrf
 
                    {{-- seeds --}}

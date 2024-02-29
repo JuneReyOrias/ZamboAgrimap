@@ -15,7 +15,13 @@
          
           <div class="card-body">
             <div class="card-body">
-
+              @if (session()->has('message'))
+              <div class="alert alert-success" id="success-alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      
+            {{session()->get('message')}}
+          </div>
+          @endif
                 @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ session('error') }}

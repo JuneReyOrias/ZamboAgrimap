@@ -112,14 +112,14 @@
     
 </div>
 </div>
-<!-- Pagination links -->
-<div class="row"style="align-content: center;display: flex;
-align-items: center; align-self: center">
-    <div class="col-md-7" style="align-content: center;display: flex;
-    align-items: center;">
-        {{ $personalinformations->links() }}
-    </div>
-</div>
+      <!-- Pagination links -->
+      <div class="row"style="align-content: center;display: flex;
+      align-items: center; align-self: center">
+          <div class="col-md-7" style="align-content: center;display: flex;
+          align-items: center;">
+              {{ $personalinformations->links() }}
+          </div>
+      </div>
 </div>
 </div>
 </div>

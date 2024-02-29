@@ -33,14 +33,14 @@ class VariableCostRequest extends FormRequest
             //     'max:50',
             // ],
             'total_machinery_fuel_cost'=>[
-                'required',
-                'string',
-                'max:50',
+             'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'total_variable_cost'=>[
-                'required',
-                'string',
-                'max:50',
+             'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             // 'total_labor_cost'=>[
             //     'required',
@@ -55,8 +55,8 @@ class VariableCostRequest extends FormRequest
        return [
             // 'name_of_fertilizer.required'=>'Please input name of fertilizer',
             // 'type of fertilizer.required'=>'Please input type of fertilizer',
-            'total_machinery_fuel_cost.required'=>'Please input total machinery fuel cost',
-            'total_variable_cost.required'=>'Please input total variable cost',
+            'total_machinery_fuel_cost.numeric'=>'Please input total machinery fuel cost, field must be a number',
+            'total_variable_cost.numeric'=>'Please input total variable cost, field must be a number',
             // 'total_labor_cost.required'=>'Please input total labor cost',
        ];
     }

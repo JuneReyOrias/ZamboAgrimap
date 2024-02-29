@@ -28,7 +28,7 @@
 <!-- inject:css -->
 <link rel="stylesheet" href="../assets/fonts/feather-font/css/iconfont.css">
 <link rel="stylesheet" href="../assets/vendors/flag-icon-css/css/flag-icon.min.css">
-<link rel="stylesheet" href="../assets/vendors/font-awesome/css/flag-icon.min.css">
+{{-- <link rel="stylesheet" href="../assets/vendors/font-awesome/css/flag-icon.min.css"> --}}
 <!-- endinject -->
 
 <!-- Layout styles -->  
@@ -65,7 +65,7 @@
             @yield('admin')
 			
 			<!-- partial:partials/_footer.html -->
-		@include('admin.body.footer')
+		{{-- @include('admin.body.footer') --}}
 			<!-- partial -->
 		
 		</div>

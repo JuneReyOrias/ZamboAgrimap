@@ -33,19 +33,19 @@ class LaborRequest extends FormRequest
             //     'max:50',
             // ],
             'no_of_person'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'rate_per_person'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'total_labor_cost'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
            
         ];
@@ -55,9 +55,9 @@ class LaborRequest extends FormRequest
        return [
             // 'name_of_fertilizer.required'=>'Please input name of fertilizer',
             // 'type of fertilizer.required'=>'Please input type of fertilizer',
-            'no_of_person.required'=>'Please input no of person',
-            'rate_per_person.required'=>'Please input rate per person',
-            'total_labor_cost.required'=>'Please input total labor cost',
+            'no_of_person.numeric'=>'Please input no. of person, field must be a number',
+            'rate_per_person.numeric'=>'Please input rate per person, field must be a number',
+            'total_labor_cost.numeric'=>'Please input total labor cost, field must be a number',
        ];
     }
 }

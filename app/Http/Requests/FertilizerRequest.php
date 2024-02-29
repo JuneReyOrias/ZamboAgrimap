@@ -33,19 +33,19 @@ class FertilizerRequest extends FormRequest
             //     'max:50',
             // ],
             'no_ofsacks'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'unitprice_per_sacks'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
             'total_cost_fertilizers'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+                'max:180',
             ],
            
         ];
@@ -55,9 +55,9 @@ class FertilizerRequest extends FormRequest
        return [
             // 'name_of_fertilizer.required'=>'Please input name of fertilizer',
             // 'type of fertilizer.required'=>'Please input type of fertilizer',
-            'no_ofsacks.required'=>'Please input no of sacks',
-            'unitprice_per_sacks.required'=>'Please input unit price per sacks',
-            'total_cost_fertilizers.required'=>'Please input total cost fertilizers',
+            'no_ofsacks.numeric'=>'Please input no of sacks, field must be a number',
+            'unitprice_per_sacks.numeric'=>'Please input unit price per sacks ,field must be a number',
+            'total_cost_fertilizers.numeric'=>'Please input total cost fertilizers, field must be a number',
        ];
     }
 }

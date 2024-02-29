@@ -69,7 +69,7 @@
 
            
    <div  class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <a  href="{{route('production_data.index')}}"button  class="btn btn-success me-md-2">Back</button></a></p>
+      {{-- <a  href="{{route('production_data.index')}}"button  class="btn btn-success me-md-2">Back</button></a></p> --}}
     <button  type="submit" class="btn btn-success me-md-2">Next</button></a></p>
   </div>
             </form>

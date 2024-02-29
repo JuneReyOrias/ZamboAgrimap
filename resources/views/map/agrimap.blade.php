@@ -15,7 +15,7 @@
    
     {{-- <!-- File input for uploading files -->
     <input type="file" id="fileInput" accept=".kml, .kmz, .geojson"> --}}
-    <input type="file" id="fileInput" accept=".kml,.kmz">
+    <input type="hidden" id="fileInput" accept=".kml,.kmz">
  
     @foreach($farmLocation as $location)
     <div class="test" 
@@ -67,9 +67,7 @@
        ></div>
       
      
-    
-       {{-- <div  data-verone_lat="{{ $location->verone_latitude }}">{{ $location->verone_latitude }}</div> --}}
-{{-- <div      data-location="{{ $location->district }}" >{{ $location->district }}</div> --}}
+ 
   @endforeach
     {{-- @foreach($polygons as $boundary)
     <div class="poly" 
@@ -96,12 +94,72 @@
     data-vertfour_lng="{{ $location->vertfour_longitude }}" ></div>
 
 @endforeach  --}}
+<div>
+  @php
+$id = Auth::id();
 
+// Find the user by their ID and eager load the personalInformation relationship
+$location= App\Models\AgriDistrict::all();
+
+@endphp
+@foreach ($location as $location)
+<div class="newdistrict"
+        data-lat="{{ $location->latitude }}" 
+        data-lng="{{ $location->longitude }}" 
+        data-location="{{ $location->district}}" 
+        data-description="{{ $location->description}}"></div>
+@endforeach
+</div>
+<div>
+  @php
+$id = Auth::id();
+
+// Find the user by their ID and eager load the personalInformation relationship
+$location= App\Models\Polygon::all();
+
+@endphp
+@foreach ($location as $location)
+    <div class="newpolygo"
+      data-verone_lat="{{ $location->verone_latitude }}" 
+      data-verone_lng="{{ $location->verone_longitude }}" 
+      data-vertwo_lat="{{ $location->vertwo_latitude }}" 
+      data-vertwo_lng="{{ $location->vertwo_longitude }}" 
+      data-verthree_lat="{{ $location->verthree_latitude }}" 
+      data-verthree_lng="{{ $location->verthree_longitude }}" 
+      data-vertfour_lat="{{ $location->vertfour_latitude }}" 
+      data-vertfour_lng="{{ $location->vertfour_longitude }}" 
+      data-verfive_lat="{{ $location->verfive_latitude }}" 
+      data-verfive_lng="{{ $location->verfive_longitude }}" 
+      data-versix_lat="{{ $location->versix_latitude }}" 
+      data-versix_lng="{{ $location->versix_longitude }}" 
+      data-verseven_lat="{{ $location->verseven_latitude }}" 
+      data-verseven_lng="{{ $location->verseven_longitude }}" 
+      data-vereight_lat="{{ $location->vereight_latitude }}" 
+      data-verteight_lng="{{ $location->verteight_longitude }}"
+      data-color="{{ $location->strokecolor }}"
+      data-area= "{{$location->area}}"
+      data-perimeter= "{{$location->perimeter}}"
+      data-polyname= "{{$location->poly_name}}"
+     >
+    
+
+    </div>
+@endforeach
+</div>
+
+
+
+
+
+
+
+
+<div>
 @php
 $id = Auth::id();
 
 // Find the user by their ID and eager load the personalInformation relationship
-$parcels= App\Models\ParcelBoarder::all();
+$parcels= App\Models\ParcellaryBoundaries::all();
 
 @endphp
 @foreach ($parcels as $parcel )
@@ -135,12 +193,20 @@ $parcels= App\Models\ParcelBoarder::all();
       data-partwelvelong ={{$parcel->partwelve_longitude}}
       data-parcolors ={{$parcel->parcolor}}
       data-parname ={{$parcel->parcel_name}}
-
-
+      data-arpowner_na ={{$parcel->arpowner_na}}
+      data-brgy_name  ={{$parcel->brgy_name }}
+      
+      data-lot_no ={{$parcel->lot_no}}
+      data-tct_no ={{$parcel->tct_no}}
+      data-pkind_desc ={{$parcel->pkind_desc  }}
+      data-puse_desc ={{$parcel->puse_desc  }}
+      data-actual_used ={{$parcel->actual_used  }}
+     
 ></div>
 
 @endforeach
 
+</div> 
 
   </nav>
 

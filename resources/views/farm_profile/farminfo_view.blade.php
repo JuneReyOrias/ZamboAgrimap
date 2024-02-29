@@ -16,17 +16,21 @@
             @if (session('message'))
             <div class="alert alert-success" role="alert">
               {{ session('message')}}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
                
             @endif
             <h6 class="card-title"><span>II.</span>Farm Profile</h6>
-  
-           <p class="text-muted mb-3">Read the <a href="https://github.com/RobinHerbots/Inputmask" target="_blank"> Official Inputmask Documentation </a>for a full list of instructions and other options.</p>
+            <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
+         
            <div class="table-responsive tab ">
             <table class="table table table-info">
                 <thead class="thead-light">
                     <tr >
                         <th>Farmno.</th>
+                        <th>Farm ID.</th>
+                        <th>Personal Info ID.</th>
+                        <th>Agri District ID.</th>
                         <th>tenurial status</th>
                         <th>rice farm address</th>
                         <th>no of years as farmers</th>
@@ -57,10 +61,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                  @if($farmprofile->count() > 0)
-                @foreach($farmprofile as $farmprofile)
+                  @if($farmprofiles->count() > 0)
+                @foreach($farmprofiles as $farmprofile)
                     <tr class="table-light">
                          <td>{{ $loop->iteration }}</td>
+                         <td>{{ $farmprofile->id }}</td>
+                         <td>{{ $farmprofile->personal_informations_id }}</td>
+                         <td>{{ $farmprofile->agri_districts_id }}</td>
                         <td>{{ $farmprofile->tenurial_status }}</td>
                         <td>{{ $farmprofile->rice_farm_address }}</td>
                         <td>{{ $farmprofile->no_of_years_as_farmers }}</td>
@@ -88,10 +95,9 @@
                         <td>{{ $farmprofile->created_at}}</td>
                         <td>{{ $farmprofile->updated_at}}</td>
                         <td>
-                           
-                             <a href="{{route('farm_profile.edit', $farmprofile->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                             <a href="{{route('farm_profile.farm_edit', $farmprofile->id)}}" title="Edit farm profile"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                 
-                             <form  action="{{ route('farm_profile.destroy', $farmprofile->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                             <form  action="{{ route('farm_profile.delete', $farmprofile->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                 {{-- {{ csrf_field()}} --}}@csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
@@ -111,6 +117,14 @@
   
    
           </div>
+                      <!-- Pagination links -->
+                      <div class="row"style="align-content: center;display: flex;
+                      align-items: center; align-self: center">
+                          <div class="col-md-7" style="align-content: center;display: flex;
+                          align-items: center;">
+                              {{ $farmprofiles->links() }}
+                          </div>
+                      </div>
         </div>
       </div>
     </div>
