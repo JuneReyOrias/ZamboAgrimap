@@ -120,7 +120,22 @@ class AgriDistrictController extends Controller
        $Agriculture= AgriDistrict::all();
        return view('agri_districts.display',compact('Agriculture'));
     }
-   
+
+    // polygon agri district fetching by admin
+    public function PolyAgris()
+    {
+       $agridistrict= AgriDistrict::all();
+       return view('polygon.polygon_create',compact('agridistrict'));
+    } 
+
+    public function ParcelAgrifetch()
+    {
+       $agridistricts= AgriDistrict::all();
+       return view('parcels.new_parcels',compact('agridistricts'));
+    } 
+
+
+
     /**
      * Update the specified resource in storage.
      */

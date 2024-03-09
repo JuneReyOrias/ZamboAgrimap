@@ -47,7 +47,7 @@
       
             <div class="row mb-3">
              
-              
+{{--               
               <div class="col-md-3 mb-3">    
                 @php
               $id = Auth::id();
@@ -63,7 +63,7 @@
                           @endforeach
                   </select>
                  
-              </div>
+              </div> --}}
               <div class="col-md-3 mb-3">
                 <label class="form-expand" for="parcel_name">Parcel Name:</label>
                 <input type="text" class="form-control placeholder-text @error('parcel_name') is-invalid @enderror"value="{{$parcels->parcel_name}}" name="parcel_name" id="validationCustom01" placeholder=" Enter parcel name" value="{{ old('parcel_name') }}" >

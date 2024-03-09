@@ -122,7 +122,7 @@
           <div class="collapse" id="farmers">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <a href="{{route('agent.allfarmersinfo.forms_info')}}" class="nav-link">Farmers Rice Info</a>
+                <a href="{{route('admin.allfarmersdata.farmers_info')}}" class="nav-link">Farmers Rice Info</a>
               </li>
               <li class="nav-item">
                 <a href="{{route('personalinfo.create')}}" class="nav-link">Personal Informations</a>

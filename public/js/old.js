@@ -153,7 +153,7 @@ function initMap() {
         let area_has = location.getAttribute("data-area_has")
         let cultivated_has = location.getAttribute("data-cultivated_has")
         listOfFarm.push(new farmdistricts(parseFloat(lat), parseFloat(long), loc, parseFloat(farm_lat), parseFloat(farm_long), last, mother, address,
-            farm_org, status, parseFloat(years), parseFloat(landtitle), parseFloat(lotno), areaprone, ecosystem, typevariety,
+            farm_org, status, parseFloat(years), landtitle, lotno, areaprone, ecosystem, typevariety,
             prefered, wetseason, dryseason, cropping, yieldha, capital, rsba, pcic, assisted, sex, area_has, cultivated_has, description));
     })
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PolygonRequest;
+use App\Models\AgriDistrict;
 use App\Models\Polygon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,37 +15,18 @@ class PolygonController extends Controller
      * Display a listing of the resource.
      */
  
-    public function FarmProfiles(){
-        try {
-            // $farmprofile= FarmProfile::all();
-    $farmLocation = DB::table('polygons')
-    ->join('agri_districts', 'polygons.id', '=', 'agri_districts.id')
-       
-    ->select('polygons.*',
-      'agri_districts.*'
-      )
-    
-    ->get();
-
-           // You can return the data to a view or process it further
-           return view('farm_profile.farm_index', [  
-        'farmLocation' => $farmLocation,
-      
-    
-    ]);
-       } catch (\Exception $ex) {
-           // Log the exception for debugging purposes
-           dd($ex);
-           return redirect()->back()->with('message', 'Something went wrong');
-       }
-        }  
+     public function DisplayAgri()
+     {
+        // dd($farmer_no);
+        $Agriculture= AgriDistrict::all();
+        return view('agri_districts.display',compact('Agriculture'));
+     }  
     /**
      * Show the form for creating a new resource.
      */
     public function Polygons()
     {
-        $polygons=Polygon::orderBy('id','desc')->paginate(10);
-     return view('polygon.polygon_create',compact('polygons'));
+     return view('polygon.polygon_create');
     }
 
     /**

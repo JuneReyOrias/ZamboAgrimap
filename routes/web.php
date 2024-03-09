@@ -71,6 +71,8 @@ Route::post('/agent-profile',[AgentController::class, 'Agentupdate']);
 Route::get('/farmers-data',[PersonalInformationsController::class,'alldataform'])->name('agent.allfarmersinfo.forms_info');
 Route::get('/farmer-profile',[PersonalInformationsController::class,'profileFarmer'])->name('agent.allfarmersinfo.profile');
 
+Route::get('/farmers-info',[PersonalInformationsController::class,'FarmersInfo'])->name('admin.allfarmersdata.farmers_info');
+
 // for user 
 Route::get('/user-all-farmers',[PersonalInformationsController::class,'forms'])->name('user.forms_data');
 
@@ -211,7 +213,7 @@ Route::get('/map/arcmap/{fileName}', [KmlImportController::class, 'displayMap'])
 //parcelaryBoarders
 Route::get('/add-parcel',[AdminController::class, 'ParcelBoarders'])->name('parcels.new_parcels');
 Route::post('/add-parcel',[AdminController::class, 'newparcels']);
-
+Route::get('/add-parcel',[AgriDistrictController::class, 'ParcelAgrifetch'])->name('parcels.new_parcels');
 
 // parcellary boarder per farm or lot area of farmers access by admin only
 Route::get('/view-parcel-boarders',[AdminController::class, 'Parcelshow'])->name('parcels.show');
@@ -223,6 +225,7 @@ Route::post('/delete-parcel-boarders/{parcels}',[AdminController::class, 'Parcel
 //polygons
 Route::get('/polygon/create',[PolygonController:: class, 'Polygons'])->name('polygon.create');
 Route::post('/polygon/create',[PolygonController::class, 'store']);
+Route::get('/polygon/create',[AgriDistrictController:: class, 'PolyAgris'])->name('polygon.create');
 
 // polygon view,edit and delete access by agent
 Route::get('/view-polygon',[PolygonController::class, 'polygonshow'])->name('polygon.polygons_show');

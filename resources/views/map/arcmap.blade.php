@@ -199,15 +199,15 @@ $parcels= App\Models\ParcellaryBoundaries::all();
       data-partwelvelong ={{$parcel->partwelve_longitude}}
       data-parcolors ={{$parcel->parcolor}}
       data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
-      data-parname ={{$parcel->parcel_name}}
+   
+      data-arpowner_na ={{$parcel->arpowner_na}}
+      data-brgy_name  ={{$parcel->brgy_name }}
+      
+      data-lot_no ={{$parcel->lot_no}}
+      data-tct_no ={{$parcel->tct_no}}
+      data-pkind_desc ={{$parcel->pkind_desc  }}
+      data-puse_desc ={{$parcel->puse_desc  }}
+      data-actual_used ={{$parcel->actual_used  }}
 
 
 ></div>

@@ -47,21 +47,14 @@
             <div class="row mb-3">
               <h2 class="card-title"><span>a.</span>Polygon per Agri-District:</h2>
               
-              <div class="col-md-3 mb-3">    
-                @php
-              $id = Auth::id();
-
-          // Find the user by their ID and eager load the personalInformation relationship
-          $agridistrict= App\Models\AgriDistrict::find($id)->all();
-
-            @endphp
+              <div class="col-md-3 mb-3">
+                
                 <label class="form-expand" for="agri_districts_id">Agri-District:</label>
-                <select class="form-control mb-4 mb-md-0" name="agri_districts_id" aria-label="agri_districts_id">
-                  @foreach ($agridistrict as $agridistrict)
+                <select class="form-control placeholder-text " name="agri_districts_id" aria-label="agri_districts_id">
+                  @foreach ( $agridistrict as  $agridistrict)
                           <option value="{{ $agridistrict->id }}">{{ $agridistrict->district }}</option>
-                          @endforeach
+                      @endforeach
                   </select>
-                 
               </div>
               <div class="col-md-3 mb-3">
                 <label class="form-expand" for="poly_name">PoLy Name:</label>
