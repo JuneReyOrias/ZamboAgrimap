@@ -38,7 +38,7 @@
 
            <form  action{{url('AddFcost')}} method="post"  >
               @csrf
-              <d  <div class="row mb-3">
+               <div class="row mb-3">
                 <h2 class="card-title"><span>a.</span>Rice Farmers Fixed Cost:</h2>
                 <div class="col-md-3 mb-3">    
                   @php
@@ -72,8 +72,27 @@
                 </div>
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="particular">Particular (Fixed Cost):</label>
-                  <input type="text" class="form-control placeholder-text " name="particular" id="validationCustom01" placeholder=" enter Particular fixed Cost" value="{{ old('particular') }}" >
+                  <select class="form-control placeholder-text @error('particular') is-invalid @enderror" name="particular" id="selectParticular" onchange="checkParticular()" aria-label="label select e">
+                    <option selected disabled>Select</option>
+                    <option value="Land Rental Cost" {{ old('particular') == 'Land Rental' ? 'selected' : '' }}>Land Rental</option>
+                    <option value="Land Ownership Cost" {{ old('particular') == 'Land Ownership Cost' ? 'selected' : '' }}>Land Ownership Cost</option>
+                    <option value="Equipment Costs" {{ old('particular') == 'Equipment Costs' ? 'selected' : '' }}>Equipment Costs</option>
+                    <option value="Infrastructure Costs" {{ old('particular') == 'Infrastructure Costs' ? 'selected' : '' }}>Infrastructure Costs</option>
+          
+                    <option value="Other" {{ old('particular') == 'Other' ? 'selected' : '' }}>Others</option>
+                  </select>
+                  
+                  
                 </div>
+                 {{-- add new tenurial status --}}
+                 <div class="col-md-3 mb-3" id="ParticularInput" style="display: none;">
+                  <label for="ParticularInput">Others(Input here):</label>
+                  <input type="text" id="ParticularInputField" class="form-control placeholder-text @error('Add_Particular') is-invalid @enderror" name="Add_Particular" placeholder=" Enter particular(fixed cost)" value="{{ old('Add_Particular') }}">
+                  @error('Add_Particular')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+                
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="no_of_ha">No. of Has:</label>
                   <input type="text" class="form-control placeholder-text @error('no_of_ha') is-invalid @enderror" name="no_of_ha" id="no_of_ha" placeholder="Enter No. of Has" value="{{ old('no_of_ha') }}" >
@@ -140,5 +159,29 @@
   // Initial calculation when the page loads
   calculateTotalFertilizerCost();
   
+  // selected   others to add a new particular input
+  function checkParticular() {
+        var select = document.getElementById("selectParticular");
+        var option = select.options[select.selectedIndex].value;
+    
+        if (option === 'Other') {
+          document.getElementById("ParticularInput").style.display = "block";
+        } else {
+          document.getElementById("ParticularInput").style.display = "none";
+        }
+        
+      }
+    
+      // Add new tenurial status to the select element
+      document.getElementById("ParticularInputField").addEventListener("change", function() {
+        var newTenure = this.value.trim();
+        if (newTenure !== '') {
+          var select = document.getElementById("selectParticular");
+          var option = document.createElement("option");
+          option.text = newTenure;
+          option.value = newTenure;
+          select.add(option);
+        }
+      });
       </script>
   @endsection

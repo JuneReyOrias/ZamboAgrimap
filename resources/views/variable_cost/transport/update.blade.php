@@ -12,7 +12,7 @@
     </div> --}}
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
+        <div class="card bordered rounded">
        
         
           <div class="card-body">

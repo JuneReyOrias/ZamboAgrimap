@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categorize;
 use App\Models\CropCategory;
+use App\Models\LastProductionDatas;
 use Illuminate\Http\Request;
 
 class CropCategoryController extends Controller
@@ -18,8 +20,10 @@ class CropCategoryController extends Controller
 
     public function CropCategory()
     {
-        // $agridistrictS= AgriDistrictController::latest()->get();
-     return view('crop_category.crop_create');
+       $Cat= Categorize::all();
+       $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+       $CropCat= CropCategory::orderBy('id','desc')->paginate(10);
+     return view('crop_category.crop_create',compact('Cat','totalRiceProduction','CropCat'));
     }
 
     /**
@@ -50,7 +54,7 @@ class CropCategoryController extends Controller
                 'crop_descript' => $request->input('crop_descript'),
            ]);
     
-            return redirect('/crops-category')->with('message','Personal informations added successsfully');
+            return redirect('/crops-category')->with('message','Crop Category added successsfully');
         
         }
         catch(\Exception $ex){

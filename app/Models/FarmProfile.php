@@ -27,6 +27,7 @@ class FarmProfile extends Model
    
             
             'agri_districts_id',
+            'agri_districts',
             'polygons_id',
             'tenurial_status',
             'rice_farm_address',

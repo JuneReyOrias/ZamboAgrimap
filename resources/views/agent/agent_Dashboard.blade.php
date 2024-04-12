@@ -16,7 +16,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <!-- End fonts -->
 
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX==" crossorigin="anonymous" />
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,11 +28,12 @@
 <!-- core:css -->
 <link rel="stylesheet" href="../assets/vendors/core/core.css">
 <!-- endinject -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX==" crossorigin="anonymous" />
 
 <!-- Plugin css for this page -->
 <link rel="stylesheet" href="../assets/vendors/flatpickr/flatpickr.min.css">
 <!-- End plugin css for this page -->
-
+<link rel="stylesheet" href="../assets/multiple-select-1.7.0/multiple-select.jquery.json">
 <!-- inject:css -->
 <link rel="stylesheet" href="../assets/fonts/feather-font/css/iconfont.css">
 <link rel="stylesheet" href="../assets/vendors/flag-icon-css/css/flag-icon.min.css">
@@ -40,6 +42,7 @@
 
 <!-- Layout styles -->  
 <link rel="stylesheet" href="../assets/css/demo2/style.css">
+<link rel="stylesheet" href="../assets/css/demo2/fontawesome.css">
 <!-- End layout styles -->
 
 <link rel="shortcut icon" href="../assets/logo/logo.png" />
@@ -95,7 +98,7 @@
 	<!-- endinject -->
 
 	<!-- Custom js for this page -->
-  <script src="../assets/js/dashboard-dark.js"></script>
+  <script src="../assets/js/dashboard-light.js"></script>
 	<!-- End custom js for this page -->
 
 

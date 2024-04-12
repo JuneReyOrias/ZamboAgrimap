@@ -1,5 +1,6 @@
 @extends('admin.dashb')
 @section('admin')
+<li class="nav-item
 <div class="page-content">
 
     <nav class="page-breadcrumb">
@@ -11,7 +12,7 @@
     </div> --}}
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
+        <div class="card border rounded">
      
           <div class="card-body">
             {{-- @if($errors->any())

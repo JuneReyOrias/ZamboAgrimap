@@ -1,10 +1,7 @@
 @extends('admin.dashb')
 @section('admin')
-{{-- @extends('agent.agent_Dashboard')
-@section('agent')  --}}
-{{-- @extends('agent.agent_Dashboard') --}}
-
-{{-- @section('agent') --}}
+@extends('layouts._footer-script')
+@extends('layouts._head')
 
 <div class="page-content">
 
@@ -18,8 +15,7 @@
   </div> --}}
   <div class="row">
     <div class="col-md-12 grid-margin">
-      <div class="card">
-        
+      <div class="card border rounded">
         <div class="card-body">
           
           @if (session('message'))

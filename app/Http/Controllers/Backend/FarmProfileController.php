@@ -1,143 +1,285 @@
 <?php
 
 namespace App\Http\Controllers\Backend;
+use App\Models\AgriDistrict;
 use App\Models\FarmProfile;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FarmProfileRequest;
 use App\Http\Requests\UpdateFarmProfileRequest;
+use App\Models\LastProductionDatas;
 use App\Models\PersonalInformations;
 use App\Models\FixedCost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Optional;
+use App\Models\KmlFile;
+
+use Illuminate\Support\Facades\Storage;
 
 class FarmProfileController extends Controller
 {
    
   
-
-    //arcmap for admin for view and fetch of dattta
-    public function Arcmap()
+    public function Arcmap(Request $request)
     {
-        // $farmprofile= FarmProfile::all();
-        $farmLocation = DB::table('farm_profiles')
-     ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
-     ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
-     ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-     ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*','personal_informations.*')
-     ->get();
-
-     // Initialize empty arrays
-            $agriDistrictIds = [];
-            $polygonsIds = [];
-
-            // Loop through each row of the result
-            foreach ($farmLocation as $location) {
-                // Extract agri_district_id and polygons_id from each row
-                $agriDistrictIds[] = $location->id;
-                $polygonsIds[] = $location->id;
+        // Retrieve the search query from the request
+        $searchQuery = $request->input('query');
+        $searchType = $request->input('search_type'); // Assuming 'search_type' is provided in the request
+        
+        // Check if the search query is in all capital letters
+        if ($searchQuery === mb_strtoupper($searchQuery, 'UTF-8')) {
+            // If the search query is in all capital letters, redirect back with an error message
+            return redirect()->back()->withErrors(['search_error' => 'Search query cannot be in all capital letters.']);
         }
-
-                return view('map.arcmap', [
-                    'farmLocation' => $farmLocation,
-                    'agriDistrictIds' => $agriDistrictIds,
-                'polygonsIds' => $polygonsIds,
-
-            ]);
-
-     }
-
-
-     
-
-     //gmap is for agent arimap view of the farmers info and location per district
-     public function Gmap()
-     {
-         // $farmprofile= FarmProfile::all();
-                    $farmLocation = DB::table('farm_profiles')
-                ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
-                ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
-                ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*','personal_informations.*')
-                ->get();
-                            
-                    // Initialize empty arrays
-                $agriDistrictIds = [];
-                $polygonsIds = [];
-                
-                // Loop through each row of the result
-                foreach ($farmLocation as $location) {
-                    // Extract agri_district_id and polygons_id from each row
-                    $agriDistrictIds[] = $location->id;
-                    $polygonsIds[] = $location->id;
-                }
-                
-                
-                    //  return view('map.arcmap',compact('farmprofile'));
-                    // return  $farmLocation;
-                    return view('map.gmap', [
-                        'farmLocation' => $farmLocation,
-                        'agriDistrictIds' => $agriDistrictIds,
-                    'polygonsIds' => $polygonsIds,
-                
-                ]);
- 
-      }
-
-    //   users view of agrimap for all farmers info and location
-      public function agrimap()
-      {
-          // $farmprofile= FarmProfile::all();
-          $farmLocation = DB::table('farm_profiles')
-       ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
-       ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
-       ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-       ->select('farm_profiles.*', 'agri_districts.*' , 'polygons.*','personal_informations.*')
-       ->get();
-  
-       // Initialize empty arrays
-            $agriDistrictIds = [];
-            $polygonsIds = [];
-            
+        
+        // Query to fetch farm locations based on last name, middle name, first name, longitude, or latitude
+        $farmLocationQuery = DB::table('farm_profiles')
+            ->join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
+            ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+            ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->select('farm_profiles.*', 'agri_districts.*', 'polygons.*', 'personal_informations.*');
+        
+        // Check the search type and add appropriate conditions
+        switch ($searchType) {
+            case 'longitude':
+                $farmLocationQuery->where('farm_profiles.longitude', '=', $searchQuery);
+                break;
+            case 'latitude':
+                $farmLocationQuery->where('farm_profiles.latitude', '=', $searchQuery);
+                break;
+            default:
+                // For other search types, search in names
+                $farmLocationQuery->where(function ($query) use ($searchQuery) {
+                    $query->where('personal_informations.last_name', 'like', '%' . $searchQuery . '%')
+                          ->orWhere('personal_informations.middle_name', 'like', '%' . $searchQuery . '%')
+                          ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%');
+                });
+                break;
+        }
+        
+        // Execute the query to fetch farm locations
+        $farmLocation = $farmLocationQuery->get();
+        
+        // If no farm locations are found, redirect back with an error message
+        if ($farmLocation->isEmpty()) {
+            return redirect()->back()->withErrors(['search_error' => 'No farm locations found for the provided query.']);
+        }
+        
+        // Initialize empty arrays
+        $agriDistrictIds = [];
+        $polygonsIds = [];
+        
         // Loop through each row of the result
-            foreach ($farmLocation as $location) {
-                // Extract agri_district_id and polygons_id from each row
-                $agriDistrictIds[] = $location->id;
-                $polygonsIds[] = $location->id;
-            }
-  
-           return view('map.agrimap', [
+        foreach ($farmLocation as $location) {
+            // Extract agri_district_id and polygons_id from each row
+            $agriDistrictIds[] = $location->id;
+            $polygonsIds[] = $location->id;
+        }
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        // Pass the data to the view
+        return view('map.arcmap', [
             'farmLocation' => $farmLocation,
             'agriDistrictIds' => $agriDistrictIds,
             'polygonsIds' => $polygonsIds,
-  
-  ]);}
-
-
-    // search engien for mapping
-            public function searchfarm(Request $request){
-        
-                $gps_latitude=$request->gps_latitude;
-                $gps_longitude=$request->gps_longitude;
-
-                $farmprofile=FarmProfile::whereBetween('gps_latitude',[$gps_latitude-0.1,$gps_latitude+0.1])->whereBetween('gps_longitude',[$gps_longitude-0.1,$gps_longitude+0.1]);
-
-                return   $farmprofile;
-            }
-            public function FarmProfile(){
-                $farmprofile= FarmProfile::all();
-            return view('farm_profile.farm_index',compact('farmprofile'));
-        }
-
-
-   
-   
-    public function FarmProfileCrud()
-    {
-        $farmprofile= FarmProfile::latest()->get();
-        return view('farm_profile.farm_show',compact('farmprofile'));
-        
+            'totalRiceProduction'=>$totalRiceProduction,
+            'searchQuery' => $searchQuery, // Pass the search query to the view
+            'searchType' => $searchType, // Pass the search type to the view
+        ]);
     }
+    
+
+    //arcmap for admin for view and fetch of dattta
+
+     //gmap is for agent arimap view of the farmers info and location per district
+
+    //  public function Gmap(Request $request)
+    //  {
+    //      // Retrieve the search query from the request
+    //      $query = $request->input('query');
+     
+    //      // Check if the search query is in capital letters
+    //       // Check if the search query is in all capital letters
+    // if ($query === mb_strtoupper($query, 'UTF-8')) {
+    //     // If the search query is in all capital letters, redirect back with an error message
+    //     return redirect()->back()->withErrors(['search_error' => 'Search query cannot be in all capital letters.']);
+    // }
+     
+    //      // Query to fetch farm locations based on last name
+    //      $farmLocationQuery = DB::table('farm_profiles')
+    //          ->join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
+    //          ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+    //          ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+    //          ->select('farm_profiles.*', 'agri_districts.*', 'polygons.*', 'personal_informations.*')
+    //          ->where('personal_informations.last_name', 'like', '%' . $query . '%');
+     
+    //      // Execute the query to fetch farm locations
+    //      $farmLocation = $farmLocationQuery->get();
+     
+    //      // If no farm locations are found, redirect back with error message
+    //      if ($farmLocation->isEmpty()) {
+    //          return redirect()->back()->withErrors(['search_error' => 'No farm locations found for the provided query.']);
+    //      }
+     
+    //      // Initialize empty arrays
+    //      $agriDistrictIds = [];
+    //      $polygonsIds = [];
+     
+    //      // Loop through each row of the result
+    //      foreach ($farmLocation as $location) {
+    //          // Extract agri_district_id and polygons_id from each row
+    //          $agriDistrictIds[] = $location->id;
+    //          $polygonsIds[] = $location->id;
+    //      }
+     
+    //      // Pass the data to the view
+    //      return view('map.gmap', [
+    //          'farmLocation' => $farmLocation,
+    //          'agriDistrictIds' => $agriDistrictIds,
+    //          'polygonsIds' => $polygonsIds,
+    //          'searchQuery' => $query, // Pass the search query to the view
+    //      ]);
+    //  }
+    public function Gmap(Request $request)
+    {
+        // Retrieve the search query from the request
+        $searchQuery = $request->input('query');
+        $searchType = $request->input('search_type'); // Assuming 'search_type' is provided in the request
+        
+        // Check if the search query is in all capital letters
+        if ($searchQuery === mb_strtoupper($searchQuery, 'UTF-8')) {
+            // If the search query is in all capital letters, redirect back with an error message
+            return redirect()->back()->withErrors(['search_error' => 'Search query cannot be in all capital letters.']);
+        }
+        
+        // Query to fetch farm locations based on last name, middle name, first name, longitude, or latitude
+        $farmLocationQuery = DB::table('farm_profiles')
+            ->join('agri_districts', 'farm_profiles.agri_districts_id', '=', 'agri_districts.id')
+            ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+            ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->select('farm_profiles.*', 'agri_districts.*', 'polygons.*', 'personal_informations.*');
+        
+        // Check the search type and add appropriate conditions
+        switch ($searchType) {
+            case 'longitude':
+                $farmLocationQuery->where('farm_profiles.longitude', '=', $searchQuery);
+                break;
+            case 'latitude':
+                $farmLocationQuery->where('farm_profiles.latitude', '=', $searchQuery);
+                break;
+            default:
+                // For other search types, search in names
+                $farmLocationQuery->where(function ($query) use ($searchQuery) {
+                    $query->where('personal_informations.last_name', 'like', '%' . $searchQuery . '%')
+                          ->orWhere('personal_informations.middle_name', 'like', '%' . $searchQuery . '%')
+                          ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%');
+                });
+                break;
+        }
+        
+        // Execute the query to fetch farm locations
+        $farmLocation = $farmLocationQuery->get();
+        
+        // If no farm locations are found, redirect back with an error message
+        if ($farmLocation->isEmpty()) {
+            return redirect()->back()->withErrors(['search_error' => 'No farm locations found for the provided query.']);
+        }
+        
+        // Initialize empty arrays
+        $agriDistrictIds = [];
+        $polygonsIds = [];
+        
+        // Loop through each row of the result
+        foreach ($farmLocation as $location) {
+            // Extract agri_district_id and polygons_id from each row
+            $agriDistrictIds[] = $location->id;
+            $polygonsIds[] = $location->id;
+        }
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        // Pass the data to the view
+        return view('map.gmap', [
+            'farmLocation' => $farmLocation,
+            'totalRiceProduction'=>$totalRiceProduction,
+            'agriDistrictIds' => $agriDistrictIds,
+            'polygonsIds' => $polygonsIds,
+            'searchQuery' => $searchQuery, // Pass the search query to the view
+            'searchType' => $searchType, // Pass the search type to the view
+        ]);
+    }
+    
+    public function agrimap(Request $request)
+    {
+        // Retrieve the search query from the request
+        $searchQuery = $request->input('query');
+        $searchType = $request->input('search_type'); // Assuming 'search_type' is provided in the request
+        
+        // Check if the search query is in all capital letters
+        if ($searchQuery === mb_strtoupper($searchQuery, 'UTF-8')) {
+            // If the search query is in all capital letters, redirect back with an error message
+            return redirect()->back()->withErrors(['search_error' => 'Search query cannot be in all capital letters.']);
+        }
+        
+        // Query to fetch farm locations based on last name, middle name, first name, longitude, or latitude
+        $farmLocationQuery = DB::table('farm_profiles')
+            ->join('agri_districts', 'farm_profiles.agri_districts_id', '=', 'agri_districts.id')
+            ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
+            ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->select('farm_profiles.*', 'agri_districts.*', 'polygons.*', 'personal_informations.*');
+        
+        // Check the search type and add appropriate conditions
+        switch ($searchType) {
+            case 'longitude':
+                $farmLocationQuery->where('farm_profiles.longitude', '=', $searchQuery);
+                break;
+            case 'latitude':
+                $farmLocationQuery->where('farm_profiles.latitude', '=', $searchQuery);
+                break;
+            default:
+                // For other search types, search in names
+                $farmLocationQuery->where(function ($query) use ($searchQuery) {
+                    $query->where('personal_informations.last_name', 'like', '%' . $searchQuery . '%')
+                          ->orWhere('personal_informations.middle_name', 'like', '%' . $searchQuery . '%')
+                          ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%');
+                });
+                break;
+        }
+        
+        // Execute the query to fetch farm locations
+        $farmLocation = $farmLocationQuery->get();
+        
+        // If no farm locations are found, redirect back with an error message
+        if ($farmLocation->isEmpty()) {
+            return redirect()->back()->withErrors(['search_error' => 'No farm locations found for the provided query.']);
+        }
+        
+        // Initialize empty arrays
+        $agriDistrictIds = [];
+        $polygonsIds = [];
+        
+        // Loop through each row of the result
+        foreach ($farmLocation as $location) {
+            // Extract agri_district_id and polygons_id from each row
+            $agriDistrictIds[] = $location->id;
+            $polygonsIds[] = $location->id;
+        }
+      
+    
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        
+        // Pass the data to the view
+        return view('map.agrimap', [
+            'farmLocation' => $farmLocation,
+            'agriDistrictIds' => $agriDistrictIds,
+            'polygonsIds' => $polygonsIds,
+            'searchQuery' => $searchQuery, // Pass the search query to the view
+            'searchType' => $searchType, // Pass the search type to the view
+            'totalRiceProduction'=>$totalRiceProduction,
+        ]);
+    }
+    
+
+
+   
+  
    
 
     // insertion of new data into farm profile table by admin
@@ -209,12 +351,13 @@ class FarmProfileController extends Controller
     // farmers view of all the data from farm profile by admin 
     public function ViewFarmProfile(){
         $farmprofiles=FarmProfile::orderBy('id','desc')->paginate(20);
-        return view('farm_profile.farminfo_view',compact('farmprofiles'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('farm_profile.farminfo_view',compact('farmprofiles','totalRiceProduction'));
     }
     // agent farm profile update data view
     public function EditFarmProfile($id){
         $farmprofiles=FarmProfile::find($id);
-        return view('farm_profile.farm_edit',compact('farmprofiles'));
+        return view('farm_profile.farm_edit',compact('farmprofiles','totalRiceProduction'));
     }
     
     

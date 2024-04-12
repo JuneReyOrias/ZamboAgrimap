@@ -4,6 +4,8 @@ namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
 use App\Models\Fisheries;
+use App\Models\FisheriesCategory;
+use App\Models\LastProductionDatas;
 use App\Models\Polygon;
 use Illuminate\Http\Request;
 
@@ -15,8 +17,11 @@ class FisheriesController extends Controller
      */
     public function Fisheries()
     {
-        // $agridistrictS= AgriDistrictController::latest()->get();
-     return view('fish.fish_create');
+        $FishCat =FisheriesCategory::all();
+        $Fisheries= Fisheries::orderBy('id','desc')->paginate(10);
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        
+     return view('fish.fish_create',compact('totalRiceProduction','FishCat','Fisheries'));
     }
 
 
@@ -38,7 +43,7 @@ class FisheriesController extends Controller
             'fish_description'=>$request->input('fish_description'),
            ]);
     
-            return redirect('/fisheries/create')->with('message','Personal informations added successsfully');
+            return redirect('/fisheries/create')->with('message','New Fisheries added successsfully');
         
         }
         catch(\Exception $ex){

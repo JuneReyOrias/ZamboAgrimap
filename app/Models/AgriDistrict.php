@@ -34,4 +34,10 @@ class AgriDistrict extends Model
     {
         return $this->hasOne(FarmProfile::class,'id','agri_districts_id' );
     }
+     // Define the relationship with User
+     public function users()
+     {
+         return $this->hasMany(User::class, 'agri_district_id');
+     }
+   
 }

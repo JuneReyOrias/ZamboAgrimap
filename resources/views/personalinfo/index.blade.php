@@ -1,5 +1,7 @@
 @extends('admin.dashb')
 @section('admin')
+@extends('layouts._footer-script')
+@extends('layouts._head')
 {{-- @extends('agent.agent_Dashboard')
 @section('agent')  --}}
 {{-- @extends('agent.agent_Dashboard') --}}
@@ -17,7 +19,7 @@
   </div> --}}
   <div class="row">
     <div class="col-md-12 grid-margin">
-      <div class="card">
+      <div class="card border rounded">
         {{-- @if($errors->any())
         <ul class="alert alert-warning">
           @foreach ($errors->all() as $error)
@@ -44,7 +46,7 @@
           <h4 class="card-titles" style="display: flex;text-align: center; "><span></span>Rice Survey Form Zamboanga City</h4>
           <br>
           <h6 class="card-title"><span>I.</span>Personal Informations</h6>
-
+          <br><br>
           <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
         
          <form action{{url('personal_informations')}} method="post">

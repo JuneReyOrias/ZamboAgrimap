@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categorize;
+use App\Models\LastProductionDatas;
 use App\Models\livestockCategory;
 use Illuminate\Http\Request;
 
@@ -18,16 +20,22 @@ class LivestockCategoryController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     */
-    public function Livestocks()
+    //  */
+    // public function Livestocks()
+    // {
+    //     $Cat= Categorize::all();
+    //     $livestock = livestockCategory::orderBy('id','desc')->paginate(10);
+    //     $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        
+    //  return view('livestocks.livestocks_create',compact('livestock','totalRiceProduction'));
+    // }
+    public function LivestockCategorys()
     {
-        $livestock = livestockCategory::all();
-     return view('livestocks.livestocks_create',compact('livestock'));
-    }
-    public function LivestockCategory()
-    {
-        // $agridistrictS= AgriDistrictController::latest()->get();
-     return view('map.gmap');
+        $Cat= Categorize::all();
+        $livestock = livestockCategory::orderBy('id','desc')->paginate(10);
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        
+     return view('livestock_category.livestock_create',compact('livestock','totalRiceProduction','Cat'));
     }
 
     /**

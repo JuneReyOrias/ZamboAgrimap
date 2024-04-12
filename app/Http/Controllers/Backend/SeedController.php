@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SeedRequest;
+use App\Models\LastProductionDatas;
 use App\Models\Seed;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,8 @@ class SeedController extends Controller
 {
     public function SeedsVar(){
         $pesticides= Seed::all();
-    return view('variable_cost.seeds.seeds_store',compact('pesticides'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.seeds.seeds_store',compact('pesticides','totalRiceProduction'));
     }
     /*
     /**
@@ -32,11 +34,11 @@ class SeedController extends Controller
             $data= $request->all();
             Seed::create($data);
     
-            return redirect('labor')->with('message','Seeds data added successsfully');
+            return redirect('/admin-labor')->with('message','Seeds data added successsfully');
         
         }
         catch(\Exception $ex){
-            return redirect('/seeds')->with('message','Someting went wrong');
+            return redirect('/admin-seeds')->with('message','Someting went wrong');
         }
     }
 
@@ -45,7 +47,8 @@ class SeedController extends Controller
 
 public function SeedsView(){
     $seeds= Seed::orderBy('id','desc')->paginate(10);
-    return view('variable_cost.seeds.view',compact('seeds'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.seeds.view',compact('seeds','totalRiceProduction'));
 }
 
 
@@ -54,7 +57,8 @@ public function SeedsView(){
 
 public function editSeeds($id){
     $seeds= Seed::find($id);
-    return view('variable_cost.seeds.seed_edit',compact('seeds'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.seeds.seed_edit',compact('seeds','totalRiceProduction'));
 }
 
 public function updatesSeeds(SeedRequest $request,$id)
@@ -79,12 +83,12 @@ public function updatesSeeds(SeedRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/view-variable-cost-seed')->with('message','Seeds Data Updated successsfully');
+       return redirect('/admin-view-variable-cost-seed')->with('message','Seeds Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('/edit-variable-cost-seed/{seeds}')->with('message','Someting went wrong');
+       return redirect('/admin-edit-variable-cost-seed/{seeds}')->with('message','Someting went wrong');
        
    }   
 } 

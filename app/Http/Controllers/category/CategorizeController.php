@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategorizeRequest;
 use App\Models\AgricDistrict;
 use App\Models\Categorize;
+use App\Models\LastProductionDatas;
 use Illuminate\Http\Request;
 
 class CategorizeController extends Controller
@@ -25,7 +26,8 @@ class CategorizeController extends Controller
     public function Livestocks()
     {
         $categorize = Categorize::all();
-     return view('livestocks.livestocks_create',compact('categorize'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+     return view('livestocks.livestocks_create',compact('categorize','totalRiceProduction'));
     }
     public function Cropping()
     {
@@ -35,23 +37,26 @@ class CategorizeController extends Controller
     public function LivestockCategory()
     {
         $categorize = Categorize::all();
-     return view('livestock_category.livestock_create',compact('categorize'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+     return view('livestock_category.livestock_create',compact('categorize','totalRiceProduction'));
     } 
     public function FisheriesCategory()
     {
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
         $categorize = Categorize::all();
-     return view('fisheries_category.fisheries_create',compact('categorize'));
+     return view('fisheries_category.fisheries_create',compact('categorize','totalRiceProduction'));
     }
     public function CropCategory()
     {
         $categorize = Categorize::all();
-
-     return view('crop_category.crop_create',compact('categorize'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+     return view('crop_category.crop_create',compact('categorize','totalRiceProduction'));
     }
     public function category()
     {
         // $category= Categorize::latest()->get();
-     return view('categorize.categorize_index');
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+     return view('categorize.categorize_index',compact('totalRiceProduction'));
     }
     /**
      * Show the form for creating a new resource.
@@ -80,7 +85,7 @@ class CategorizeController extends Controller
            ]);
     
            $lastInsertedAgriDistrictId = $categorize->agri_districts_id;
-            return redirect('/category')->with('message','Personal informations added successsfully');
+            return redirect('/category')->with('message','Category added successsfully');
         
         }
         catch(\Exception $ex){
@@ -102,8 +107,8 @@ class CategorizeController extends Controller
     {
        // dd($farmer_no);
        $agridistricts = Categorize::where('personal_information_id',$id)->first();
-     
-       return view('personalinfo.edit')->with('personalInformation',$agridistricts);
+       $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+       return view('personalinfo.edit',compact('agridistricts','totalRiceProduction'));
     }
 
     /**

@@ -23,9 +23,9 @@ class TransportRequest extends FormRequest
     {
         $rule= [
             'total_transport_per_deliverycost'=>[
-                'required',
-                'string',
-                'max:50',
+                'numeric',
+                'regex:/^\d+(\.\d+)?$/',
+               
             ],
             // 'harrowing_cost'=>[
             //     'required',
@@ -53,7 +53,7 @@ class TransportRequest extends FormRequest
     }
     public function messages(){
        return [
-            'total_transport_per_deliverycost.required'=>'Please input the Total Transport per delivery cost',
+            'total_transport_per_deliverycost.numeric'=>'Please input the Total Transport per delivery cost, field must be a number',
             // 'harrowing_cost.required'=>'Please input harrowing cost',
             // 'harvesting_cost.required'=>'Please input harvesting cost',
             // 'post_harvest_cost.required'=>'Please input post harvest cost',

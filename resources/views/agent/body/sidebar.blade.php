@@ -27,38 +27,38 @@
         </a>
       </li>
      
-      {{-- <li class="nav-item nav-category">Features</li>
+       <li class="nav-item nav-category">Features</li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false" aria-controls="uiComponents">
-          <i class="link-icon" data-feather="feather"></i>
+          <i class="link-icon" data-feather="list"></i>
           <span class="link-title">Agri-Districts</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
         <div class="collapse" id="uiComponents">
           <ul class="nav sub-menu">
             <li class="nav-item">
-              <a href="" class="nav-link">Ayala</a>
+              <a href="{{route('agent.agriDistricts.ayala_farmers')}}" class="nav-link">Ayala Rice Farmers</a>
             </li>
             <li class="nav-item">
-              <a href="pages/ui-components/alerts.html" class="nav-link">Tumaga</a>
+              <a href="{{route('agent.agriDistricts.tumaga_farmers')}}" class="nav-link">Tumaga Rice Farmers</a>
             </li>
             <li class="nav-item">
-              <a href="pages/ui-components/badges.html" class="nav-link">Culianan</a>
+              <a href="{{route('agent.agriDistricts.culianan_farmers')}}" class="nav-link">Culianan Rice Farmers</a>
             </li>
             <li class="nav-item">
-              <a href="pages/ui-components/breadcrumbs.html" class="nav-link">Manicahan</a>
+              <a href="{{route('agent.agriDistricts.manicahan_farmers')}}" class="nav-link">Manicahan Rice Farmers</a>
             </li>
             <li class="nav-item">
-              <a href="pages/ui-components/buttons.html" class="nav-link">Curuan</a>
+              <a href="{{route('agent.agriDistricts.curuan_farmers')}}" class="nav-link">Curuan Rice Farmers</a>
             </li>
             <li class="nav-item">
-              <a href="pages/ui-components/button-group.html" class="nav-link">Vitali</a>
+              <a href="{{route('agent.agriDistricts.vitali_farmers')}}" class="nav-link">Vitali Rice Farmers</a>
             </li>
             
           </ul>
         </div>
       </li>
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#advancedUI" role="button" aria-expanded="false" aria-controls="advancedUI">
           <i class="link-icon" data-feather="anchor"></i>
           <span class="link-title">Agriculture Sector</span>
@@ -91,18 +91,18 @@
             <li class="nav-item">
               <a href="{{route('agent.personal_info.add_info')}}" class="nav-link">Rice Survey Form</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{route('agent.personal_info.add_info')}}" class="nav-link">Corn Survey Form</a>
             </li>
              <li class="nav-item">
               <a href="{{route('agent.personal_info.add_info')}}" class="nav-link">Coconut Survey Form</a>
-            </li>
+            </li> --}}
             <li class="nav-item">
-              <a href="{{route('multifile.import_agent')}}" class="nav-link">Multiple Import Form</a>
+              <a href="{{route('agent.mutipleFile.import_excelFile')}}" class="nav-link">Multiple Import Form</a>
             </li>
            
               <li class="nav-item">
-              <a href="{{route('kml.import')}}" class="nav-link">Kml Import</a>
+              <a href="{{route('kml.agent_kml_import')}}" class="nav-link">Kml Import</a>
             </li>
          
           </ul>
@@ -110,15 +110,15 @@
       </li>
       <li class="nav-item">
         <a class="nav-link"  data-bs-toggle="collapse" href="#farmers" role="button" aria-expanded="false" aria-controls="charts">
-          <i class="link-icon" data-feather="calendar"></i>
+          <i class="link-icon" data-feather="info"></i>
           <span class="link-title">Farmers Info</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
         <div class="collapse" id="farmers">
           <ul class="nav sub-menu">
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{route('agent.allfarmersinfo.forms_info')}}" class="nav-link">Farmers Rice Info</a>
-            </li>
+            </li> --}}
             <li class="nav-item">
               <a href="{{route('agent.personal_info.view_infor')}}" class="nav-link">Personal Informations</a>
             </li>
@@ -158,19 +158,19 @@
       </li>
       <li class="nav-item">
         <a class="nav-link"  data-bs-toggle="collapse" href="#charts" role="button" aria-expanded="false" aria-controls="calendar">
-          <i class="link-icon" data-feather="calendar"></i>
-          <span class="link-title">Rice Varieties</span>
+          <i class="link-icon" data-feather="slack"></i>
+          <span class="link-title">Crop Varieties</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
         <div class="collapse" id="charts">
           <ul class="nav sub-menu">
             <li class="nav-item">
-              <a href="{{route('agent.allfarmersinfo.profile')}}" class="nav-link">Inbred</a>
+              <a href="{{route('agent.riceVariety.inbred_variety')}}" class="nav-link">Rice Varieties/Agri-District</a>
             </li>
-            <li class="nav-item">
-              <a href="pages/charts/chartjs.html" class="nav-link">Jasmin Rice</a>
-            </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
+              <a href="{{route('agent.riceVariety.hybrid_variety')}}" class="nav-link">Hybrid</a>
+            </li> --}}
+            {{-- <li class="nav-item">
               <a href="pages/charts/flot.html" class="nav-link">Basmati Rice</a>
             </li>
             <li class="nav-item">
@@ -181,7 +181,7 @@
             </li>
             <li class="nav-item">
               <a href="pages/charts/sparkline.html" class="nav-link"> Arborio rice</a>
-            </li>
+            </li> --}}
           </ul>
         </div>
       </li> 
@@ -193,29 +193,32 @@
         </a>
         <div class="collapse" id="schedule">
           <ul class="nav sub-menu">
+            
             <li class="nav-item">
-              <a href="p" class="nav-link">Planting</a>
+              <a href="{{route('agent.Schedule.planting')}}" class="nav-link">Planting</a>
             </li>
             <li class="nav-item">
-              <a href="" class="nav-link">Harvest</a>
+              <a href="{{route('agent.Schedule.harvest')}}" class="nav-link">Harvest</a>
             </li>
-          
           </ul>
         </div>
       </li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#tables" role="button" aria-expanded="false" aria-controls="tables">
-          <i class="link-icon" data-feather="layout"></i>
+          <i class="link-icon" data-feather="bar-chart-2"></i>
           <span class="link-title">Crops Production</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
         <div class="collapse" id="tables">
           <ul class="nav sub-menu">
             <li class="nav-item">
-              <a href="pages/tables/basic-table.html" class="nav-link">Basic Tables</a>
+              <a href="{{route('agent.cropProductions.rice_crop')}}" class="nav-link">Rice Crop</a>
             </li>
             <li class="nav-item">
-              <a href="pages/tables/data-table.html" class="nav-link">Data Table</a>
+              <a href="" class="nav-link">Corn Crop</a>
+            </li>
+            <li class="nav-item">
+              <a href="" class="nav-link">Coconut</a>
             </li>
           </ul>
         </div>

@@ -10,11 +10,11 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class ImportFarmProfile implements ToModel,WithHeadingRow
 {
-    protected $personalInformations;
+    protected $personalInformationId;
 
-    public function __construct(PersonalInformations $personalInformations)
+    public function __construct($personalInformationId)
     {
-        $this->personalInformations = $personalInformations;
+        $this->personalInformationId = $personalInformationId;
     }
     /**
     * @param array $row
@@ -23,10 +23,13 @@ class ImportFarmProfile implements ToModel,WithHeadingRow
     */
     public function model(array $row)
     {   
-        $personalInformationId = $this->personalInformations->id;
+
+        dd($row);
+        
+
 
         return new FarmProfile([
-            'personal_information_id' => $personalInformationId,
+            'personal_information_id' => $this->personalInformationId,
             'tenurial_status' => $row['tenurial_status'],
             'rice_farm_address' => $row['rice_farm_address'],
             'no_of_years_as_farmers' => $row['no_of_years_as_farmers'],
@@ -52,5 +55,7 @@ class ImportFarmProfile implements ToModel,WithHeadingRow
             'name_technicians' => $row['name_technicians'],
             'date_interview' => $row['date_interview'],
         ]);
-    }
+ 
+    
+}
 }

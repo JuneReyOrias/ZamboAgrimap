@@ -27,6 +27,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\AgriDistrict;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PersonalInformations;
 use App\Http\Requests\PersonalInformationsRequest;
@@ -68,7 +69,14 @@ class AgentController extends Controller
 
       //agent add personal informations 
       public function addpersonalInfo(){
-        return view('agent.personal_info.add_info');
+     // Assuming you have the authenticated user
+    $user = Auth::user(); // Assuming you're using Laravel's authentication
+
+    // Fetching user's id and agri_district
+    $user_id = $user->id;
+    $agri_district = $user->agri_district;
+
+        return view('agent.personal_info.add_info', compact('user_id', 'agri_district'));
     }
 
     // agent input persona info
@@ -96,44 +104,99 @@ class AgentController extends Controller
         return redirect('/add-personal-info')->with('error', 'Farm Profile with this information already exists.');
     }
     
-            $data= $request->validated();
-            $data= $request->all();
-            PersonalInformations::create(
-                [
-                    'users_id' => $request->input('users_id'),
-                    'first_name' => $request->input('first_name'),
-                    'middle_name' => $request->input('middle_name'),
-                    'last_name' => request('last_name'),
-                    'extension_name' => request('extension_name'),
-                    'home_address' => request('home_address'),
-                    'sex' => request('sex'),
-                    'religion' => request('religion'),
-                    'date_of_birth' => request('date_of_birth'),
-                    'place_of_birth' => request('place_of_birth'),
-                    'contact_no' => request('contact_no'),
-                    'civil_status' => request('civil_status'),
-                    'name_legal_spouse' => request('name_legal_spouse'),
-                    'no_of_children' => request('no_of_children'),
-                    'mothers_maiden_name' => request('mothers_maiden_name'),
-                    'highest_formal_education' => request('highest_formal_education'),
-                    'person_with_disability' => request('person_with_disability'),
-                    'pwd_id_no' => request('pwd_id_no'),
-                    'government_issued_id' => request('government_issued_id'),
-                    'id_type' => request('id_type'),
-                    'gov_id_no' => request('gov_id_no'),
-                    'member_ofany_farmers_ass_org_coop' => request('member_ofany_farmers_ass_org_coop'),
-                    'nameof_farmers_ass_org_coop' => request('nameof_farmers_ass_org_coop'),
-                    'name_contact_person' => request('name_contact_person'),
-                    'oca_district_office' => request('oca_district_office'),
-                    'cp_tel_no' => request('cp_tel_no'),
-                ]
-            );
+    $personalInformation= $request->validated();
+    $personalInformation= $request->all();
+           $personalInformation= new PersonalInformations;
+        //    dd($request->all());
+     
+  // Check if a file is present in the request and if it's valid
+if ($request->hasFile('image') && $request->file('image')->isValid()) {
+    // Retrieve the image file from the request
+    $image = $request->file('image');
     
+    // Generate a unique image name using current timestamp and file extension
+    $imagename = time() . '.' . $image->getClientOriginalExtension();
+    
+    // Move the uploaded image to the 'personalInfoimages' directory with the generated name
+    $image->move('personalInfoimages', $imagename);
+    
+    // Set the image name in the PersonalInformation model
+    $personalInformation->image = $imagename;
+} 
+            $personalInformation->users_id =$request->users_id;
+            $personalInformation->first_name= $request->first_name;
+            $personalInformation->middle_name= $request->middle_name;
+            $personalInformation->last_name=  $request->last_name;
+
+            if ($request->extension_name === 'others') {
+                $personalInformation->extension_name = $request->add_extName; // Use the value entered in the "add_extenstion name" input field
+           } else {
+                $personalInformation->extension_name = $request->extension_name; // Use the selected color from the dropdown
+           }
+            $personalInformation->country=  $request->country;
+            $personalInformation->province=  $request->province;
+            $personalInformation->city=  $request->city;
+            $personalInformation->agri_district=  $request->agri_district;
+            $personalInformation->barangay=  $request->barangay;
+            
+             $personalInformation->home_address=  $request->home_address;
+             $personalInformation->sex=  $request->sex;
+
+             if ($request->religion=== 'other') {
+                $personalInformation->religion= $request->add_Religion; // Use the value entered in the "religion" input field
+           } else {
+                $personalInformation->religion= $request->religion; // Use the selected religion from the dropdown
+           }
+             $personalInformation->date_of_birth=  $request->date_of_birth;
+            
+             if ($request->place_of_birth=== 'Add Place of Birth') {
+                $personalInformation->place_of_birth= $request->add_PlaceBirth; // Use the value entered in the "place_of_birth" input field
+           } else {
+                $personalInformation->place_of_birth= $request->place_of_birth; // Use the selected place_of_birth from the dropdown
+           }
+             $personalInformation->contact_no=  $request->contact_no;
+             $personalInformation->civil_status=  $request->civil_status;
+             $personalInformation->name_legal_spouse=  $request->name_legal_spouse;
+
+             if ($request->no_of_children=== 'Add') {
+                $personalInformation->no_of_children= $request->add_noChildren; // Use the value entered in the "no_of_children" input field
+                } else {
+                        $personalInformation->no_of_children= $request->no_of_children; // Use the selected no_of_children from the dropdown
+                }
+    
+             $personalInformation->mothers_maiden_name=  $request->mothers_maiden_name;
+             if ($request->highest_formal_education=== 'Other') {
+                $personalInformation->highest_formal_education= $request->add_formEduc; // Use the value entered in the "highest_formal_education" input field
+                } else {
+                        $personalInformation->highest_formal_education= $request->highest_formal_education; // Use the selected highest_formal_education from the dropdown
+                }
+             $personalInformation->person_with_disability=  $request->person_with_disability;
+             $personalInformation->pwd_id_no=  $request->pwd_id_no;
+             $personalInformation->government_issued_id=  $request->government_issued_id;
+             $personalInformation->id_type=  $request->id_type;
+             $personalInformation->gov_id_no=  $request->gov_id_no;
+             $personalInformation->member_ofany_farmers_ass_org_coop=  $request->member_ofany_farmers_ass_org_coop;
+             
+             if ($request->nameof_farmers_ass_org_coop === 'add') {
+                $personalInformation->nameof_farmers_ass_org_coop = $request->add_FarmersGroup; // Use the value entered in the "add_extenstion name" input field
+           } else {
+                $personalInformation->nameof_farmers_ass_org_coop = $request->nameof_farmers_ass_org_coop; // Use the selected color from the dropdown
+           }
+             $personalInformation->name_contact_person=  $request->name_contact_person;
+      
+             $personalInformation->cp_tel_no=  $request->cp_tel_no;
+            
+
+
+
+        
+            // dd($personalInformation);
+             $personalInformation->save();
             return redirect('/add-farm-profile')->with('message','Personal informations added successsfully');
         
         }
         catch(\Exception $ex){
-            // dd($ex); // Debugging statement to inspect the exception
+            dd($ex); // Debugging statement to inspect the exception
             return redirect('/add-personal-info')->with('message','Someting went wrong');
             
         }   
@@ -183,89 +246,215 @@ public function fetchtables()
 
 
 public function farmprofiles(){
-    return view('agent.farmprofile.add_profile');
+     // Assuming $user represents the currently logged-in user
+     $user = auth()->user();
+
+     // Check if user is authenticated before proceeding
+     if (!$user) {
+         // Handle unauthenticated user, for example, redirect them to login
+         return redirect()->route('login');
+     }
+    $user_id = $user->id;
+    $agri_districts = $user->agri_district;
+    $agri_districts_id = $user->agri_districts_id;
+    return view('agent.farmprofile.add_profile',compact('agri_districts','agri_districts_id'));
 }
+// public function farmprofiles(){
+//     // Assuming $user represents the currently logged-in user
+//     $user = auth()->user();
+
+//     // Check if user is authenticated before proceeding
+//     if (!$user) {
+//         // Handle unauthenticated user, for example, redirect them to login
+//         return redirect()->route('login');
+//     }
+
+//     // Fetching user ID
+//     $user_id = $user->id;
+
+//     // Fetching agri_districts for the user
+//     $agri_districts = $user->agri_districts; // assuming 'agri_districts' is the relationship name
+
+//     // Fetching agri_districts_id based on the user's ID and agri_districts
+//     $agri_districts_ids = $agri_districts->pluck('id');
+
+//     // Assuming AgriDistrict is your model for agricultural districts
+//     // Fetching AgriDistricts based on their IDs
+//     $agri_districts_info = AgriDistrict::whereIn('id', $agri_districts_ids)->get();
+
+//     return view('agent.farmprofile.add_profile', compact('agri_districts_info'));
+// }
+
+
 // agent added new farm profiles
-public function AddFarmProfile(FarmProfileRequest $request)
-    {
+// public function AddFarmProfile(FarmProfileRequest $request)
+//     {
        
-        try {
+//         try {
            
-            $user = auth()->user();
-            $data = $request->validated();
+//             $user = auth()->user();
+//             $data = $request->validated();
            
 
        
 
-    // Check if the associated PersonalInformations record exists
-    // Access the primary key of the PersonalInformations model instance
+//     // Check if the associated PersonalInformations record exists
+//     // Access the primary key of the PersonalInformations model instance
 
-    $existingFarmProfile = FarmProfile::where([
-        ['personal_informations_id', '=', $request->input('personal_informations_id')],
+//     $existingFarmProfile = FarmProfile::where([
+//         ['personal_informations_id', '=', $request->input('personal_informations_id')],
        
     
        
        
     
       
-        // Add other fields here
-    ])->first();
+//         // Add other fields here
+//     ])->first();
     
-    if ($existingFarmProfile) {
-        // FarmProfile with the given personal_informations_id and other fields already exists
-        // You can handle this scenario here, for example, return an error message
-        return redirect('/add-farm-profile')->with('error', 'Farm Profile with this information already exists.');
-    }
+//     if ($existingFarmProfile) {
+//         // FarmProfile with the given personal_informations_id and other fields already exists
+//         // You can handle this scenario here, for example, return an error message
+//         return redirect('/add-farm-profile')->with('error', 'Farm Profile with this information already exists.');
+//     }
     
 
-    $farmProfile = FarmProfile::create([
-        'personal_informations_id' => $request->input('personal_informations_id'),
-        'users_id' => $request->input('users_id'),
-        'agri_districts_id' => $request->input('agri_districts_id'),
-        'polygons_id' => $request->input('polygons_id'),
-       'tenurial_status' => request('tenurial_status'),
-       'rice_farm_address' => request('rice_farm_address'),
-       'no_of_years_as_farmers' => request('no_of_years_as_farmers'),
-       'gps_longitude' => request('gps_longitude'),
-       'gps_latitude' => request('gps_latitude'),
-       'total_physical_area_has' => request('total_physical_area_has'),
-       'rice_area_cultivated_has' => request('rice_area_cultivated_has'),
-       'land_title_no' => request('land_title_no'),
-       'lot_no' => request('lot_no'),
-       'area_prone_to' => request('area_prone_to'),
-       'ecosystem' => request('ecosystem'),
-       'type_rice_variety' => request('type_rice_variety'),
-       'prefered_variety' => request('prefered_variety'),
-       'plant_schedule_wetseason' => request('plant_schedule_wetseason'),
-       'plant_schedule_dryseason' => request('plant_schedule_dryseason'),
-       'no_of_cropping_yr' => request('no_of_cropping_yr'),
-       'yield_kg_ha' => request('yield_kg_ha'),
-       'rsba_register' => request('rsba_register'),
-       'pcic_insured' => request('pcic_insured'),
-       'government_assisted' => request('government_assisted'),
-       'source_of_capital' => request('source_of_capital'),
-       'remarks_recommendation' => request('remarks_recommendation'),
-       'oca_district_office' => request('oca_district_office'),
-       'name_technicians' => request('name_technicians'),
-       'date_interview' => request('date_interview'),
+//             $farmProfile = new FarmProfile;
+//             $farmProfile->personal_informations_id= $request->personal_informations_id;
+//         //    $farmProfile->users_id= $request->users_id;
+//         $farmProfile->agri_districts_id= $request->agri_districts_id;
+//         // $farmProfile->polygons_id= $request->polygons_id;
+//         $farmProfile->agri_districts= $request->agri_districts;
+//         if ($request->tenurial_status=== 'Add') {
+//               $farmProfile->tenurial_status= $request->add_newTenure; // Use the value entered in the "tenurial_status" input field
+//             } else {
+//                       $farmProfile->tenurial_status= $request->tenurial_status; // Use the selected no_of_children from the dropdown
+//             }
+//         $farmProfile->rice_farm_address= $request->rice_farm_address;
+      
+//         if ($request->no_of_years_as_farmers=== 'Add') {
+//             $farmProfile->no_of_years_as_farmers= $request->add_newFarmyears; // Use the value entered in the "no_of_years_as_farmers" input field
+//           } else {
+//                     $farmProfile->no_of_years_as_farmers= $request->no_of_years_as_farmers; // Use the selected no_of_children from the dropdown
+//           }
+//         $farmProfile->gps_longitude= $request->gps_longitude;
+//         $farmProfile->gps_latitude= $request->gps_latitude;
+//         $farmProfile->total_physical_area_has= $request->total_physical_area_has;
+//         $farmProfile->rice_area_cultivated_has= $request->rice_area_cultivated_has;
+//         $farmProfile->land_title_no= $request->land_title_no;
+//         $farmProfile->lot_no= $request->lot_no;
+       
+//         if ($request->area_prone_to=== 'Add Prone') {
+//             $farmProfile->area_prone_to= $request->add_newProneYear; // Use the value entered in the "area_prone_to" input field
+//           } else {
+//                     $farmProfile->area_prone_to= $request->area_prone_to; // Use the selected no_of_children from the dropdown
+//           }
 
-    ]);
-            
+//         if ($request->ecosystem=== 'Add ecosystem') {
+//             $farmProfile->ecosystem= $request->Add_Ecosystem; // Use the value entered in the "ecosystem" input field
+//           } else {
+//                     $farmProfile->ecosystem= $request->ecosystem; // Use the selected no_of_children from the dropdown
+//           }
+//         $farmProfile->type_rice_variety= $request->type_rice_variety;
+//         $farmProfile->prefered_variety= $request->prefered_variety;
+//         $farmProfile->plant_schedule_wetseason= $request->plant_schedule_wetseason;
+//         $farmProfile->plant_schedule_dryseason= $request->plant_schedule_dryseason;
+      
+//         if ($request->no_of_cropping_yr=== 'Adds') {
+//             $farmProfile->no_of_cropping_yr= $request->add_cropyear; // Use the value entered in the "no_of_cropping_yr" input field
+//           } else {
+//                     $farmProfile->no_of_cropping_yr= $request->no_of_cropping_yr; // Use the selected no_of_children from the dropdown
+//           }
+//         $farmProfile->yield_kg_ha= $request->yield_kg_ha;
+//         $farmProfile->rsba_register= $request->rsba_register;
+//         $farmProfile->pcic_insured= $request->pcic_insured;
+//         $farmProfile->government_assisted= $request->government_assisted;
+       
+//         if ($request->source_of_capital=== 'Others') {
+//             $farmProfile->source_of_capital= $request->add_sourceCapital; // Use the value entered in the "source_of_capital" input field
+//           } else {
+//                     $farmProfile->source_of_capital= $request->source_of_capital; // Use the selected no_of_children from the dropdown
+//           }
+//         $farmProfile->remarks_recommendation= $request->remarks_recommendation;
+//         $farmProfile->oca_district_office= $request->oca_district_office;
+//         $farmProfile->name_technicians= $request->name_technicians;
+//         $farmProfile->date_interview= $request->date_interview;
 
 
-// $farmProfile->save();
+
+//           dd($farmProfile);
+//         //   save new info
+//         $farmProfile->save();
 
          
     
 
-return redirect('/add-fixed-cost')->with('message', 'Farm Profile added successfully');
-} catch (\Exception $ex) {
-    // Handle the exception
+// return redirect('/add-fixed-cost')->with('message', 'Farm Profile added successfully');
+// } catch (\Exception $ex) {
+//     // Handle the exception
 //    dd($ex);
-    return redirect('/add-farm-profile')->with('message', 'Something went wrong');
-}
+//     return redirect('/add-farm-profile')->with('message', 'Something went wrong');
+// }
        
+//     }
+public function AddFarmProfile(FarmProfileRequest $request)
+{
+    try {
+        // Get authenticated user
+        $user = auth()->user();
+
+        // Validate the incoming request data
+        $data = $request->validated();
+
+        // Check if FarmProfile with the given personal_informations_id already exists
+        $existingFarmProfile = FarmProfile::where('personal_informations_id', $request->input('personal_informations_id'))->first();
+
+        if ($existingFarmProfile) {
+            return redirect('/add-farm-profile')->with('error', 'Farm Profile with this information already exists.');
+        }
+
+        // Create a new FarmProfile instance
+        $farmProfile = new FarmProfile;
+        $farmProfile->personal_informations_id = $request->personal_informations_id;
+        $farmProfile->agri_districts_id = $request->agri_districts_id;
+        $farmProfile->agri_districts = $request->agri_districts;
+        $farmProfile->tenurial_status = $request->tenurial_status === 'Add' ? $request->add_newTenure : $request->tenurial_status;
+        $farmProfile->rice_farm_address = $request->rice_farm_address;
+        $farmProfile->no_of_years_as_farmers = $request->no_of_years_as_farmers === 'Add' ? $request->add_newFarmyears : $request->no_of_years_as_farmers;
+        $farmProfile->gps_longitude = $request->gps_longitude;
+        $farmProfile->gps_latitude = $request->gps_latitude;
+        $farmProfile->total_physical_area_has = $request->total_physical_area_has;
+        $farmProfile->rice_area_cultivated_has = $request->rice_area_cultivated_has;
+        $farmProfile->land_title_no = $request->land_title_no;
+        $farmProfile->lot_no = $request->lot_no;
+        $farmProfile->area_prone_to = $request->area_prone_to === 'Add Prone' ? $request->add_newProneYear : $request->area_prone_to;
+        $farmProfile->ecosystem = $request->ecosystem === 'Add ecosystem' ? $request->Add_Ecosystem : $request->ecosystem;
+        $farmProfile->type_rice_variety = $request->type_rice_variety;
+        $farmProfile->prefered_variety = $request->prefered_variety;
+        $farmProfile->plant_schedule_wetseason = $request->plant_schedule_wetseason;
+        $farmProfile->plant_schedule_dryseason = $request->plant_schedule_dryseason;
+        $farmProfile->no_of_cropping_yr = $request->no_of_cropping_yr === 'Adds' ? $request->add_cropyear : $request->no_of_cropping_yr;
+        $farmProfile->yield_kg_ha = $request->yield_kg_ha;
+        $farmProfile->rsba_register = $request->rsba_register;
+        $farmProfile->pcic_insured = $request->pcic_insured;
+        $farmProfile->government_assisted = $request->government_assisted;
+        $farmProfile->source_of_capital = $request->source_of_capital === 'Others' ? $request->add_sourceCapital : $request->source_of_capital;
+        $farmProfile->remarks_recommendation = $request->remarks_recommendation;
+        $farmProfile->oca_district_office = $request->oca_district_office;
+        $farmProfile->name_technicians = $request->name_technicians;
+        $farmProfile->date_interview = $request->date_interview;
+        // dd($farmProfile);
+        // Save the new FarmProfile
+        $farmProfile->save();
+
+        // Redirect with success message
+        return redirect('/add-fixed-cost')->with('message', 'Farm Profile added successfully');
+    } catch (\Exception $ex) {
+        // Log the exception or handle it appropriately
+        dd($ex);
+        return redirect('/add-farm-profile')->with('message', 'Something went wrong');
     }
+}
 
 // agent fixed cost view
 public function fixedCost(){
@@ -295,15 +484,15 @@ public function AddFcost(FixedCostRequest $request)
 
         $data= $request->validated();
         $data= $request->all();
-        $fixedcost= FixedCost::create([
-        'personal_informations_id' => $request->input('personal_informations_id'),
-        'farm_profiles_id' => $request->input('farm_profiles_id'),
-        'particular' => $request->input('particular'),
-        'no_of_ha' => $request->input('no_of_ha'),
-       'cost_per_ha' => request('cost_per_ha'),
-       'total_amount' => request('total_amount'),
+        $fixedcost= new FixedCost;
+        $fixedcost->personal_informations_id = $request->personal_informations_id;
+        $fixedcost->farm_profiles_id = $request->farm_profiles_id;
+        $fixedcost->particular = $request->particular=== 'Other' ? $request->Add_Particular : $request->particular;
+        $fixedcost->no_of_ha = $request->no_of_ha;
+        $fixedcost->cost_per_ha = $request->cost_per_ha;
+        $fixedcost->total_amount = $request->total_amount;
     
-        ]);
+    //    dd($fixedcost);
         $fixedcost->save();
 
 
@@ -342,32 +531,33 @@ public function AddMused(MachineriesUsedtRequest $request)
 
         $data= $request->validated();
         $data= $request->all();
-       $machineused= MachineriesUseds::create([
-            'personal_informations_id' => $request->input('personal_informations_id'),
-            'farm_profiles_id' => $request->input('farm_profiles_id'),
-            'plowing_machineries_used' => $request->input('plowing_machineries_used'),
-            'plo_ownership_status' => $request->input('plo_ownership_status'),
-           'no_of_plowing' => request('no_of_plowing'),
-           'plowing_cost' => request('plowing_cost'),
+       $machineused= new MachineriesUseds;
+       $machineused-> personal_informations_id = $request->personal_informations_id;
+       $machineused->farm_profiles_id = $request->farm_profiles_id;
+       $machineused-> plowing_machineries_used = $request->plowing_machineries_used === 'OthersPlowing' ? $request->add_Plowingmachineries : $request->plowing_machineries_used;
+       $machineused-> plo_ownership_status = $request->plo_ownership_status === 'Other' ? $request->add_PlowingStatus : $request->plo_ownership_status;
+       $machineused->no_of_plowing = $request->no_of_plowing;
+       $machineused->cost_per_plowing = $request->cost_per_plowing;
+       $machineused-> plowing_cost = $request->plowing_cost;
         
-           'harrowing_machineries_used' => $request->input('harrowing_machineries_used'),
-           'harro_ownership_status' => $request->input('harro_ownership_status'),
-           'no_of_harrowing' => $request->input('no_of_harrowing'),
-           'harrowing_cost' => $request->input('harrowing_cost'),
-          'harvesting_machineries_used' => request('harvesting_machineries_used'),
-          'harvest_ownership_status' => request('harvest_ownership_status'),
+       $machineused-> harrowing_machineries_used = $request->harrowing_machineries_used=== 'OtherHarrowing' ? $request->Add_HarrowingMachineries : $request->harrowing_machineries_used;
+       $machineused->harro_ownership_status = $request->harro_ownership_status=== 'Otherharveststat' ? $request->add_harvestingStatus : $request->harro_ownership_status;
+       $machineused->no_of_harrowing = $request->no_of_harrowing; 
+       $machineused->cost_per_harrowing = $request->cost_per_harrowing; 
+       $machineused->harrowing_cost = $request->harrowing_cost;
 
-          'harvesting_cost' => $request->input('harvesting_cost'),
-          'postharvest_machineries_used' => $request->input('postharvest_machineries_used'),
-          'postharv_ownership_status' => $request->input('postharv_ownership_status'),
-          'post_harvest_cost' => $request->input('post_harvest_cost'),
-         'total_cost_for_machineries' => request('total_cost_for_machineries'),
+       $machineused->harvesting_machineries_used = $request->harvesting_machineries_used=== 'OtherHarvesting' ? $request->add_HarvestingMachineries : $request->harvesting_machineries_used;
+       $machineused->harvest_ownership_status = $request->harvest_ownership_status=== 'OtherHarvesting' ? $request->add_HarvestingMachineries : $request->harvest_ownership_status;
+       $machineused->harvesting_cost = $request->harvesting_cost;
+
+       $machineused->postharvest_machineries_used = $request->postharvest_machineries_used=== 'Otherpostharvest' ? $request->add_postharvestMachineries : $request->postharvest_machineries_used;
+       $machineused->postharv_ownership_status = $request->postharv_ownership_status=== 'OtherpostharvestStatus' ? $request->add_postStatus : $request->postharv_ownership_status;
+       $machineused->post_harvest_cost = $request->post_harvest_cost;
+       $machineused->total_cost_for_machineries = $request->total_cost_for_machineries;
          
-
-        ]);
         // dd($machineused);
         $machineused->save();
-        return redirect('/add-variable-cost-seed')->with('message','Fixed Cost added successsfully');
+        return redirect('/add-variable-cost-seed')->with('message','Machineries Used added successsfully');
     
     }
     catch(\Exception $ex){
@@ -405,32 +595,32 @@ public function AddNewProduction(LastProductionDatasRequest $request)
 
             $data= $request->validated();
             $data= $request->all();
-           $lastproduction= LastProductionDatas::create([
+           $lastproduction= new LastProductionDatas;
 
-                'personal_informations_id' => $request->input('personal_informations_id'),
-                'farm_profiles_id' => $request->input('farm_profiles_id'),
-                'agri_districts_id' => $request->input('agri_districts_id'),
-                'seeds_typed_used' => $request->input('seeds_typed_used'),
-                'seeds_used_in_kg' => $request->input('seeds_used_in_kg'),
-                'seed_source' => request('seed_source'),
-                'no_of_fertilizer_used_in_bags' => request('no_of_fertilizer_used_in_bags'),
+           $lastproduction->personal_informations_id = $request->personal_informations_id;
+           $lastproduction->farm_profiles_id = $request->farm_profiles_id;
+           $lastproduction->agri_districts_id = $request->agri_districts_id;
+           $lastproduction->seeds_typed_used = $request->seeds_typed_used;
+           $lastproduction->seeds_used_in_kg = $request->seeds_used_in_kg;
+           $lastproduction->seed_source = $request->seed_source=== 'Add' ? $request->add_seedsource : $request->seed_source;
+           $lastproduction->no_of_fertilizer_used_in_bags = $request->no_of_fertilizer_used_in_bags;
                 
-                'no_of_pesticides_used_in_l_per_kg' => $request->input('no_of_pesticides_used_in_l_per_kg'),
-                'no_of_insecticides_used_in_l' => $request->input('no_of_insecticides_used_in_l'),
-                'area_planted' => $request->input('area_planted'),
-                'date_planted' => $request->input('date_planted'),
-                'date_harvested' => request('date_harvested'),
-                'yield_tons_per_kg' => request('yield_tons_per_kg'),
+           $lastproduction->no_of_pesticides_used_in_l_per_kg = $request->no_of_pesticides_used_in_l_per_kg;
+           $lastproduction->no_of_insecticides_used_in_l = $request->no_of_insecticides_used_in_l;
+           $lastproduction->area_planted = $request->area_planted;
+           $lastproduction->date_planted = $request->date_planted;
+           $lastproduction->date_harvested = $request->date_harvested;
+           $lastproduction->yield_tons_per_kg = $request->yield_tons_per_kg;
         
-                'unit_price_palay_per_kg' => $request->input('unit_price_palay_per_kg'),
-                'unit_price_rice_per_kg' => $request->input('unit_price_rice_per_kg'),
-                'type_of_product' => $request->input('type_of_product'),
-                'sold_to' => $request->input('sold_to'),
-                'if_palay_milled_where' => request('if_palay_milled_where'),
-                'gross_income_palay' => $request->input('gross_income_palay'),
-                'gross_income_rice' => request('gross_income_rice'),
+           $lastproduction->unit_price_palay_per_kg = $request->unit_price_palay_per_kg;
+           $lastproduction->unit_price_rice_per_kg = $request->unit_price_rice_per_kg;
+           $lastproduction->type_of_product = $request->type_of_product;
+           $lastproduction->sold_to = $request->sold_to;
+           $lastproduction->if_palay_milled_where =  $request->if_palay_milled_where;
+           $lastproduction->gross_income_palay = $request->gross_income_palay;
+           $lastproduction->gross_income_rice =  $request->gross_income_rice;
         
-            ]);
+            // dd($lastproduction);
             $lastproduction->save();
             return redirect('/add-personal-info')->with('message','Rice Survey Form Completed!');
         
@@ -455,16 +645,23 @@ public function AddNewSeeed(SeedRequest $request)
     try{
         $data= $request->validated();
         $data= $request->all();
-        $seeds=Seed::create([
-            'seed_name' => $request->input('seed_name'),
-            'seed_type' => $request->input('seed_type'),
-            'unit' => $request->input('unit'),
-            'quantity' => $request->input('quantity'),
-           'unit_price' => request('unit_price'),
-           'total_seed_cost' => request('total_seed_cost'),
-        ]);
+        $seeds= new Seed;
+        $seeds->seed_name = $request->seed_name === 'OtherseedName' 
+        ? $request->add_newInbreeds 
+        : ($request->seed_name === 'OtherseedVarie' 
+            ? $request->add_newInbreed
+            : $request->seed_name);
+
+
+        $seeds->seed_type = $request->seed_type === 'OtherseedVariety' ? $request->AddRiceVariety : $request->seed_type;
+       
+        $seeds->unit = $request->unit;
+        $seeds->quantity = $request->quantity;
+        $seeds->unit_price = $request->unit_price;
+        $seeds->total_seed_cost = $request->total_seed_cost;
+        // dd($seeds);
         $seeds->save();
-        return redirect('/add-variable-cost-labor')->with('message','Seeds data added successsfully');
+        return redirect('/add-variable-cost-labor')->with('message','Rice Seeds added successsfully');
     
     }
     catch(\Exception $ex){
@@ -501,20 +698,58 @@ public function variableFertilizers(){
 }
 
 //agent variablecost fertilizers add new
+// public function AddNewfertilizers(Request $request)
+// {
+//     try{
+//         // $data= $request->validated();
+//         // $data= $request->all();
+//         $fertilizer= new Fertilizer;
+//         $fertilizer->name_of_fertilizer = $request->name_of_fertilizer === 'other' ? $request->additionalFertilizer : $request->name_of_fertilizer;
+//         $fertilizer->type_of_fertilizer = $request->type_of_fertilizer;
+//         $fertilizer->no_ofsacks = $request->no_ofsacks;
+//         $fertilizer->unitprice_per_sacks = $request->unitprice_per_sacks;
+//         $fertilizer->total_cost_fertilizers = $request->total_cost_fertilizers;
+//         dd($fertilizer);
+//         $fertilizer->save();
+//         return redirect('/add-variable-cost-pesticides')->with('message','Fertilizers data added successsfully');
+    
+//     }
+//     catch(\Exception $ex){
+//         return redirect('/add-variable-cost-fertilizers')->with('message','Someting went wrong');
+//     }
+// }
 public function AddNewfertilizers(FertilizerRequest $request)
 {
-    try{
-        $data= $request->validated();
-        $data= $request->all();
-        Fertilizer::create($data);
-
-        return redirect('/add-variable-cost-pesticides')->with('message','Fertilizers data added successsfully');
-    
+    try {
+         $data= $request->validated();
+        // $data= $request->all();
+        $fertilizer = new Fertilizer;
+        if ($request->name_of_fertilizer === 'other') {
+            // If 'other' option is selected, use the value from the additionalFertilizer field
+            $fertilizer->name_of_fertilizer = $request->additionalFertilizer;
+            // You may also want to handle the type_of_fertilizer differently here based on your requirement
+            $fertilizer->type_of_fertilizer = $request->type_of_fertilizers;
+        } else {
+            // If a predefined option is selected, use its value for both name_of_fertilizer and type_of_fertilizer
+            $fertilizer->name_of_fertilizer = $request->name_of_fertilizer;
+            $fertilizer->type_of_fertilizer = $request->type_of_fertilizer;
+        }
+        // Proceed with other fields as usual
+        $fertilizer->no_ofsacks = $request->no_ofsacks;
+        $fertilizer->unitprice_per_sacks = $request->unitprice_per_sacks;
+        $fertilizer->total_cost_fertilizers = $request->total_cost_fertilizers;
+        // dd($fertilizer);
+        // Save the fertilizer data
+        $fertilizer->save();
+        
+        // Redirect with success message
+        return redirect('/add-variable-cost-pesticides')->with('message', 'Fertilizer data added successfully');
+    } catch (\Exception $e) {
+        // Handle any exceptions here
+        // For example, you can return an error response or redirect back with an error message
+        return redirect()->back()->withInput()->withErrors(['error' => 'Failed to add Fertilizer data. Please try again.']);
     }
-    catch(\Exception $ex){
-        return redirect('/add-variable-cost-fertilizers')->with('message','Someting went wrong');
-    }
-}
+}    
 
 // Agent variable cost pesticides view
  public function variablePesticides(){
@@ -522,13 +757,30 @@ public function AddNewfertilizers(FertilizerRequest $request)
  }
 
 //  agent variablecost pesticides add new
-public function AddNewPesticide(PesticidesRequest $request)
+public function AddNewPesticide( PesticidesRequest $request)
     {
         try{
             $data= $request->validated();
             $data= $request->all();
-            Pesticide::create($data);
-    
+           
+            $pesticides = new Pesticide;
+            if ($request->pesticides_name === 'OtherPestName') {
+                // If 'OtherPestName' option is selected, use the value from the additionalFertilizer field
+                $pesticides->pesticides_name = $request->add_PestName;
+                // You may also want to handle the type_ofpesticides differently here based on your requirement
+                $pesticides->type_ofpesticides = $request->Add_typePest;
+            } else {
+                // If a predefined option is selected, use its value for both pesticides_name and type_ofpesticides
+                $pesticides->pesticides_name = $request->pesticides_name;
+                $pesticides->type_ofpesticides = $request->type_ofpesticides;
+            }
+            // Proceed with OtherPestName fields as usual
+            $pesticides->no_of_l_kg = $request->no_of_l_kg;
+            $pesticides->unitprice_ofpesticides = $request->unitprice_ofpesticides;
+            $pesticides->total_cost_pesticides = $request->total_cost_pesticides;
+            // dd($pesticides);
+            // Save the pesticides data
+            $pesticides->save();
             return redirect('/add-variable-cost-transport')->with('message','Pesticides data added successsfully');
         
         }
@@ -590,21 +842,28 @@ public function AddNewVartotal(VariableCostRequest $request)
                 }
                 $data= $request->validated();
                 $data= $request->all();
-              $vartotal= VariableCost::create([
-                'personal_informations_id' => $request->input('personal_informations_id'),
-                'farm_profiles_id' => $request->input('farm_profiles_id'),
-                'seeds_id' => $request->input('seeds_id'),
-                'labors_id' => $request->input('labors_id'),
-                'fertilizers_id' => $request->input('fertilizers_id'),
-                'pesticides_id' => $request->input('pesticides_id'),
-                'transports_id' => $request->input('transports_id'),
-                'total_machinery_fuel_cost' => request('total_machinery_fuel_cost'),
-                'total_variable_cost' => request('total_variable_cost'),
-               ]);
+                
+              $vartotal= new VariableCost;
+              $vartotal->personal_informations_id = $request->personal_informations_id;
+              $vartotal->farm_profiles_id = $request->farm_profiles_id;
+              $vartotal->seeds_id = $request->seeds_id;
+              $vartotal->labors_id = $request->labors_id;
+              $vartotal->fertilizers_id = $request->fertilizers_id;
+              $vartotal->pesticides_id = $request->pesticides_id;
+              $vartotal->transports_id = $request->transports_id;
+              $vartotal->total_seed_cost = $request->total_seed_cost;
+              $vartotal->total_labor_cost = $request->total_labor_cost;
+              $vartotal->total_cost_fertilizers = $request->total_cost_fertilizers;
+              $vartotal->total_cost_pesticides = $request->total_cost_pesticides;
+              $vartotal->total_transport_per_deliverycost = $request->total_transport_per_deliverycost;
 
-              
+
+              $vartotal->total_machinery_fuel_cost =$request->total_machinery_fuel_cost;
+              $vartotal->total_variable_cost =$request->total_variable_cost;
+             
+            //   dd($vartotal);
                $vartotal->save();
-                return redirect('/add-last-production')->with('message','Rice Form Survey Completed Successfully');
+                return redirect('/add-last-production')->with('message','Variable Cost Added Successfully');
             
             }
             catch(\Exception $ex){
@@ -1598,246 +1857,444 @@ public function TransportDelete($id) {
    }
 }
 
+// map view by agent
+public function mapView($id){
+    $personlinformation=PersonalInformations::find($id);
+    return view('map.view_map_info',compact('personlinformation'));
+}
+
+// Rice Variety "Inbred
+public function InbredVariety()
+{
+    try {
+        $inbredData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.agri_district',
+                'farm_profiles.type_rice_variety',
+                'farm_profiles.prefered_variety'
+            )
+            ->orderBy('personal_informations.agri_district')
+            ->get();
+
+        // Group the data by district
+        $InbredInfo = [];
+        foreach ($inbredData as $data) {
+            $typeVariety = $data->type_rice_variety;
+            $preferedVariety = $data->prefered_variety;
+
+            // If type of variety is "N/A", use preferred variety
+            if (strtolower($typeVariety) === 'n/a' || strtolower($typeVariety) === 'na') {
+                $variety = $preferedVariety;
+            } else {
+                $variety = $typeVariety;
+            }
+
+            if (!isset($InbredInfo[$data->agri_district][$variety])) {
+                $InbredInfo[$data->agri_district][$variety] = ['count' => 0, 'percentage' => 0];
+            }
+
+            $InbredInfo[$data->agri_district][$variety]['count']++;
+        }
+
+        // Calculate percentage for each rice variety in each district
+        foreach ($InbredInfo as $district => &$varieties) {
+            $totalRiceVarietiesInDistrict = array_sum(array_column($varieties, 'count'));
+            foreach ($varieties as &$data) {
+                $percentage = ($totalRiceVarietiesInDistrict > 0) ? ($data['count'] / $totalRiceVarietiesInDistrict) * 100 : 0;
+                $data['percentage'] = number_format($percentage, 2);
+            }
+        }
+
+        return view('agent.riceVariety.inbred_variety', compact('InbredInfo'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+}
 
 
 
 
+// // Rice Variety "Hybrid" access by agent
+// public function HybridVariety(){
+//     try {
+//         $FarmersData = DB::table('personal_informations')
+//             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+//             ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+//             ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+//             ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+//             ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+//             ->select(
+//                 'personal_informations.*',
+//                 'farm_profiles.*',
+//                 'fixed_costs.*',
+//                 'machineries_useds.*',
+//                 'variable_costs.*',
+//                 'last_production_datas.*'
+//             )
+//             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+//             ->get();
+
+//         return view('agent.riceVariety.hybrid_variety', compact('FarmersData'));
+//     } catch (\Exception $ex) {
+//         // Log the exception for debugging purposes
+//         dd($ex);
+//         return redirect()->back()->with('message', 'Something went wrong');
+//     }
+    
+// }
+
+
+// Rice harvest sch
+public function HarvestSched(){
+    try {
+        $harvestData = DB::table('personal_informations')
+        ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.agri_district',
+                'personal_informations.last_name',
+                'personal_informations.first_name',
+                'last_production_datas.date_harvested',
+                'farm_profiles.type_rice_variety',
+                'farm_profiles.prefered_variety',
+                
+            )
+            ->orderBy('personal_informations.agri_district')
+            ->get();
+
+        // Group the data by district
+        $harvestSchedule = [];
+        foreach ($harvestData as $data) {
+            $harvestSchedule[$data->agri_district][] = [
+                'last_name' => $data->last_name,
+                'first_name' => $data->first_name,
+                'date_harvested' => $data->date_harvested,
+                'type_rice_variety' => $data->type_rice_variety,
+                'prefered_variety' => $data->prefered_variety,
+            ];
+        }
+
+        return view('agent.Schedule.harvest', compact('harvestSchedule'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+}
 
 
 
+// Rice Planting schedule of farmers per district
+public function PlantingSched(){
+    try {
+        $farmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.agri_district',
+                'last_production_datas.date_planted',
+                'farm_profiles.*',
+                'personal_informations.last_name',
+                'personal_informations.first_name',
+                'farm_profiles.type_rice_variety',
+                'farm_profiles.prefered_variety',
+            )
+            ->orderBy('personal_informations.agri_district')
+            ->get();
+
+        // Group the data by district
+        $plantingSchedule = [];
+        foreach ($farmersData as $data) {
+            $plantingSchedule[$data->agri_district][] = [
+                'last_name' => $data->last_name,
+                'first_name' => $data->first_name,
+                'date_planted' => $data->date_planted,
+                'type_rice_variety' => $data->type_rice_variety,
+                'prefered_variety' => $data->prefered_variety,
+            ];
+        }
+        return view('agent.Schedule.planting', compact('plantingSchedule'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+}
+
+
+// Rice farmers per districts informations
+
+// ayala farmers
+public function AyalaFarmers()
+{
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
+
+        return view('agent.agriDistricts.ayala_farmers', compact('FarmersData'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+}
+
+public function show($id)
+{
+    try {
+        $ayalaData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->where('personal_informations.id', $id)
+            ->first();
+
+        if (!$ayalaData) {
+            return redirect()->back()->with('error', 'Data not found');
+        }
+
+        return view('agent.ayala.show_personal_info', compact('ayalaData'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('error', 'Something went wrong');
+    }
+}
 
 
 
+// tumaga farmers
+public function TumagaFarmers(){
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
 
-
-
-
-
-
-
-
-
-
-
-
-
- //inserting multiple insertion of data into database
-//  public function submitForm(Request $request)
-//  {
-//      try {
-//          // Validate form data (you can add more validation as needed)
-
-//          // Insert data into Table1
-//          $personalinfo = PersonalInformations::create([
-//             'agri_districts_id' => $request->input('agri_districts_id'),
-//             //  'crop_categorys_id' => $request->input('crop_categorys_id'),
-//             //  'livestock_categorys_id' => $request->input('livestock_categorys_id'),
-//             //  'fisheries_categories_id' => $request->input('fisheries_categories_id'),
-//              'first_name' => $request->input('first_name'),
-//              'middle_name' => $request->input('middle_name'),
-//              'last_name' => $request->input('last_name'),
-//              'extension_name' => $request->input('extension_name'),
-//              'home_address' => $request->input('home_address'),
-//              'sex' => $request->input('sex'),
-//              'religion' => $request->input('religion'),
-//              'date_of_birth' => $request->input('date_of_birth'),
-//              'place_of_birth' => $request->input('place_of_birth'),
-//              'contact_no' => $request->input('contact_no'),
-//              'civil_status' => $request->input('civil_status'),
-//              'name_legal_spouse' => $request->input('name_legal_spouse'),
-//              'no_of_children' => $request->input('no_of_children'),
-//              'mothers_maiden_name' => $request->input('mothers_maiden_name'),
-
-//              'highest_formal_education' => $request->input('highest_formal_education'),
-//              'person_with_disability' => $request->input('person_with_disability'),
-//              'pwd_id_no' => $request->input('pwd_id_no'),
-//              'government_issued_id' => $request->input('government_issued_id'),
-//              'id_type' => $request->input('id_type'),
-//              'gov_id_no' => $request->input('gov_id_no'),
-//              'member_ofany_farmers_ass_org_coop' => $request->input('member_ofany_farmers_ass_org_coop'),
-//              'nameof_farmers_ass_org_coop' => $request->input('nameof_farmers_ass_org_coop'),
-//              'name_contact_person' => $request->input('name_contact_person'),
-
-//              'cp_tel_no' => $request->input('cp_tel_no'),
-//              'users_id' => $request->input('users_id'),
-//              // Add more columns as needed
-//          ]);
-//  // Insert data into Table2
-//  $farmprofile = FarmProfile::create([
-//     'personal_informations_id' => $request->input('personal_informations_id'),
-//      'agri_districts_id' => $request->input('agri_districts_id'),
-//      'polygons_id' => $request->input('polygons_id'),
-//      'tenurial_status' => $request->input('tenurial_status'),
-//      'rice_farm_address' => $request->input('rice_farm_address'),
-//      'no_of_years_as_farmers' => $request->input('no_of_years_as_farmers'),
-//      'gps_longitude' => $request->input('gps_longitude'),
-//      'gps_latitude' => $request->input('gps_latitude'),
-//      'total_physical_area_has' => $request->input('total_physical_area_has'),
-//      'rice_area_cultivated_has' => $request->input('rice_area_cultivated_has'),
-//      'land_title_no' => $request->input('land_title_no'),
-
-//      'lot_no' => $request->input('lot_no'),
-//      'area_prone_to' => $request->input('area_prone_to'),
-//      'ecosystem' => $request->input('ecosystem'),
-//      'type_rice_variety' => $request->input('type_rice_variety'),
-//      'prefered_variety' => $request->input('prefered_variety'),
-//      'plant_schedule_wetseason' => $request->input('plant_schedule_wetseason'),
-//      'plant_schedule_dryseason' => $request->input('plant_schedule_dryseason'),
-//      'no_of_cropping_yr' => $request->input('no_of_cropping_yr'),
-//      'yield_kg_ha' => $request->input('yield_kg_ha'),
-//      'rsba_register' => $request->input('rsba_register'),
-//      'pcic_insured' => $request->input('pcic_insured'),
-//      'source_of_capital' => $request->input('source_of_capital'),
-//      'remarks_recommendation' => $request->input('remarks_recommendation'),
-//      'oca_district_office' => $request->input('oca_district_office'),
-//      'name_technicians' => $request->input('name_technicians'),
-//      'date_interview' => $request->input('date_interview'),
-//      // Add more columns as needed
-//  ]);
-
-
-//          // Insert data into Table3
-      
-//           $fixedcost = FixedCost::create([
-//             'personal_informations_id' => $request->input('personal_informations_id'),
-//              'farm_profiles_id' => $request->input('farm_profiles_id'),
-//              'particular' => $request->input('particular'),
-//              'no_of_ha' => $request->input('no_of_ha'),
-//              'cost_per_ha' => $request->input('cost_per_ha'),
-//              'total_amount' => $request->input('total_amount'),
-             
-//              // Add more columns as needed
-//          ]);
-
-//   // Insert data into Table4
-//   $machineries =LastProductionDatas::create([
-//     'personal_informations_id' => $request->input('personal_informations_id'),
-//      'farm_profiles_id' => $request->input('farm_profiles_id'),
-//      'plowing_machineries_used' => $request->input('plowing_machineries_used'),
-//      'plo_ownership_status' => $request->input('plo_ownership_status'),
-//      'no_of_plowing' => $request->input('no_of_plowing'),
-//      'plowing_cost' => $request->input('plowing_cost'),
-//      'harrowing_machineries_used' => $request->input('harrowing_machineries_used'),
-//      'harro_ownership_status' => $request->input('harro_ownership_status'),
-//      'no_of_harrowing' => $request->input('no_of_harrowing'),
-//      'harrowing_cost' => $request->input('harrowing_cost'),
-//      'harvesting_machineries_used' => $request->input('harvesting_machineries_used'),
-
-//      'harvest_ownership_status' => $request->input('harvest_ownership_status'),
-//      'harvesting_cost' => $request->input('harvesting_cost'),
-//      'postharvest_machineries_used' => $request->input('postharvest_machineries_used'),
-//      'postharv_ownership_status' => $request->input('postharv_ownership_status'),
-//      'post_harvest_cost' => $request->input('post_harvest_cost'),
-//      'total_cost_for_machineries' => $request->input('total_cost_for_machineries')
+        return view('agent.agriDistricts.tumaga_farmers', compact('FarmersData'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
    
-//      // Add more columns as needed
-//  ]);
+}
 
-// // Insert data into Table5
-// $lastproduction = LastProductionDatas::create([
-//     'personal_informations_id' => $request->input('personal_informations_id'),
-//      'farm_profiles_id' => $request->input('farm_profiles_id'),
-//      'agri_districts_id' => $request->input('agri_districts_id'),
-//      'seeds_typed_used' => $request->input('seeds_typed_used'),
-//      'seeds_used_in_kg' => $request->input('seeds_used_in_kg'),
-//      'seed_source' => $request->input('seed_source'),
-//      'no_of_fertilizer_used_in_bags' => $request->input('no_of_fertilizer_used_in_bags'),
-//      'no_of_pesticides_used_in_l_per_kg' => $request->input('no_of_pesticides_used_in_l_per_kg'),
-//      'no_of_insecticides_used_in_l' => $request->input('no_of_insecticides_used_in_l'),
-//      'area_planted' => $request->input('area_planted'),
-//      'date_planted' => $request->input('date_planted'),
 
-//      'date_harvested' => $request->input('date_harvested'),
-//      'yield_tons_per_kg' => $request->input('yield_tons_per_kg'),
-//      'unit_price_palay_per_kg' => $request->input('unit_price_palay_per_kg'),
-//      'unit_price_rice_per_kg' => $request->input('unit_price_rice_per_kg'),
-//      'type_of_product' => $request->input('type_of_product'),
-//      'sold_to' => $request->input('sold_to'),
-//      'if_palay_milled_where' => $request->input('if_palay_milled_where'),
-//      'gross_income_palay' => $request->input('gross_income_palay'),
-//      'gross_income_rice' => $request->input('gross_income_rice')
+// culianan farmers
+public function CuliananFarmers(){
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
+
+        return view('agent.agriDistricts.culianan_farmers', compact('FarmersData'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
    
-//      // Add more columns as needed
-//  ]);
-// // Insert data into Table6
-// $seeds = Seed::create([
-//     'seed_name' => $request->input('seed_name'),
-//      'seed_type' => $request->input('seed_type'),
-//      'unit' => $request->input('unit'),
-//      'quantity' => $request->input('quantity'),
-//      'unit_price' => $request->input('unit_price'),
-//      'total_seed_cost' => $request->input('total_seed_cost')
-    
-//      // Add more columns as needed
-//  ]);
+}
 
-// // Insert data into Table7
-// $labor = Labor::create([
-//     'no_of_person' => $request->input('no_of_person'),
-//      'rate_per_person' => $request->input('rate_per_person'),
-//      'total_labor_cost' => $request->input('total_labor_cost')
-    
-    
-//      // Add more columns as needed
-//  ]);
+// Manicahan farmers
+public function ManicahanFarmers(){
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
 
-//  // Insert data into Table8
-// $fertilizer = Fertilizer::create([
-//     'name_of_fertilizer' => $request->input('name_of_fertilizer'),
-//      'type_of_fertilizer' => $request->input('type_of_fertilizer'),
-//      'no_ofsacks' => $request->input('no_ofsacks'),
-//      'unitprice_per_sacks' => $request->input('unitprice_per_sacks'),
-//      'total_cost_fertilizers' => $request->input('total_cost_fertilizers')
-    
-    
-//      // Add more columns as needed
-//  ]);
- 
-//  // Insert data into Table9
-// $pesticide = Pesticide::create([
-//     'pesticides_name' => $request->input('pesticides_name'),
-//      'type_ofpesticides' => $request->input('type_ofpesticides'),
-//      'no_of_l_kg' => $request->input('no_of_l_kg'),
-//      'unitprice_ofpesticides' => $request->input('unitprice_ofpesticides'),
-//      'total_cost_pesticides' => $request->input('total_cost_pesticides')
-    
-    
-//      // Add more columns as needed
-//  ]);
-//   // Insert data into Table10
-//  $transport = Transport::create([
-//     'name_of_vehicle' => $request->input('name_of_vehicle'),
-//      'type_of_vehicle' => $request->input('type_of_vehicle'),
-//      'total_transport_per_deliverycost' => $request->input('total_transport_per_deliverycost')
-    
-//      // Add more columns as needed
-//  ]);
+        return view('agent.agriDistricts.manicahan_farmers', compact('FarmersData'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+  
+}
 
-//  $variablecostt = VariableCost::create([
-//     'personal_informations_id' => $request->input('personal_informations_id'),
-//      'farm_profiles_id' => $request->input('farm_profiles_id'),
-//      'seeds_id' => $request->input('seeds_id'),
-//      'labors_id' => $request->input('labors_id'),
-//      'fertilizers_id' => $request->input('fertilizers_id'),
-//      'pesticides_id' => $request->input('pesticides_id'),
-//      'transports_id' => $request->input('transports_id'),
-//      'total_machinery_fuel_cost' => $request->input('total_machinery_fuel_cost'),
-//      'total_variable_cost' => $request->input('total_variable_cost')
-    
-//      // Add more columns as needed
-//  ]);
-//          // Similar code for other tables
+// curuan farmers
+public function CuruanFarmers(){
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
 
-//          // Optionally, return a success response
-//          return response()->json(['message' => 'Data inserted successfully']);
-//      } catch (\Exception $e) {
-//          // Handle the exception
-//          dd($e);
-//          return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-//      }
-//  }
+        return view('agent.agriDistricts.curuan_farmers', compact('FarmersData'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+   
+}
+
+// vitali farmers
+public function VitaliFarmers(){
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
+
+        return view('agent.agriDistricts.vitali_farmers', compact('FarmersData'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+  
+}
+public function RiceCrop(){
+    try {
+        $riceProductionData = DB::table('personal_informations')
+        ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+        ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+        ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+        ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'personal_informations.agri_district',
+        
+                'personal_informations.last_name',
+                'personal_informations.first_name',
+                'last_production_datas.date_planted',
+                'last_production_datas.date_harvested',
+                'last_production_datas.yield_tons_per_kg',
+                'last_production_datas.unit_price_palay_per_kg',
+                'last_production_datas.unit_price_rice_per_kg',
+                'last_production_datas.gross_income_palay',
+                'last_production_datas.gross_income_rice',
+                'last_production_datas.type_of_product'
+            )
+            // ->where('last_production_datas.type_of_product', 'rice',) // Filter for rice production only
+            ->orderBy('personal_informations.agri_district')
+            ->get();
+
+        // Group the data by district
+        $riceProductionSchedule = [];
+        foreach ($riceProductionData as $data) {
+            $riceProductionSchedule[$data->agri_district][] = [
+                'last_name' => $data->last_name,
+                'first_name' => $data->first_name,
+                'date_planted' => $data->date_planted,
+                'date_harvested' => $data->date_harvested,
+                'yield_tons_per_kg' => $data->yield_tons_per_kg,
+                'unit_price_palay_per_kg' => $data->unit_price_palay_per_kg,
+                'unit_price_rice_per_kg' => $data->unit_price_rice_per_kg,
+                'gross_income_palay' => $data->gross_income_palay,
+                'gross_income_rice' => $data->gross_income_rice,
+                'type_of_product' => $data->type_of_product
+            ];
+        }
 
 
+        return view('agent.cropProductions.rice_crop', compact('riceProductionSchedule'));
+    } catch (\Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+        
+}
 
-
+// multiple impor of excels in Dataase access by agent
+public function ExcelFile(){
+    return view('agent.mutipleFile.import_excelFile');
+}
 }

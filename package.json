@@ -16,6 +16,8 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "@googlemaps/js-api-loader": "^1.16.2"
+        "@googlemaps/js-api-loader": "^1.16.2",
+        "apexcharts": "^3.48.0",
+        "multiple-select": "^1.7.0"
     }
 }

@@ -1,6 +1,7 @@
 @extends('admin.dashb')
 @section('admin')
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 <div class="page-content">
 
   <nav class="page-breadcrumb">
@@ -9,7 +10,7 @@
  
   <div class="row">
     <div class="col-md-12 grid-margin">
-      <div class="card">
+      <div class="card border rounded">
         
         <div class="card-body">
           @if (session('message'))
@@ -20,12 +21,12 @@
              
           @endif
           
-          <h6 class="card-title"><span>VI.</span>Last Production Data</h6>
-
+          <h6 class="card-title"><span>VI.</span>Last Production Data (view, edit, delete)</h6>
+<br><br>
           <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
        
          <div class="table-responsive tab ">
-          <table class="table table table-info">
+          <table class="table table bordered dataTable">
               <thead class="thead-light">
                   <tr >
                       <th>no.</th>

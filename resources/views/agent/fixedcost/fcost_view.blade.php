@@ -1,6 +1,7 @@
 @extends('agent.agent_Dashboard')
 @section('agent') 
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 <div class="page-content">
 
     <nav class="page-breadcrumb">
@@ -9,7 +10,7 @@
    
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
+        <div class="card border rounded">
           
           <div class="card-body">
             @if (session('message'))
@@ -20,6 +21,7 @@
                
             @endif
             <h6 class="card-title"><span>III.</span>Fixed Cost Update</h6>
+           <br><br>
             <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
          
           
@@ -58,12 +60,12 @@
   
                         <td>
                            
-                             <a href="{{route('agent.fixedcost.fixed_updates', $fixedcost->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                             <a href="{{route('agent.fixedcost.fixed_updates', $fixedcost->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                 
                              <form  action="{{ route('agent.fixedcost.delete', $fixedcost->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                             @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                             </form> 
                             
                         </td>

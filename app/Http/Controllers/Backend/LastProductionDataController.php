@@ -20,7 +20,8 @@ class LastProductionDataController extends Controller
     }
     public function ProductionForms(){
         $lastproductiondata= LastProductionDatas::all();
-    return view('production_data.production_index',compact('lastproductiondata'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('production_data.production_index',compact('lastproductiondata','totalRiceProduction'));
     }
     /**
      * Show the form for creating a new resource.
@@ -56,11 +57,11 @@ class LastProductionDataController extends Controller
             $data= $request->all();
             LastProductionDatas::create($data);
     
-            return redirect('/personalinformation')->with('message','Rice Survey Form Completed successsfully');
+            return redirect('/admin-personalinformation')->with('message','Rice Survey Form Completed successsfully');
         
         }
         catch(\Exception $ex){
-            return redirect('/production')->with('message','Someting went wrong');
+            return redirect('admin-lastproduction-data')->with('message','Someting went wrong');
         }
     }
 
@@ -68,13 +69,15 @@ class LastProductionDataController extends Controller
 // last production view
 public function Productionview(){
     $productions= LastProductionDatas::orderBy('id','desc')->paginate(20);
-    return view('production_data.production_create',compact('productions'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('production_data.production_create',compact('productions','totalRiceProduction'));
 }
 
 // last prduction view update
 public function Prodedit($id){
      $productions= LastProductionDatas::find($id);
-     return view('production_data.production_edit',compact('productions'));
+     $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+     return view('production_data.production_edit',compact('productions','totalRiceProduction'));
  }
 
  public function Proddataupdate(LastProductionDatasRequest $request,$id)
@@ -120,12 +123,12 @@ public function Prodedit($id){
         $data->save();     
         
     
-        return redirect('/view-production')->with('message','Last Production Data Updated successsfully');
+        return redirect('/admin-view-production-data')->with('message','Last Production Data Updated successsfully');
     
     }
     catch(\Exception $ex){
         // dd($ex); // Debugging statement to inspect the exception
-        return redirect('/edit-production/{productions}')->with('message','Someting went wrong');
+        return redirect('/admin-edit-lastproduction-data/{productions}')->with('message','Someting went wrong');
         
     }   
 } 

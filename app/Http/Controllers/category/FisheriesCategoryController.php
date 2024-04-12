@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categorize;
 use App\Models\FisheriesCategory;
+use App\Models\LastProductionDatas;
 use Illuminate\Http\Request;
 
 class FisheriesCategoryController extends Controller
@@ -19,8 +21,10 @@ class FisheriesCategoryController extends Controller
      */
     public function FisheriesCategory()
     {
-        // $agridistrictS= AgriDistrictController::latest()->get();
-     return view('fisheries_category.fisheries_create');
+        $Cat= Categorize::all();
+        $FisheriesCat= FisheriesCategory::orderBy('id','desc')->paginate(10);
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+     return view('fisheries_category.fisheries_create',compact('totalRiceProduction','Cat','FisheriesCat'));
     }
 
     /**

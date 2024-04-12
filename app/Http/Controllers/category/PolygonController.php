@@ -5,6 +5,7 @@ namespace App\Http\Controllers\category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PolygonRequest;
 use App\Models\AgriDistrict;
+use App\Models\LastProductionDatas;
 use App\Models\Polygon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,19 +15,14 @@ class PolygonController extends Controller
      /**
      * Display a listing of the resource.
      */
- 
-     public function DisplayAgri()
-     {
-        // dd($farmer_no);
-        $Agriculture= AgriDistrict::all();
-        return view('agri_districts.display',compact('Agriculture'));
-     }  
+  
     /**
      * Show the form for creating a new resource.
      */
     public function Polygons()
     {
-     return view('polygon.polygon_create');
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+     return view('polygon.polygon_create',compact('totalRiceProduction'));
     }
 
     /**
@@ -75,13 +71,15 @@ class PolygonController extends Controller
 // fixed cost view
 public function polygonshow(){
     $polygons=Polygon::orderBy('id','desc')->paginate(10);
-    return view('polygon.polygons_show',compact('polygons'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('polygon.polygons_show',compact('polygons','totalRiceProduction'));
 }
 
 // fixed cost update
 public function polygonEdit($id){
     $polygons=Polygon::find($id);
-    return view('polygon.polygons_edit',compact('polygons'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('polygon.polygons_edit',compact('polygons','totalRiceProduction'));
 }
 
 public function polygonUpdates(PolygonRequest $request,$id)

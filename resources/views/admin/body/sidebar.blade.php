@@ -1,7 +1,7 @@
 <nav class="sidebar">
     <div class="sidebar-header">
       <a href="#" class="sidebar-brand">
-        Admin<span>Panel</span>
+      Admin<span>Agrimap</span>
       </a>
       <div class="sidebar-toggler not-active">
         <span></span>
@@ -41,29 +41,29 @@
         <li class="nav-item nav-category">Components</li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false" aria-controls="uiComponents">
-            <i class="link-icon" data-feather="feather"></i>
+            <i class="link-icon" data-feather="list"></i>
             <span class="link-title">Agri-Districts</span>
             <i class="link-arrow" data-feather="chevron-down"></i>
           </a>
           <div class="collapse" id="uiComponents">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <a href="{{route('farm-table.join_table')}}" class="nav-link">Ayala</a>
+                <a href="{{route('admin.Agri_district.ayala_farmer')}}" class="nav-link">Ayala Rice Farmers</a>
               </li>
               <li class="nav-item">
-                <a href="" class="nav-link">Tumaga</a>
+                <a href="{{route('admin.Agri_district.tumaga_farmer')}}" class="nav-link">Tumaga Rice Farmers</a>
               </li>
               <li class="nav-item">
-                <a href="pages/ui-components/badges.html" class="nav-link">Culianan</a>
+                <a href="{{route('admin.Agri_district.culianan_farmer')}}" class="nav-link">Culianan Rice Farmers</a>
               </li>
               <li class="nav-item">
-                <a href="pages/ui-components/breadcrumbs.html" class="nav-link">Manicahan</a>
+                <a href="{{route('admin.Agri_district.manicahan_farmer')}}" class="nav-link">Manicahan Rice Farmers</a>
               </li>
               <li class="nav-item">
-                <a href="pages/ui-components/buttons.html" class="nav-link">Curuan</a>
+                <a href="{{route('admin.Agri_district.curuan_farmer')}}" class="nav-link">Curuan Rice Farmers</a>
               </li>
               <li class="nav-item">
-                <a href="pages/ui-components/button-group.html" class="nav-link">Vitali</a>
+                <a href="{{route('admin.Agri_district.vitali_farmer')}}" class="nav-link">Vitali Rice Farmers</a>
               </li>
               
             </ul>
@@ -115,15 +115,15 @@
         </li>
         <li class="nav-item">
           <a class="nav-link"  data-bs-toggle="collapse" href="#farmers" role="button" aria-expanded="false" aria-controls="charts">
-            <i class="link-icon" data-feather="calendar"></i>
-            <span class="link-title">Farmers Info</span>
+            <i class="link-icon" data-feather="info"></i>
+            <span class="link-title">Farmers Information</span>
             <i class="link-arrow" data-feather="chevron-down"></i>
           </a>
           <div class="collapse" id="farmers">
             <ul class="nav sub-menu">
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{route('admin.allfarmersdata.farmers_info')}}" class="nav-link">Farmers Rice Info</a>
-              </li>
+              </li> --}}
               <li class="nav-item">
                 <a href="{{route('personalinfo.create')}}" class="nav-link">Personal Informations</a>
               </li>
@@ -171,11 +171,11 @@
             <ul class="nav sub-menu">
               <li class="nav-item">
         
-                  <a href="pages/charts/apex.html" class="nav-link">Inbred</a>
+                  <a href="{{route('admin.rice_varieties.rice_varietydistrict')}}" class="nav-link">Rice Varieties/District</a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                   <a href="pages/charts/chartjs.html" class="nav-link">Hybrid</a>
-                </li>
+                </li> --}}
                 {{-- <li class="nav-item">
                   <a href="pages/charts/chartjs.html" class="nav-link">Jasmin Rice</a>
                 </li>
@@ -202,10 +202,10 @@
           <div class="collapse" id="schedule">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <a href="p" class="nav-link">Planting</a>
+                <a href="{{route('admin.rice_schedule.rice_planting')}}" class="nav-link">Rice Planting</a>
               </li>
               <li class="nav-item">
-                <a href="" class="nav-link">Harvest</a>
+                <a href="{{route('admin.rice_schedule.rice_harvest')}}" class="nav-link">Rice Harvest</a>
               </li>
             
             </ul>
@@ -220,10 +220,13 @@
           <div class="collapse" id="tables">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <a href="pages/tables/basic-table.html" class="nav-link">Rice Crop Tables</a>
+                <a href="{{route('admin.crop_production.rice_crops')}}" class="nav-link">Rice Crop</a>
               </li>
               <li class="nav-item">
-                <a href="pages/tables/data-table.html" class="nav-link">Corn Table</a>
+                <a href="" class="nav-link">Corn Crop</a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link">Coconut Crop</a>
               </li>
             </ul>
           </div>

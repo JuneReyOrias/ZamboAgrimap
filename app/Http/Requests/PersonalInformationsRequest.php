@@ -42,11 +42,7 @@ class PersonalInformationsRequest extends FormRequest
                 'string',
                 'max:50',
             ],
-            'home_address'=>[
-                'required',
-                'string',
-                'max:50',
-            ],
+          
             'sex'=>[
                 'required',
                 'string',
@@ -77,11 +73,7 @@ class PersonalInformationsRequest extends FormRequest
                 'string',
                 'max:50',
             ],
-            'name_legal_spouse'=>[
-                'required',
-                'string',
-                'max:50',
-            ],
+
             'no_of_children'=>[
                 'required',
                 'string',
@@ -102,11 +94,7 @@ class PersonalInformationsRequest extends FormRequest
                 'string',
                 'max:50',
             ],
-            'pwd_id_no'=>[
-                'required',
-                'string',
-                'max:50',
-            ],
+          
             'government_issued_id'=>[
                 'required',
                 'string',
@@ -150,19 +138,19 @@ class PersonalInformationsRequest extends FormRequest
             'first_name.required'=>'Please input your first name',
             'middle_name.required'=>'Please input your middle name',
             'extension_name.required'=>'Please input your extension name',
-            'home_address.required'=>'Please input your home address',
+           
             'sex.required'=>'Please input your sex',
             'religion.required'=>'Please input your religion',
             'date_of_birth.required'=> 'Please input your date of birth',
             'place_of_birth.required'=> 'Please input your place of birth',
             'contact_no.required'=>'Please input yor contact no.',
             'civil_status.required'=> 'Please input your civil status',
-            'name_legal_spouse.required'=>'Please input your name of legal spouse',
+           
             'no_of_children.required'=> 'Please input your number of children',
             'mothers_maiden_name.required'=> 'Please input your mothers maiden name',
             'highest_formal_education.required'=> 'Please input your highest formal education',
             'person_with_disability.required'=> 'Please choose yes or no',
-            'pwd_id_no.required'=> 'Please input your pwd id no. if you chose yes, if no write n/a',
+         
             'government_issued_id.required'=> 'Please choose yes or no if applicable government_issued_id',
             'id_type.required'=> 'Please choose applicable Id Type',
             'gov_id_no.required'=> 'Please input your gov id no. if you chose yes, if no write n/a',

@@ -1,16 +1,17 @@
 @extends('agent.agent_Dashboard')
 @section('agent') 
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 
 <div class="page-content">
 
     <nav class="page-breadcrumb">
   
     </nav>
-   
+    <div id="personal_info_section"class="table-section">
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
+        <div class="card border rounded">
           <div class="card-body">
             @if (session('message'))
             <div class="alert alert-success" role="alert">
@@ -26,11 +27,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-            <h6 class="card-title"><span>II.</span>Farm Profile</h6>
-            <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
-         
-           <div class="table-responsive tab ">
-            <table class="table table table-info">
+        <h4 class="mb-3 mb-md-0">Personal Informations</h4> <br>
+  
+        <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
+          <div class="table-responsive tab ">
+           <table class="table table-bordered datatable">
                 <thead class="thead-light">
                     <tr >
                         <th>Farmno.</th>
@@ -102,12 +103,12 @@
                         <td>{{ $farmprofile->updated_at}}</td>
                         <td>
                            
-                             <a href="{{route('agent.farmprofile.farm_update', $farmprofile->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                             <a href="{{route('agent.farmprofile.farm_update', $farmprofile->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                 
                              <form  action="{{ route('agent.farmprofile.delete', $farmprofile->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                 {{-- {{ csrf_field()}} --}}@csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                             </form>
                             
                         </td>

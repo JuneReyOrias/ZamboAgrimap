@@ -4,6 +4,8 @@ namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
 use App\Models\AgriDistrict;
+use App\Models\Categorize;
+use App\Models\LastProductionDatas;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -77,9 +79,9 @@ class AgriDistrictController extends Controller
        
         ->select('agri_districts.*', 'users.*' )
         ->get();
-   
-
-     return view('categorize.categorize_index',compact('agriculture'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        $showcat=Categorize::orderBy('id','desc')->paginate(10);
+     return view('categorize.categorize_index',compact('agriculture','totalRiceProduction','showcat'));
     }
    
     /**
@@ -118,20 +120,23 @@ class AgriDistrictController extends Controller
     {
        // dd($farmer_no);
        $Agriculture= AgriDistrict::all();
-       return view('agri_districts.display',compact('Agriculture'));
+       $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+       return view('agri_districts.display',compact('Agriculture','totalRiceProduction'));
     }
 
     // polygon agri district fetching by admin
     public function PolyAgris()
     {
        $agridistrict= AgriDistrict::all();
-       return view('polygon.polygon_create',compact('agridistrict'));
+       $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+       return view('polygon.polygon_create',compact('agridistrict','totalRiceProduction'));
     } 
 
     public function ParcelAgrifetch()
     {
        $agridistricts= AgriDistrict::all();
-       return view('parcels.new_parcels',compact('agridistricts'));
+       $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+       return view('parcels.new_parcels',compact('agridistricts','totalRiceProduction'));
     } 
 
 

@@ -18,8 +18,7 @@
   </div> --}}
   <div class="row">
     <div class="col-md-12 grid-margin">
-      <div class="card">
-     
+      <div class="card border rounded">
         <div class="card-body">
           
           @if (session('message'))

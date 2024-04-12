@@ -34,19 +34,20 @@ class FarmProfileRequest extends FormRequest
                 'max:50',
             ],
             'no_of_years_as_farmers'=>[
-                'numeric',
-                'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+                'required',
+                'string',
+                'max:50',
+               
             ],
             'gps_longitude'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'gps_latitude'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'total_physical_area_has'=>[
                 'numeric',
@@ -56,7 +57,7 @@ class FarmProfileRequest extends FormRequest
             'rice_area_cultivated_has'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+             
             ], 
             'land_title_no'=>[
                 'required',
@@ -71,7 +72,7 @@ class FarmProfileRequest extends FormRequest
             'area_prone_to'=>[
                 'required',
                 'string',
-                'max:11',
+                'max:50',
             ],
             'ecosystem'=>[
                 'required',
@@ -108,7 +109,7 @@ class FarmProfileRequest extends FormRequest
             'yield_kg_ha'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'rsba_register'=>[
                 'required',
@@ -158,7 +159,7 @@ class FarmProfileRequest extends FormRequest
             'tenurial_status.required'=>'Please input your tenurial status',
             'rice_farm_address.required'=>'Please input your rice farm address',
             'no_of_years_as_farmers.numeric'=>'Please input your no of years as farmers',
-            'gps_longitude.numeric'=>'Please input your GPS longitude',
+            'gps_longitude.required'=>'Please input your GPS longitude',
             'gps_latitude.numeric'=>'Please input your GPS latitude',
             'total_physical_area_has.numeric'=>'Please input your total physical area has',
             'rice_area_cultivated_has.numeric'=>'Please input your rice area cultivated has',

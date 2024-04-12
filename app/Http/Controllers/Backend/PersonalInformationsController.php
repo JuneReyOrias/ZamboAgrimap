@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Backend;
+use App\Models\LastProductionDatas;
 use App\Models\PersonalInformations;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\MultipleFile;
+use App\Models\ParcellaryBoundaries;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PersonalInformationsRequest;
 use App\Http\Requests\UpdatePersonalInformationRequest;
@@ -13,7 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use Nette\Utils\Strings;
-
+use App\Models\KmlFile;
 class PersonalInformationsController extends Controller
 {
 
@@ -71,12 +73,21 @@ public function Personalfarms() {
     public function Gmap()
     {
      $personalInformations= PersonalInformations::all();
-     return view('map.gmap',compact('personalInformations'));
+     $parcels= ParcellaryBoundaries::all();
+   
+        // Fetch the latest uploaded KML file from the database
+        $kmlFile = KmlFile::latest()->first();
+
+       
+    
+
+     return view('map.gmap',compact('personalInformations','parcels','kmlFile'));
     }
     public function PersonalInfo(): View
     {
         $personalInformation= PersonalInformations::all();
-    return view('personalinfo.index',compact('personalInformation'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('personalinfo.index',compact('personalInformation','totalRiceProduction'));
     }
     public function Agent(): View
     {
@@ -161,7 +172,7 @@ public function Personalfarms() {
         }
         catch(\Exception $ex){
             dd($ex); // Debugging statement to inspect the exception
-            return redirect('/personalinformation')->with('message','Someting went wrong');
+            return redirect('/admin-add-personalinformation')->with('message','Someting went wrong');
             
         }   
         
@@ -176,12 +187,14 @@ public function Personalfarms() {
         // view the personalinfo by admin
         public function PersonalInfoView(){
             $personalinfos=PersonalInformations::OrderBy('id','desc')->paginate(20);
-            return view('personalinfo.create',compact('personalinfos'));
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            return view('personalinfo.create',compact('personalinfos','totalRiceProduction'));
         }
         // edit page for admin
         public function PersonalInfoEdit($id){
             $personalinfos= PersonalInformations::find($id);
-            return view('personalinfo.edit_info',compact('personalinfos'));
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            return view('personalinfo.edit_info',compact('personalinfos','totalRiceProduction'));
         }
 
         // new update store by admin FOR PERSONAL INFO
@@ -226,12 +239,12 @@ public function Personalfarms() {
                     $data->save();     
                     
                 
-                    return redirect('/view-personalinfo')->with('message','Personal informations Updated successsfully');
+                    return redirect('/admin-view-personalinfo')->with('message','Personal informations Updated successsfully');
                 
                 }
                 catch(\Exception $ex){
                     // dd($ex); // Debugging statement to inspect the exception
-                    return redirect('/update-personalinfo/{personalinfos}')->with('message','Someting went wrong');
+                    return redirect('/admin-update-personalinfo/{personalinfos}')->with('message','Someting went wrong');
                     
                 }   
             } 

@@ -1,6 +1,7 @@
 @extends('admin.dashb')
 @section('admin')
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 
 <div class="page-content">
 
@@ -10,8 +11,30 @@
 
   <div class="row">
     <div class="col-md-12 grid-margin">
-      <div class="card">
+      <div class="card border rounded">
+        @if (session()->has('message'))
+        <div class="alert alert-success" id="success-alert">
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    
+    
+            {{session()->get('message')}}
+          </div>
+          @endif
+        @if($errors->any())
+        <ul class="alert alert-warning">
+          @foreach ($errors->all() as $error)
+          <li>{{$error}}</li>
         
+          @endforeach
+          <button type="button"  class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </ul>
+        @endif
+        @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
         <div class="card-body">
           
           
@@ -26,20 +49,31 @@
     <div class="col-md-6 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          @if (session('status'))
-          <div class="alert alert-success" role="alert">
-            {{ session('status')}}
-          </div>
+            {{-- @if (session('message'))
+            <div class="alert alert-success" role="alert">
+              {{ session('message')}}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+               
+            @endif
            
-          @endif
+            @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif --}}
+
              <div class="card-header">Upload KML File</div>
 
-            <div class="card-body">
-              <form action="/kml/import" method="post" enctype="multipart/form-data">
+             <div class="card-body">
+              <form action{{url('upload') }} method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="file" name="file" accept=".kml,.kmz" required>
+                <input type="file" name="kmlFile">
                 <button type="submit">Upload</button>
-              </form>
+            </form>
+          </div>
+          
             </div>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
             integrity="sha384-oBqDVmz9ATKxIep9tiCx5/Z9fNEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
@@ -80,4 +114,6 @@
   
   </div>
 
-</div>@endsection
+</div>
+<script ></script>
+@endsection

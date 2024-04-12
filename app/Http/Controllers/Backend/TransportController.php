@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransportRequest;
+use App\Models\LastProductionDatas;
 use App\Models\Transport;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,8 @@ class TransportController extends Controller
     }
     public function TransportVar(){
         $transport= Transport::all();
-    return view('variable_cost.transport.transport_store',compact('transport'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.transport.transport_store',compact('transport','totalRiceProduction'));
     }
     /**
      * Show the form for creating a new resource.
@@ -38,11 +40,11 @@ class TransportController extends Controller
             $data= $request->all();
             Transport::create($data);
     
-            return redirect('/variablecost')->with('message','transport data added successsfully');
+            return redirect('/admin-variablecost')->with('message','transport data added successsfully');
         
         }
         catch(\Exception $ex){
-            return redirect('/transport')->with('message','Someting went wrong');
+            return redirect('/admin-transport')->with('message','Someting went wrong');
         }
     }
 
@@ -51,7 +53,8 @@ class TransportController extends Controller
 
 public function trasnportView(){
     $transports= Transport::orderBy('id','desc')->paginate(10);
-    return view('variable_cost.transport.show',compact('transports'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.transport.show',compact('transports','totalRiceProduction'));
 }
 
 
@@ -60,7 +63,8 @@ public function trasnportView(){
 
 public function edittransport($id){
     $transports= Transport::find($id);
-    return view('variable_cost.transport.update',compact('transports'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.transport.update',compact('transports','totalRiceProduction'));
 }
 
 public function updatestransport(TransportRequest $request,$id)
@@ -83,12 +87,12 @@ public function updatestransport(TransportRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/view-variable-cost-transport')->with('message','Transport Data Updated successsfully');
+       return redirect('/admin-view-variable-cost-transport')->with('message','Transport Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('edit-variable-cost-transport/{transports}')->with('message','Someting went wrong');
+       return redirect('/admin-edit-variable-cost-transport/{transports}')->with('message','Someting went wrong');
        
    }   
 } 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PesticidesRequest;
+use App\Models\LastProductionDatas;
 use App\Models\Pesticide;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,8 @@ class PesticideController extends Controller
     }
     public function PesticidesVar(){
         $pesticides= Pesticide::all();
-    return view('variable_cost.pesticides.pesticides_store',compact('pesticides'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.pesticides.pesticides_store',compact('pesticides','totalRiceProduction'));
     }
     
     /**
@@ -31,11 +33,11 @@ class PesticideController extends Controller
             $data= $request->all();
             Pesticide::create($data);
     
-            return redirect('/transport')->with('message','Pesticides data added successsfully');
+            return redirect('/admin-transport')->with('message','Pesticides data added successsfully');
         
         }
         catch(\Exception $ex){
-            return redirect('/pesticides')->with('message','Someting went wrong');
+            return redirect('/admin-pesticides')->with('message','Someting went wrong');
         }
     }
 
@@ -45,7 +47,8 @@ class PesticideController extends Controller
 
 public function pestView(){
     $pesticides= Pesticide::orderBy('id','desc')->paginate(10);
-    return view('variable_cost.pesticides.view',compact('pesticides'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.pesticides.view',compact('pesticides','totalRiceProduction'));
 }
 
 
@@ -54,7 +57,8 @@ public function pestView(){
 
 public function editpest($id){
     $pesticides= Pesticide::find($id);
-    return view('variable_cost.pesticides.pest_edit',compact('pesticides'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.pesticides.pest_edit',compact('pesticides','totalRiceProduction'));
 }
 
 public function updateslaborpest(PesticidesRequest $request,$id)
@@ -77,12 +81,12 @@ public function updateslaborpest(PesticidesRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/view-variable-cost-pesticides')->with('message','Pesticide Data Updated successsfully');
+       return redirect('/admin-view-variable-cost-pesticides')->with('message','Pesticide Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('/edit-variable-cost-pesticides/{$pesticides}')->with('message','Someting went wrong');
+       return redirect('/admin-edit-variable-cost-pesticides/{$pesticides}')->with('message','Someting went wrong');
        
    }   
 } 

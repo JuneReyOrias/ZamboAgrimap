@@ -84,8 +84,15 @@
                 </div>
 
                 <div class="col-md-3 mb-3">
+                  @php
+                  $id = Auth::id();
+  
+              // Find the user by their ID and eager load the personalInformation relationship
+              $farmprofile= App\Models\FarmProfile::find($id)->latest()->first();
+  
+                @endphp
                   <label class="form-expand" for="seeds_typed_used">Seed Type Used:</label>
-                  <input type="text" class="form-control placeholder-text @error('seeds_typed_used') is-invalid @enderror" name="seeds_typed_used" id="seeds_typed_used" placeholder="Enter seeds type used" value="{{ old('seeds_typed_used') }}" >
+                  <input type="text" class="form-control placeholder-text @error('seeds_typed_used') is-invalid @enderror" value="{{ $farmprofile->type_rice_variety !== 'N/A' ? $farmprofile->type_rice_variety : $farmprofile->prefered_variety }}"  name="seeds_typed_used" id="seeds_typed_used" placeholder="Enter seeds type used" value="{{ old('seeds_typed_used') }}" >
                   @error('seeds_typed_used')
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
@@ -101,17 +108,25 @@
 
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="seed_source">Seed Source:</label>
-                    <select class="form-control placeholder-text @error('seed_source') is-invalid @enderror" id="seed_source" name="seed_source" aria-label="Floating label select e">
+                    <select class="form-control placeholder-text @error('seed_source') is-invalid @enderror" id="seed_source"onchange="checkSeedsrc()" name="seed_source" aria-label="Floating label select e">
                     <option selected disabled>Select</option>
                     <option value="Government Subsidy" {{ old('seed_source') == 'Government Subsidy' ? 'selected' : '' }}>Government Subsidy</option>
                     <option value="Traders" {{ old('seed_source') == 'Traders' ? 'selected' : '' }}>Traders</option>
                     <option value="Own" {{ old('seed_source') == 'Own' ? 'selected' : '' }}>Own</option>
+                    <option value="Add" {{ old('seed_source') == 'Add' ? 'selected' : '' }}>Add</option>
                   </select>
                   @error('seed_source')
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
                 </div>
-               
+                                {{-- addding new source capital --}}
+                                <div class="col-md-3 mb-3" id="SeedSrcInput" style="display: none;">
+                                  <label for="SeedSrcInput">Add Seed Source :</label>
+                                  <input type="text" id="SourceCapitalInputField" class="form-control placeholder-text @error('add_seedsource') is-invalid @enderror" name="add_seedsource" placeholder=" Enter source of Capital" value="{{ old('add_seedsource') }}">
+                                  @error('add_seedsource')
+                                  <div class="invalid-feedback">{{ $message }}</div>
+                                  @enderror
+                                </div>
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="no_of_fertilizer_used_in_bags">No. of fertilizer used in bags:</label>
                   <input type="text" class="form-control placeholder-text @error('no_of_fertilizer_used_in_bags') is-invalid @enderror" name="no_of_fertilizer_used_in_bags" id="no_of_fertilizer_used_in_bags" placeholder="Enter  No. of fertilizer" value="{{ old('no_of_fertilizer_used_in_bags') }}" >
@@ -189,15 +204,15 @@
  
         <div class="col-md-3 mb-3">
           <label class="form-expand" for="unit_price_palay_per_kg">Unit price of Palay per/kgs:</label>
-          <input type="text" class="form-control placeholder-text @error('unit_price_palay_per_kg') is-invalid @enderror" name="unit_price_palay_per_kg" id="validationCustom01" placeholder="Enter unit price of palay" value="{{ old('unit_price_palay_per_kg') }}" >
+          <input type="text" class="form-control placeholder-text @error('unit_price_palay_per_kg') is-invalid @enderror" name="unit_price_palay_per_kg" id="unit_price_palay_per_kg" placeholder="Enter unit price of palay" value="{{ old('unit_price_palay_per_kg') }}" >
           @error('unit_price_palay_per_kg')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
         </div>
        
         <div class="col-md-3 mb-3">
-          <label class="form-expand" for="unit_price_rice_per_kg">Unit price of Rice/kgs:</label>
-          <input type="text" class="form-control placeholder-text @error('unit_price_rice_per_kg') is-invalid @enderror" name="unit_price_rice_per_kg" id="validationCustom01" placeholder="Enter unit price of rice" value="{{ old('unit_price_rice_per_kg') }}" >
+          <label class="form-expand" for="unit_price_rice_per_kg">Unit price of Rice/kgs(PHP):</label>
+          <input type="text" class="form-control placeholder-text @error('unit_price_rice_per_kg') is-invalid @enderror" name="unit_price_rice_per_kg" id="unit_price_rice_per_kg" placeholder="Enter unit price of rice" value="{{ old('unit_price_rice_per_kg') }}" >
           @error('unit_price_rice_per_kg')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
@@ -212,7 +227,7 @@
         </div>
         <div class="col-md-3 mb-3">
         <label class="form-expand" for="sold_to">Sold to:</label>
-        <select class="form-control placeholder-text @error('sold_to') is-invalid @enderror" id="sold_to" name="sold_to" aria-label="Floating label select e">
+        <select class="form-control placeholder-text @error('sold_to') is-invalid @enderror" id="sold_to"onchange="checkSoldTo()" name="sold_to" aria-label="Floating label select e">
           <option selected disabled>Select</option>
           <option value="Palay" {{ old('sold_to') == 'Palay' ? 'selected' : '' }}>Palay</option>
           <option value="Rice" {{ old('sold_to') == 'Rice' ? 'selected' : '' }}>Rice</option>
@@ -223,24 +238,42 @@
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
       </div>
-        <div class="col-md-3 mb-3">
-          <label class="form-expand" for="if_palay_milled_where">If palay milled where?:</label>
-          <input type="text" class="form-control placeholder-text @error('if_palay_milled_where') is-invalid @enderror" name="if_palay_milled_where" id="harrowingCostInput" placeholder="Enter if palay milled where" value="{{ old('if_palay_milled_where') }}" >
+        {{-- when selected a Palay then open window of input of the prefer for miiling loaction ot machine used --}}
+        <div class="col-md-3 mb-3" id="PalayInput" style="display: none;">
+          <label for="OthersInput">If palay milled where?:</label>
+          <input type="text" id="OthersInput" class="form-control placeholder-text @error('if_palay_milled_where') is-invalid @enderror"name="if_palay_milled_where" id="validationCustom02" placeholder="Enter pesticide name"  value="{{ old('if_palay_milled_where') }}">
           @error('if_palay_milled_where')
           <div class="invalid-feedback">{{ $message }}</div>
-      @enderror
+        @enderror
         </div>
 
+        <div class="col-md-3 mb-3" id="RiceInput" style="display: none;">
+          <label for="OthersInput">If palay milled where?:</label>
+          
+          <select class="form-control placeholder-text @error('if_palay_milled_where') is-invalid @enderror" id="if_palay_milled_where"onchange="checkSoldTo()" name="if_palay_milled_where" aria-label="Floating label select e">
+          <option selected disabled>Select</option>
+          <option value="N/A" {{ old('sold_to') == 'N/A' ? 'selected' : '' }}>N/A</option>
+         
+    
+        </select>
+         
+          @error('if_palay_milled_where')
+          <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+        </div>
+
+
+
         <div class="col-md-3 mb-3">
-          <label class="form-expand" for="gross_income_palay">Gross Income (Palay):</label>
-          <input type="text" class="form-control placeholder-text @error('gross_income_palay') is-invalid @enderror" name="gross_income_palay" id="harrowingCostInput" placeholder="Enter yields" value="{{ old('gross_income_palay') }}" >
+          <label class="form-expand" for="gross_income_palay">Gross Income (Palay)PHP:</label>
+          <input type="text" class="form-control placeholder-text @error('gross_income_palay') is-invalid @enderror" name="gross_income_palay" id="gross_income_palay" placeholder="Enter yields" value="{{ old('gross_income_palay') }}" >
           @error('gross_income_palay')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
         </div>
         <div class="col-md-3 mb-3">
-          <label class="form-expand" for="gross_income_rice">Gross Income (Rice):</label>
-          <input type="text" class="form-control placeholder-text @error('gross_income_rice') is-invalid @enderror" name="gross_income_rice" id="harrowingCostInput" placeholder="Enter yields" value="{{ old('gross_income_rice') }}" >
+          <label class="form-expand" for="gross_income_rice">Gross Income (Rice)PHP:</label>
+          <input type="text" class="form-control placeholder-text @error('gross_income_rice') is-invalid @enderror" name="gross_income_rice" id="gross_income_rice" placeholder="Enter yields" value="{{ old('gross_income_rice') }}" >
           @error('gross_income_rice')
           <div class="invalid-feedback">{{ $message }}</div>
       @enderror
@@ -264,6 +297,7 @@
   </div>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
         flatpickr("#datepicker", {
@@ -271,5 +305,77 @@
             // Additional options can be added here
         });
     });
+
+     // selection of adding no. of cropping per year
+     function checkSeedsrc() {
+        var select = document.getElementById("seed_source");
+        var option = select.options[select.selectedIndex].value;
+    
+        if (option === 'Add') {
+          document.getElementById("SeedSrcInput").style.display = "block";
+        } else {
+          document.getElementById("SeedSrcInput").style.display = "none";
+        }
+        
+      }
+    
+      // Add new tenurial status to the select element
+      document.getElementById("CroppingInputField").addEventListener("change", function() {
+        var newTenure = this.value.trim();
+        if (newTenure !== '') {
+          var select = document.getElementById("seed_source");
+          var option = document.createElement("option");
+          option.text = newTenure;
+          option.value = newTenure;
+          select.add(option);
+        }
+      });
+
+      // selection for sold to 
+      function checkSoldTo() {
+    var sold_to = document.getElementById("sold_to");
+    var PalayInput = document.getElementById("PalayInput");
+    var RiceInput = document.getElementById("RiceInput");
+
+    if (sold_to.value === "Palay") {
+        PalayInput.style.display = "block";
+        RiceInput.style.display = "none";
+    } else if (sold_to.value === "Rice") {
+        RiceInput.style.display = "block";
+        PalayInput.style.display = "none";
+    } else {
+        PalayInput.style.display = "none";
+        RiceInput.style.display = "none";
+    }
+}
+
   </script>
+  <script>
+ document.addEventListener('DOMContentLoaded', function() {
+    // Get input elements
+    const unit_price_palay_per_kg = document.getElementById('unit_price_palay_per_kg');
+    const unit_price_rice_per_kg = document.getElementById('unit_price_rice_per_kg');
+    const gross_income_palay = document.getElementById('gross_income_palay');
+    const gross_income_rice = document.getElementById('gross_income_rice');
+
+    // Add event listeners for input events
+    unit_price_palay_per_kg.addEventListener('input', formatDecimal);
+    unit_price_rice_per_kg.addEventListener('input', formatDecimal);
+    gross_income_palay.addEventListener('input', formatDecimal);
+    gross_income_rice.addEventListener('input', formatDecimal);
+
+    // Function to format input values as decimal
+    function formatDecimal(event) {
+        const input = event.target;
+        // Get the input value
+        let value = input.value;
+        // Remove any non-numeric characters and leading zeroes
+        value = value.replace(/[^0-9.]/g, '');
+        // Format the value as a decimal number
+        value = parseFloat(value).toFixed(2);
+        // Update the input value
+        input.value = value;
+    }
+});
+</script>
   @endsection

@@ -1,7 +1,8 @@
 @extends('admin.dashb')
 @section('admin')
 
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 <div class="page-content">
 
     <nav class="page-breadcrumb">
@@ -10,9 +11,8 @@
    
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
-          
-          <div class="card-body">
+        <div class="card border rounded">
+            <div class="card-body">
           
             @if (session('message'))
             <div class="alert alert-success" role="alert">
@@ -34,14 +34,14 @@
                 <a  href="{{route('polygon.create')}}"button  class="btn btn-success me-md-2">Add New Polygon</button></a></p>
               
               </div>   
-            <h5 class="card-title"><span> </span>Agri-district Polygon Boundary</h5>
+            <h4 class="mb-3 mb-md-0">Agri-district Polygon Boundary</h4>
             
-       
+       <br>
             <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
          
           
            <div class="table-responsive tab ">
-            <table class="table table table-info">
+            <table class="table table-bordered datatable">
                 <thead class="thead-light">
                     <tr >
                         <th>No.</th>

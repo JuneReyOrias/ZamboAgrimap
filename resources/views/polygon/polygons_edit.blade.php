@@ -13,8 +13,7 @@
     </div> --}}
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
-        
+        <div class="card border rounded">
           <div class="card-body">
             
             <h6 class="card-title"><span>I.</span>Create New Polygon Boundary</h6>

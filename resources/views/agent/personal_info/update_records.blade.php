@@ -53,7 +53,7 @@
 
              
              
-             <input type="hidden" name="users_id" value="{{ $personalinfos->id }}">{{ $personalinfos->id }}</input
+             <input type="hidden" name="users_id" value="{{ $personlinformation->id }}">{{ $personlinformation->id }}</input
              >
             
           

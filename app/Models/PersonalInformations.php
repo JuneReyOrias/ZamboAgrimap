@@ -43,6 +43,8 @@ class PersonalInformations extends Model
        'cp_tel_no',
        'users_id',
       'personal_photo',
+      'city',
+      'image',
       
     ];
     public function user()

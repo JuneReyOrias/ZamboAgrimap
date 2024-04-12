@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\KmlFileController;
 use App\Http\Controllers\Backend\PersonalInformationsController;
 use App\Http\Controllers\Backend\FixedCostController;
 use App\Http\Controllers\Backend\FarmProfileController;
@@ -49,20 +50,81 @@ use App\Models\AgriDistrict;
 //     return view('home');
 // });
 
-Route::get('user/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('user/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard'); 
 
-// // formcheck reciept edit of farm profile
-// Route::get('/form-checking-farm-profile',[AgentController::class, 'checkfarm'])->name('agent.formvalidation.valfarmprofile.farmprofile_edit');
-// Route::post('/form-checking-farm-profile',[AgentController::class, 'updateFarmprofile']);
+        // rice crop production per istrict access by admin
+        Route::get('admin-view-rice-crop-production',[AdminController::class,'ProductionperRice'])->name('admin.crop_production.rice_crops');
+
+        // rice varieties per agrDistrict acess by admin
+        Route::get('admin-view-rice-varietyper-agridistrict',[AdminController::class,'FarmersRiceVarietyDistrict'])->name('admin.rice_varieties.rice_varietydistrict');
+
+        // Rice crop planting and harvest schedule per district acess by admin
+        Route::get('admin-view-rice-plantingschedule',[AdminController::class,'Plantingschedrice'])->name('admin.rice_schedule.rice_planting');
+        Route::get('admin-view-rice-harvestschedule',[AdminController::class,'HarvestSchedRices'])->name('admin.rice_schedule.rice_harvest');
+
+    // farmers info view per agri district access by admin
+    Route::get('admin-view-ayala-farmers',[AdminController::class,'farmerAyalas'])->name('admin.Agri_district.ayala_farmer');
+    Route::get('admin-view-tumaga-farmers',[AdminController::class,'FarmerTumagainfo'])->name('admin.Agri_district.tumaga_farmer');
+    Route::get('admin-view-culianan-farmers',[AdminController::class,'FarmerCulianansInfo'])->name('admin.Agri_district.culianan_farmer');
+    Route::get('admin-view-manicahan-farmers',[AdminController::class,'FarmerManicahaninfo'])->name('admin.Agri_district.manicahan_farmer');
+    Route::get('admin-view-curuan-farmers',[AdminController::class,'FarmercuruanInfo'])->name('admin.Agri_district.curuan_farmer');
+    Route::get('admin-view-vitali-farmers',[AdminController::class,'VitaliInfoFarmer'])->name('admin.Agri_district.vitali_farmer');
 
 
-// formcheck reciept edit of personal information
-// Route::get('/form-checking',[PersonalInformationsController::class, 'viewpersoninfo'])->name('agent.formvalidation.valpersonal.personinfo_edit');
-// Route::post('/form-checking/{perinfo}',[AgentController::class, 'updatePerinfo']);
-// Route::get('/form-checking',[AgentController::class, 'viewpersoninfo'])->name('agent.formvalidation.valpersonal.personinfo_edit');
 
+
+    // Rice Crop Producttions of farmers per agriDistrict
+    Route::get('user-view-rice-crop-production',[UserAccountController::class,'CropRiceProduc'])->name('user.cropProduction.rice_crop');
+
+    // rice varieties per agrDistrict
+    Route::get('user-view-rice-varietyper-agridistrict',[UserAccountController::class,'VarietyRiceUsers'])->name('user.RiceVariety.inbred_hybrid');
+    
+    // Rice crop planting and harvest schedule per district
+    Route::get('user-view-rice-plantingschedule',[UserAccountController::class,'RicePlantingSched'])->name('user.riceSchedule.rice_planting');
+    Route::get('user-view-rice-harvestschedule',[UserAccountController::class,'RiceHarvestSched'])->name('user.riceSchedule.rice_harvest');
+
+
+
+
+
+    // route for viewing the farmers info per agriDistrict access by user
+    Route::get('user-view-ayala-farmers',[UserAccountController::class,'AyalaUserView'])->name('user.agriFarmers.ayala_farmers');
+    Route::get('user-view-tumaga-farmers',[UserAccountController::class,'TumagaUserView'])->name('user.agriFarmers.tumaga_farmers');
+    Route::get('user-view-culianan-farmers',[UserAccountController::class,'CuliananUserView'])->name('user.agriFarmers.culianan_farmers');
+    Route::get('user-view-manicahan-farmers',[UserAccountController::class,'ManicahanUsersView'])->name('user.agriFarmers.manicahan_farmers');
+    Route::get('user-view-curuan-farmers',[UserAccountController::class,'CuruanUsersView'])->name('user.agriFarmers.curuan_farmers');
+    Route::get('user-view-vitali-farmers',[UserAccountController::class,'VitaliUserView'])->name('user.agriFarmers.vitali_farmers');
+
+
+// multiple improf execl file to dataase by  agen
+Route::get('agent-import-multipleFiles',[AgentController::class,'ExcelFile'])->name('agent.mutipleFile.import_excelFile');
+// cropProducions
+Route::get('/agent-rice-crop-productions',[AgentController::class,'RiceCrop'])->name('agent.cropProductions.rice_crop');
+
+// rice farmers infromation per districts 
+Route::get('/agent-view-ayala-districts-farmers',[AgentController::class, 'AyalaFarmers'])->name('agent.agriDistricts.ayala_farmers');
+
+Route::get('/agent-update-ayalafarmers-personal-info/{id}',[AgentController::class, 'show'])->name('agent.ayala.show_personal_info');
+
+
+
+Route::get('/agent-view-tumaga-districts-farmers',[AgentController::class, 'TumagaFarmers'])->name('agent.agriDistricts.tumaga_farmers');
+Route::get('/agent-view-culianan-districts-farmers',[AgentController::class, 'CuliananFarmers'])->name('agent.agriDistricts.culianan_farmers');
+Route::get('/agent-view-manicahan-districts-farmers',[AgentController::class, 'ManicahanFarmers'])->name('agent.agriDistricts.manicahan_farmers');
+Route::get('/agent-view-curuan-districts-farmers',[AgentController::class, 'CuruanFarmers'])->name('agent.agriDistricts.curuan_farmers');
+Route::get('/agent-view-vitali-districts-farmers',[AgentController::class, 'VitaliFarmers'])->name('agent.agriDistricts.vitali_farmers');
+// Rice harvest and planting schedluel of farmers per districts
+Route::get('/agent-view-rice-harvest-schedule',[AgentController::class, 'HarvestSched'])->name('agent.Schedule.harvest');
+Route::get('/agent-view-rice-planting-schedule',[AgentController::class, 'PlantingSched'])->name('agent.Schedule.planting');
+
+// rice variety view Inbred and hybrid
+Route::get('/agent-view-rice-variety-Inbred',[AgentController::class, 'InbredVariety'])->name('agent.riceVariety.inbred_variety');
+Route::get('/agent-view-rice-variety-Hybrid',[AgentController::class, 'HybridVariety'])->name('agent.riceVariety.hybrid_variety');
+
+
+//agentprofile update and view by agent
 Route::get('/agent-profile',[AgentController::class, 'AgentProfile'])->name('agent.profile.agent_profiles');
 Route::post('/agent-profile',[AgentController::class, 'Agentupdate']);
 
@@ -205,10 +267,12 @@ Route::post('/update-personal-info/{personlinformations}',[AgentController::clas
 //landingg page 
 Route::get('/', [LandingPageController::class, 'LandingPage'])->name('landing-page.page');
 
-//kml file upload
-Route::get('/kml/import', [KmlImportController::class, 'index'])->name('kml.import');
-Route::post('/kml/import',[KmlImportController::class, 'upload']);
-Route::get('/map/arcmap/{fileName}', [KmlImportController::class, 'displayMap']);
+//kml file upload by admin
+Route::get('/admin-kml-import', [KmlFileController::class, 'index'])->name('kml.import');
+Route::post('/admin-kml-import',[KmlFileController::class, 'upload']);
+//kml import by agent 
+Route::get('/agent-kml-import',[KmlFileController::class,'AgentKmlImport'])->name('kml.agent_kml_import');
+Route::post('/agent-kml-import',[KmlFileController::class,'uploadkml']);
 
 //parcelaryBoarders
 Route::get('/add-parcel',[AdminController::class, 'ParcelBoarders'])->name('parcels.new_parcels');
@@ -237,35 +301,35 @@ Route::delete('/delete-polygon/{polygons}',[PolygonController::class, 'polygonde
 //fish
 Route::get('/fisheries/create',[FisheriesController::class, 'Fisheries'])->name('fish.create');
 Route::post('/fisheries/create',[FisheriesController::class, 'store']);
-Route::get('/fisheries/create',[FisheriesCategoryController::class, 'Fisheries'])->name('fish.create');
+// Route::get('/fisheries/create',[FisheriesCategoryController::class, 'Fisheries'])->name('fish.create');
 // Route::get('/fisheries/create',[CategorizeController::class, 'Fisheries'])->name('fish.create');
 
 //livestocks
 Route::get('/livestocks/create',[LivestockController::class, 'Livestocks'])->name('livestocks.create');
 Route::post('/livestocks/create',[LivestockController::class, 'store']);
 Route::get('/livestocks/create',[CategorizeController::class, 'Livestocks'])->name('livestocks.create');
-Route::get('/livestocks/create',[LivestockCategoryController::class, 'Livestocks'])->name('livestocks.create');
+// Route::get('/livestocks/create',[LivestockCategoryController::class, 'Livestocks'])->name('livestocks.create');
 
 //crops
 Route::get('/crops/create',[CropController::class, 'Cropping'])->name('crops.create');
 Route::post('/crops/create',[CropController::class, 'store']);
-Route::get('/crops/create',[CropCategoryController::class, 'Cropping'])->name('crops.create');
+// Route::get('/crops/create',[CropCategoryController::class, 'Cropping'])->name('crops.create');
 // Route::get('/crops/create',[CategorizeController::class, 'Cropping'])->name('crops.create');
 
 //livestock-category
-Route::get('/livestockcategory/create',[LivestockCategoryController::class, 'LivestockCategory'])->name('livestock_category.livestock_create');
+Route::get('/livestockcategory/create',[LivestockCategoryController::class, 'LivestockCategorys'])->name('livestock_category.livestock_create');
 Route::post('/livestockcategory/create',[LivestockCategoryController::class, 'store']);
-Route::get('/livestockcategory/create',[CategorizeController::class, 'LivestockCategory'])->name('livestock_category.livestock_create');
+// Route::get('/livestockcategory/create',[CategorizeController::class, 'LivestockCategory'])->name('livestock_category.livestock_create');
 
 //fisheries-category
 Route::get('/fisheriescategory/create',[FisheriesCategoryController::class, 'FisheriesCategory'])->name('fisheries_category.fisheries_create');
 Route::post('/fisheriescategory/create',[FisheriesCategoryController::class, 'store']);
-Route::get('/fisheriescategory/create',[CategorizeController::class, 'FisheriesCategory'])->name('fisheries_category.fisheries_create');
+// Route::get('/fisheriescategory/create',[CategorizeController::class, 'FisheriesCategory'])->name('fisheries_category.fisheries_create');
 
 //crop-category
 Route::get('/crops-category', [CropCategoryController:: class,'CropCategory'])->name('crop_category.crop_create');
 Route::post('/crops-category',[CropCategoryController::class, 'store']);
-Route::get('/crops-category', [CategorizeController:: class,'CropCategory'])->name('crop_category.crop_create');
+// Route::get('/crops-category', [CategorizeController:: class,'CropCategory'])->name('crop_category.crop_create');
 
 //catgorize router
 Route::get('/category', [CategorizeController:: class,'Category'])->name('categorize.index');
@@ -329,16 +393,19 @@ Route::middleware(['auth','role:user'])->group(function(){
     });//end Group agent middleware
 
 //multi importing of file into the database route
-Route::get('/multifile/imports', [FileController::class, 'MultiFilesAgent'])->name('multifile.import_agent');
- Route::get('/multifile/import', [FileController::class, 'MultiFiles'])->name('multifile.import');
-  Route::post('/multifile/import',[FileController::class, 'saveUploadForm']);
+Route::get('/admin-multifile-imports', [FileController::class, 'MultiFilesAgent'])->name('multifile.import_agent');
+Route::post('/admin-multifile-imports', [FileController::class, 'saveUploadForm']);
+ Route::get('/admin-multifile-imports', [FileController::class, 'MultiFiles'])->name('multifile.import');
+  Route::post('/admin-multifile-imports',[FileController::class, 'saveUploadForm']);
       
  // admin Map route
       Route::get('/map/gmap',[FarmProfileController::class, 'Gmap'])->name('map.gmap');
+      Route::get('/agent-map-view-info/{id}',[AgentController::class, 'mapView'])->name('map.view_map_info');
+
       Route::get('/map/agrimap',[FarmProfileController::class, 'agrimap'])->name('map.agrimap');
  
       // admin Map route
-      Route::get('/map/arcmap',[FarmProfileController::class, 'ArcMap'])->name('map.arcmap');
+      Route::get('/admin-map-arcmap',[FarmProfileController::class, 'ArcMap'])->name('map.arcmap');
 
      
      
@@ -346,26 +413,26 @@ Route::get('/multifile/imports', [FileController::class, 'MultiFilesAgent'])->na
       Route::get('/personalinfo/creates',[PersonalInformationsController::class, 'PersonalInfoCrudAgent'])->name('personalinfo.agent.show_agent');
    
       // view of personal info by admin ad update or dlete of info
-      Route::get('/view-personalinfo',[PersonalInformationsController::class, 'PersonalInfoView'])->name('personalinfo.create');
-      Route::get('/update-personalinfo/{personalinfos}',[PersonalInformationsController::class, 'PersonalInfoEdit'])->name('personalinfo.edit_info');
-      Route::post('/update-personalinfo/{personalinfos}',[PersonalInformationsController::class, 'PersonalInfoUpdate']);
-      Route::delete('/delete-personalinfo/{personalinfos}',[PersonalInformationsController::class, 'DeletePersonalInfo'])->name('personalinfo.delete');
+      Route::get('/admin-view-personalinfo',[PersonalInformationsController::class, 'PersonalInfoView'])->name('personalinfo.create');
+      Route::get('/admin-update-personalinfo/{personalinfos}',[PersonalInformationsController::class, 'PersonalInfoEdit'])->name('personalinfo.edit_info');
+      Route::post('/admin-update-personalinfo/{personalinfos}',[PersonalInformationsController::class, 'PersonalInfoUpdate']);
+      Route::delete('/admin-delete-personalinfo/{personalinfos}',[PersonalInformationsController::class, 'DeletePersonalInfo'])->name('personalinfo.delete');
     //fetch information from personal informations
     Route::get('/farmprofile',[PersonalInformationsController::class ,'showPersonalInfo'])->name('farm_profile.index');
 
    //Personal Informations route   
 Route::controller(PersonalInformationsController::class)->group(function () {
-    Route::get('/personalinformation','PersonalInfo')->name('personalinfo.index');
-    Route::post('/personalinformation', 'store')->name('personalinfo.store');
+    Route::get('/admin-add-personalinformation','PersonalInfo')->name('personalinfo.index');
+    Route::post('/admin-add-personalinformation', 'store')->name('personalinfo.store');
 
 });
 
 
     // farmers edit, view and delte of farm profile info by admin
-    Route::get('/view-farmprofile',[ FarmProfileController::class,'ViewFarmProfile'])->name('farm_profile.farminfo_view');
-    Route::get('/update-farmprofile/{farmprofiles}',[ FarmProfileController::class,'EditFarmProfile'])->name('farm_profile.farm_edit');
-    Route::post('/update-farmprofile/{farmprofiles}',[ FarmProfileController::class,'UpdateFarmProfiles']);
-    Route::post('/delete-farmprofile/{farmprofiles}',[ FarmProfileController::class,'deletetFarmProfile'])->name('farm_profile.delete');
+    Route::get('/admin-view-farmprofile',[ FarmProfileController::class,'ViewFarmProfile'])->name('farm_profile.farminfo_view');
+    Route::get('/admin-update-farmprofile/{farmprofiles}',[ FarmProfileController::class,'EditFarmProfile'])->name('farm_profile.farm_edit');
+    Route::post('/admin-update-farmprofile/{farmprofiles}',[ FarmProfileController::class,'UpdateFarmProfiles']);
+    Route::post('/admin-delete-farmprofile/{farmprofiles}',[ FarmProfileController::class,'deletetFarmProfile'])->name('farm_profile.delete');
 
 
 //farm profiles route
@@ -375,118 +442,118 @@ Route::middleware('auth')->group(function () {
 });
 
 // fixed cost update, edit,delte for admin 
-Route::get('/view-fixedcost',[FixedCostController::class, 'FixedCostView'])->name('fixed_cost.fixed_create');
-Route::get('/edit-fixedcost/{fixedcosts}',[ FixedCostController::class,'editFixedcost'])->name('fixed_cost.fixed_edit');
-Route::post('/edit-fixedcost/{fixedcosts}', [FixedCostController::class,'updateFixedcosts']);
-Route::delete('/delete-fixedcost/{fixedcosts}', [FixedCostController::class, 'destroyFixedcost'])->name('fixed_cost.delete');
+Route::get('/admin-view-fixedcost',[FixedCostController::class, 'FixedCostView'])->name('fixed_cost.fixed_create');
+Route::get('/admin-edit-fixedcost/{fixedcosts}',[ FixedCostController::class,'editFixedcost'])->name('fixed_cost.fixed_edit');
+Route::post('/admin-edit-fixedcost/{fixedcosts}', [FixedCostController::class,'updateFixedcosts']);
+Route::delete('/admin-delete-fixedcost/{fixedcosts}', [FixedCostController::class, 'destroyFixedcost'])->name('fixed_cost.delete');
 
 //fixed cost routes
 Route::middleware('auth')->group(function () {
-    Route::get('/fixedcost', [FixedCostController::class,'FixedForms'])->name('fixed_cost.index');
-    Route::post('/fixedcost',[FixedCostController::class, 'store']);
+    Route::get('/admin-fixedcost', [FixedCostController::class,'FixedForms'])->name('fixed_cost.index');
+    Route::post('/admin-fixedcost',[FixedCostController::class, 'store']);
 
 
 });
 
     // machineries view, edit, and by admin access
-    Route::get('/view-machineries-used',[MachineriesUsedController::class, 'MachineriesVieew'])->name('machineries_used.machine_create');
-    Route::get('/edit-machineries-used/{machineries}',[ MachineriesUsedController::class, 'editMachineries'])->name('machineries_used.machine_edit');
-    Route::post('/edit-machineries-used/{machineries}', [MachineriesUsedController::class, 'updateMachineries']);
-    Route::delete('/delete-machineries-used/{machineries}', [MachineriesUsedController::class,'Machineriesdestroy'])->name('machineries_used.delete');
+    Route::get('/admin-view-machineries-used',[MachineriesUsedController::class, 'MachineriesVieew'])->name('machineries_used.machine_create');
+    Route::get('/admin-edit-machineries-used/{machineries}',[ MachineriesUsedController::class, 'editMachineries'])->name('machineries_used.machine_edit');
+    Route::post('/admin-edit-machineries-used/{machineries}', [MachineriesUsedController::class, 'updateMachineries']);
+    Route::delete('/admin-delete-machineries-used/{machineries}', [MachineriesUsedController::class,'Machineriesdestroy'])->name('machineries_used.delete');
 
 //machineries used routes
 Route::middleware('auth')->group(function () {
-    Route::get('/machineriesused', [MachineriesUsedController::class,'MachineForms'])->name('machineries_used.index');
-    Route::post('/machineriesused',[MachineriesUsedController::class, 'store']);
+    Route::get('/admin-machineriesused', [MachineriesUsedController::class,'MachineForms'])->name('machineries_used.index');
+    Route::post('/admin-machineriesused',[MachineriesUsedController::class, 'store']);
    
 
 });
 
 // sedds edit,view ,update and delete by admin access
 
-  Route::get('/view-variable-cost-seed',[SeedController::class, 'SeedsView'])->name('variable_cost.seeds.view');
-  Route::get('/edit-variable-cost-seed/{seeds}',[ SeedController::class, 'editSeeds'])->name('variable_cost.seeds.seed_edit');
-  Route::post('/edit-variable-cost-seed/{seeds}', [SeedController::class, 'updatesSeeds']);
-  Route::delete('/delete-variable-cost-seed/{seeds}', [SeedController::class,'Seedsdelete'])->name('variable_cost.seeds.delete');
+  Route::get('/admin-view-variable-cost-seed',[SeedController::class, 'SeedsView'])->name('variable_cost.seeds.view');
+  Route::get('/admin-edit-variable-cost-seed/{seeds}',[ SeedController::class, 'editSeeds'])->name('variable_cost.seeds.seed_edit');
+  Route::post('/admin-edit-variable-cost-seed/{seeds}', [SeedController::class, 'updatesSeeds']);
+  Route::delete('/admin-delete-variable-cost-seed/{seeds}', [SeedController::class,'Seedsdelete'])->name('variable_cost.seeds.delete');
 
 
 
 //Seed routes
 Route::middleware('auth')->group(function () {
-    Route::get('/seeds', [SeedController::class,'SeedsVar'])->name('variable_cost.seeds.store');
-    Route::post('seeds',[SeedController::class, 'store']);
+    Route::get('/admin-seeds', [SeedController::class,'SeedsVar'])->name('variable_cost.seeds.store');
+    Route::post('admin-seeds',[SeedController::class, 'store']);
    
 });
 
 // labor view , edit abd delete access by admin
-Route::get('/view-variable-cost-labor',[LaborController::class, 'laborView'])->name('variable_cost.labor.labors_view');
-Route::get('/edit-variable-cost-labor/{labors}',[ LaborController::class, 'editlabor'])->name('variable_cost.labor.labors_edit');
-Route::post('/edit-variable-cost-labor/{labors}', [LaborController::class, 'updateslabor']);
-Route::delete('/delete-variable-cost-labor/{labors}', [LaborController::class,'deletel'])->name('variable_cost.labor.delete');
+Route::get('/admin-view-variable-cost-labor',[LaborController::class, 'laborView'])->name('variable_cost.labor.labors_view');
+Route::get('/admin-edit-variable-cost-labor/{labors}',[ LaborController::class, 'editlabor'])->name('variable_cost.labor.labors_edit');
+Route::post('/admin-edit-variable-cost-labor/{labors}', [LaborController::class, 'updateslabor']);
+Route::delete('/admin-delete-variable-cost-labor/{labors}', [LaborController::class,'deletel'])->name('variable_cost.labor.delete');
 
 
 
 //labor routes
 Route::middleware('auth')->group(function () {
-    Route::get('/labor', [LaborController::class,'LaborsVar'])->name('variable_cost.labor.store');
-    Route::post('/labor',[LaborController::class, 'store']);
+    Route::get('/admin-labor', [LaborController::class,'LaborsVar'])->name('variable_cost.labor.store');
+    Route::post('/admin-labor',[LaborController::class, 'store']);
    
 });
 
 // fertilizer view , edit abd delete access by admin
-Route::get('/view-variable-cost-fertilizer',[FertilizerController::class, 'fertilizerView'])->name('variable_cost.fertilizer.view');
-Route::get('/edit-variable-cost-fertilizer/{fertilizers}',[ FertilizerController::class, 'editfertilizer'])->name('variable_cost.fertilizer.edit');
-Route::post('/edit-variable-cost-fertilizer/{fertilizers}', [FertilizerController::class, 'updatesfertilizer']);
-Route::delete('/delete-variable-cost-fertilizer/{fertilizers}', [FertilizerController::class,'fertilizerdelete'])->name('variable_cost.fertilizer.delete');
+Route::get('/admin-view-variable-cost-fertilizer',[FertilizerController::class, 'fertilizerView'])->name('variable_cost.fertilizer.view');
+Route::get('/admin-edit-variable-cost-fertilizer/{fertilizers}',[ FertilizerController::class, 'editfertilizer'])->name('variable_cost.fertilizer.edit');
+Route::post('/admin-edit-variable-cost-fertilizer/{fertilizers}', [FertilizerController::class, 'updatesfertilizer']);
+Route::delete('/admin-delete-variable-cost-fertilizer/{fertilizers}', [FertilizerController::class,'fertilizerdelete'])->name('variable_cost.fertilizer.delete');
 
 //fertilizers route
 Route::middleware('auth')->group(function () {
-    Route::get('/fertilizer', [FertilizerController::class,'FertilizersVar'])->name('variable_cost.fertilizer.store');
-    Route::post('/fertilizer',[FertilizerController::class, 'store']); 
+    Route::get('/admin-fertilizer', [FertilizerController::class,'FertilizersVar'])->name('variable_cost.fertilizer.store');
+    Route::post('/admin-fertilizer',[FertilizerController::class, 'store']); 
   
 });
 
 // pesticides view , edit abd delete access by admin
-Route::get('/view-variable-cost-pesticides',[PesticideController::class, 'pestView'])->name('variable_cost.pesticides.view');
-Route::get('/edit-variable-cost-pesticides/{pesticides}',[ PesticideController::class, 'editpest'])->name('variable_cost.pesticides.pest_edit');
-Route::post('/edit-variable-cost-pesticides/{pesticides}', [PesticideController::class, 'updateslaborpest']);
-Route::delete('/delete-variable-cost-pesticides/{pesticides}', [PesticideController::class,'pestdelete'])->name('variable_cost.pesticides.delete');
+Route::get('/admin-view-variable-cost-pesticides',[PesticideController::class, 'pestView'])->name('variable_cost.pesticides.view');
+Route::get('/admin-edit-variable-cost-pesticides/{pesticides}',[ PesticideController::class, 'editpest'])->name('variable_cost.pesticides.pest_edit');
+Route::post('/admin-edit-variable-cost-pesticides/{pesticides}', [PesticideController::class, 'updateslaborpest']);
+Route::delete('/admindelete-variable-cost-pesticides/{pesticides}', [PesticideController::class,'pestdelete'])->name('variable_cost.pesticides.delete');
 
 //pesticides routes
 Route::middleware('auth')->group(function () {
-    Route::get('/pesticides', [PesticideController::class,'PesticidesVar'])->name('variable_cost.pesticides.store');
-    Route::post('/pesticides',[PesticideController::class, 'store']);
+    Route::get('/admin-pesticides', [PesticideController::class,'PesticidesVar'])->name('variable_cost.pesticides.store');
+    Route::post('/admin-pesticides',[PesticideController::class, 'store']);
    
 });
 
 // transport view , edit abd delete access by admin
-Route::get('/view-variable-cost-transport',[TransportController::class, 'trasnportView'])->name('variable_cost.transport.show');
-Route::get('/edit-variable-cost-transport/{transports}',[ TransportController::class, 'edittransport'])->name('variable_cost.transport.update');
-Route::post('/edit-variable-cost-transport/{transports}', [TransportController::class, 'updatestransport']);
-Route::delete('/delete-variable-cost-transport/{transports}', [TransportController::class,'transportdelete'])->name('variable_cost.transport.delete');
+Route::get('/admin-view-variable-cost-transport',[TransportController::class, 'trasnportView'])->name('variable_cost.transport.show');
+Route::get('/admin-edit-variable-cost-transport/{transports}',[ TransportController::class, 'edittransport'])->name('variable_cost.transport.update');
+Route::post('/admin-edit-variable-cost-transport/{transports}', [TransportController::class, 'updatestransport']);
+Route::delete('/admin-delete-variable-cost-transport/{transports}', [TransportController::class,'transportdelete'])->name('variable_cost.transport.delete');
 
 
 
 //transport routes
 Route::middleware('auth')->group(function () {
-  Route::get('/transport', [TransportController::class,'TransportVar'])->name('variable_cost.transport.store');
-    Route::post('/transport',[TransportController::class, 'store']);
+  Route::get('/admin-transport', [TransportController::class,'TransportVar'])->name('variable_cost.transport.store');
+    Route::post('/admin-transport',[TransportController::class, 'store']);
    
 });
 
 // varaible cost view , edit abd delete access by admin
-Route::get('/view-variable-cost',[VariableCostController::class, 'varView'])->name('variable_cost.var_show');
-Route::get('/edit-variable-cost/{variable}',[ VariableCostController::class, 'editvar'])->name('variable_cost.var_update');
-Route::post('/edit-variable-cost/{variable}', [VariableCostController::class, 'updatesvar']);
-Route::delete('/delete-variable-cost/{variable}', [VariableCostController::class,'vardelete'])->name('variable_cost.delete');
+Route::get('/admin-view-variable-cost',[VariableCostController::class, 'varView'])->name('variable_cost.var_show');
+Route::get('/admin-edit-variable-cost/{variable}',[ VariableCostController::class, 'editvar'])->name('variable_cost.var_update');
+Route::post('/admin-edit-variable-cost/{variable}', [VariableCostController::class, 'updatesvar']);
+Route::delete('/admin-delete-variable-cost/{variable}', [VariableCostController::class,'vardelete'])->name('variable_cost.delete');
 
 
 
 
 //variable cost routes
 Route::middleware('auth')->group(function () {
-Route::get('/variablecost', [VariableCostController::class,'VariableForms'])->name('variable_cost.index');
-Route::post('/variablecost',[VariableCostController::class, 'store']);
+Route::get('/admin-variablecost', [VariableCostController::class,'VariableForms'])->name('variable_cost.index');
+Route::post('/admin-variablecost',[VariableCostController::class, 'store']);
     
   });
   
@@ -494,10 +561,10 @@ Route::post('/variablecost',[VariableCostController::class, 'store']);
   
 //last Productions Data routes
 Route::middleware('auth')->group(function () {
-    Route::get('/production', [LastProductionDataController::class,'ProductionForms'])->name('production_data.index');
-    Route::post('/production',[LastProductionDataController::class, 'store']);
-    Route::get('/view-production',[LastProductionDataController::class, 'Productionview'])->name('production_data.production_create');
-    Route::get('/edit-production/{productions}',[ LastProductionDataController::class, 'Prodedit'])->name('production_data.production_edit');
-    Route::post('/edit-production/{productions}', [LastProductionDataController::class, 'Proddataupdate']);
-    Route::delete('/delete-production/{productions}', [LastProductionDataController::class, 'ProdDestroy'])->name('production_data.delete');
+    Route::get('/admin-lastproduction-data', [LastProductionDataController::class,'ProductionForms'])->name('production_data.index');
+    Route::post('/admin-lastproduction-data',[LastProductionDataController::class, 'store']);
+    Route::get('/admin-view-lastproduction-data',[LastProductionDataController::class, 'Productionview'])->name('production_data.production_create');
+    Route::get('/admin-edit-lastproduction-data/{productions}',[ LastProductionDataController::class, 'Prodedit'])->name('production_data.production_edit');
+    Route::post('/admin-edit-lastproduction-data/{productions}', [LastProductionDataController::class, 'Proddataupdate']);
+    Route::delete('/admin-delete-lastproduction-data/{productions}', [LastProductionDataController::class, 'ProdDestroy'])->name('production_data.delete');
 });

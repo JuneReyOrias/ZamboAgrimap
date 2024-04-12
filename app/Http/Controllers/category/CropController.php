@@ -4,6 +4,8 @@ namespace App\Http\Controllers\category;
 
 use App\Http\Controllers\Controller;
 use App\Models\Crop;
+use App\Models\CropCategory;
+use App\Models\LastProductionDatas;
 use Illuminate\Http\Request;
 
 class CropController extends Controller
@@ -17,8 +19,10 @@ class CropController extends Controller
     }
     public function Cropping()
     {
-        // $agridistrictS= AgriDistrictController::latest()->get();
-     return view('crops.crops_create');
+        $CropCat= CropCategory::all();
+        $Crop = Crop::orderBy('id','desc')->paginate(10);
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+     return view('crops.crops_create',compact('totalRiceProduction','CropCat','Crop'));
     }
     /**
      * Show the form for creating a new resource.
@@ -56,7 +60,7 @@ class CropController extends Controller
                 'crop_description'=>$request->input('crop_description'),
             ]);
     
-            return redirect('/crops-category')->with('message','Personal informations added successsfully');
+            return redirect('/crops/create')->with('message','New Crop added successsfully');
         
         }
         catch(\Exception $ex){

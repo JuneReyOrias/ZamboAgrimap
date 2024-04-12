@@ -50,7 +50,8 @@ class AdminController extends Controller
 
         $yieldPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalAreaYield / $totalAreaPlanted : 0;
         $averageCostPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalCost / $totalAreaPlanted : 0;
-        return view('admin.index',compact('totalfarms','totalAreaPlanted','totalAreaYield','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('admin.index',compact('totalfarms','totalAreaPlanted','totalAreaYield','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted','totalRiceProduction'));
     }//end method
 
         public function AdminLogout(Request $request)
@@ -70,7 +71,8 @@ class AdminController extends Controller
     public function AdminProfile(){
         $id =Auth::user()->id;
         $admin = User:: find($id);
-        return view('admin.admin_profile', compact('admin'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('admin.admin_profile', compact('admin','totalRiceProduction'));
     }
     public function update(Request $request){
         
@@ -127,7 +129,8 @@ class AdminController extends Controller
    public function ParcelBoarders()
    {
        // $category= Categorize::latest()->get();
-    return view('parcels.new_parcels');
+       $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('parcels.new_parcels',compact('totalRiceProduction'));
    }
    
 public function newparcels(ParcellaryBoundariesRequest $request)
@@ -194,13 +197,15 @@ public function newparcels(ParcellaryBoundariesRequest $request)
 // admin cost view
 public function Parcelshow(){
     $parcels=ParcellaryBoundaries::orderBy('id','desc')->paginate(20);
-    return view('parcels.show',compact('parcels'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('parcels.show',compact('parcels','totalRiceProduction'));
 }
 
 // admin cost update
 public function ParcelEdit($id){
     $parcels=ParcellaryBoundaries::find($id);
-    return view('parcels.parcels_edit',compact('parcels'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('parcels.parcels_edit',compact('parcels','totalRiceProduction'));
 }
 
 public function ParcelUpdates(ParcellaryBoundariesRequest $request,$id)
@@ -297,7 +302,8 @@ public function Parceldelete($id) {
 
 // creatinng new users account
 public function newAccounts(){
-    return view('admin.create_account.new_accounts');
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('admin.create_account.new_accounts',compact('totalRiceProduction'));
 }
 
 public function NewUsers(RegisterRequest $request){
@@ -327,13 +333,15 @@ public function NewUsers(RegisterRequest $request){
 }
 public function Accountview(){
     $users=User::orderBy('id','desc')->paginate(20);
-    return view('admin.create_account.display_users',compact('users'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('admin.create_account.display_users',compact('users','totalRiceProduction'));
 }
 
 // admin cost update
 public function  editAccount($id){
     $users=User::find($id);
-    return view('admin.create_account.edit_accounts',compact('users'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('admin.create_account.edit_accounts',compact('users','totalRiceProduction'));
 }
 
 public function updateAccounts(Request $request, $id){
@@ -370,12 +378,12 @@ public function updateAccounts(Request $request, $id){
      
     
   $data->save();
-  dd($data);
+
     // Redirect back after processing
     return redirect('/view-accounts')->with('message', 'Account updated successfully');
    } 
 } catch (Exception $e) {
-   dd($e);
+//    dd($e);
    // Handle any exceptions and redirect back with error message
    return redirect('/edit-accounts/{users}')->with('error', 'Error updating product: ' . $e->getMessage());
 }
@@ -387,7 +395,7 @@ public function updateAccounts(Request $request, $id){
 
 
 
-
+// Delete users access by admin
 public function deleteusers($id) {
     try {
         // Find the personal information by ID
@@ -409,5 +417,381 @@ public function deleteusers($id) {
         return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
     }
 }
+
+
+// farmers info per agri district
+ public function farmerAyalas(){
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('admin.Agri_district.ayala_farmer', compact('FarmersData','totalRiceProduction'));
+    } catch (Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+
+ }
+
+//  tumaga farmers info view by admin
+public function FarmerTumagainfo(){
+
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('admin.Agri_district.tumaga_farmer', compact('FarmersData','totalRiceProduction'));
+    } catch (Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+ 
+ 
 }
 
+// culaianan rice farmers view by admin
+public function FarmerCulianansInfo(){
+    try {
+        $FarmersData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+            ->select(
+                'personal_informations.*',
+                'farm_profiles.*',
+                'fixed_costs.*',
+                'machineries_useds.*',
+                'variable_costs.*',
+                'last_production_datas.*'
+            )
+            ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+            ->get();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('admin.Agri_district.culianan_farmer', compact('FarmersData','totalRiceProduction'));
+    } catch (Exception $ex) {
+        // Log the exception for debugging purposes
+        dd($ex);
+        return redirect()->back()->with('message', 'Something went wrong');
+    }
+ 
+}
+        // manicahan famrers info view by admin
+        public function FarmerManicahanInfo(){
+            try {
+                $FarmersData = DB::table('personal_informations')
+                    ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+                    ->select(
+                        'personal_informations.*',
+                        'farm_profiles.*',
+                        'fixed_costs.*',
+                        'machineries_useds.*',
+                        'variable_costs.*',
+                        'last_production_datas.*'
+                    )
+                    ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+                    ->get();
+                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                return view('admin.Agri_district.manicahan_farmer', compact('FarmersData','totalRiceProduction'));
+            } catch (Exception $ex) {
+                // Log the exception for debugging purposes
+                dd($ex);
+                return redirect()->back()->with('message', 'Something went wrong');
+            }
+        }
+
+        // curUan farmers info view by admin
+        public function FarmercuruanInfo(){
+            try {
+                $FarmersData = DB::table('personal_informations')
+                    ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+                    ->select(
+                        'personal_informations.*',
+                        'farm_profiles.*',
+                        'fixed_costs.*',
+                        'machineries_useds.*',
+                        'variable_costs.*',
+                        'last_production_datas.*'
+                    )
+                    ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+                    ->get();
+                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                return view('admin.Agri_district.curuan_farmer', compact('FarmersData','totalRiceProduction'));
+            } catch (\Exception $ex) {
+                // Log the exception for debugging purposes
+                dd($ex);
+                return redirect()->back()->with('message', 'Something went wrong');
+            }
+            
+        }
+    
+        //vitalifarmers view by users
+    
+        public function VitaliInfoFarmer(){
+    
+            try {
+                $FarmersData = DB::table('personal_informations')
+                    ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+                    ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+                    ->select(
+                        'personal_informations.*',
+                        'farm_profiles.*',
+                        'fixed_costs.*',
+                        'machineries_useds.*',
+                        'variable_costs.*',
+                        'last_production_datas.*'
+                    )
+                    ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+                    ->get();
+                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                return view('admin.Agri_district.vitali_farmer', compact('FarmersData','totalRiceProduction'));
+            } catch (Exception $ex) {
+                // Log the exception for debugging purposes
+                dd($ex);
+                return redirect()->back()->with('message', 'Something went wrong');
+        }
+       
+}
+
+    // crop varietys per agri district access by admin
+
+    // rice varieties per agri-district view by admin
+    public function FarmersRiceVarietyDistrict(){
+
+        try {
+            $riceData = DB::table('personal_informations')
+                ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->select(
+                    'personal_informations.agri_district',
+                    'farm_profiles.type_rice_variety',
+                    'farm_profiles.prefered_variety'
+                )
+                ->orderBy('personal_informations.agri_district')
+                ->get();
+      // Initialize counts for inbred, hybrid, and preferred variety
+   
+            // Initialize $InbredInfo as an associative array
+            $InbredInfo = [];
+    
+            foreach ($riceData as $data) {
+                $agri_district = $data->agri_district;
+                $typeVariety = strtolower($data->type_rice_variety);
+                $preferedVariety = strtolower($data->prefered_variety);
+    
+                // Initialize counts for each variety if district not already in $InbredInfo
+                if (!isset($InbredInfo[$agri_district])) {
+                    $InbredInfo[$agri_district] = [];
+                }
+    
+                // If type of variety is "N/A", use preferred variety
+                if ($typeVariety === 'n/a' || $typeVariety === 'na') {
+                    $variety = $preferedVariety;
+                } else {
+                    $variety = $typeVariety;
+                }
+    
+                // If variety not already in district's array, initialize count to 0
+                if (!isset($InbredInfo[$agri_district][$variety])) {
+                    $InbredInfo[$agri_district][$variety] = ['count' => 0, 'percentage' => 0];
+                }
+    
+                // Increment count for the variety
+                $InbredInfo[$agri_district][$variety]['count']++;
+            }
+    
+            // Calculate percentage for each rice variety in each district
+            foreach ($InbredInfo as $district => &$varieties) {
+                $totalRiceVarietiesInDistrict = array_sum(array_column($varieties, 'count'));
+                foreach ($varieties as &$data) {
+                    $percentage = ($totalRiceVarietiesInDistrict > 0) ? ($data['count'] / $totalRiceVarietiesInDistrict) * 100 : 0;
+                    $data['percentage'] = number_format($percentage, 2);
+                }
+            }
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            return view('admin.rice_varieties.rice_varietydistrict', compact('InbredInfo','totalRiceProduction'));
+        } catch (\Exception $ex) {
+            // Log the exception for debugging purposes
+            dd($ex);
+            return redirect()->back()->with('message', 'Something went wrong');
+        }
+       
+    }
+
+    public function Plantingschedrice(){
+        try {
+            $farmersData = DB::table('personal_informations')
+                ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+                ->select(
+                    'personal_informations.agri_district',
+                    'last_production_datas.date_planted',
+                    'farm_profiles.*',
+                    'personal_informations.last_name',
+                    'personal_informations.first_name',
+                    'farm_profiles.type_rice_variety',
+                    'farm_profiles.prefered_variety',
+                )
+                ->orderBy('personal_informations.agri_district')
+                ->get();
+    
+            // Group the data by district
+            $plantingSchedule = [];
+            foreach ($farmersData as $data) {
+                $plantingSchedule[$data->agri_district][] = [
+                    'last_name' => $data->last_name,
+                    'first_name' => $data->first_name,
+                    'date_planted' => $data->date_planted,
+                    'type_rice_variety' => $data->type_rice_variety,
+                    'prefered_variety' => $data->prefered_variety,
+                ];
+            }
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            return view('admin.rice_schedule.rice_planting', compact('plantingSchedule','totalRiceProduction'));
+        } catch (\Exception $ex) {
+            // Log the exception for debugging purposes
+            dd($ex);
+            return redirect()->back()->with('message', 'Something went wrong');
+        }
+       
+    }
+
+    // rice harvest
+    public function HarvestSchedRices(){
+        try {
+            $harvestData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+                ->select(
+                    'personal_informations.agri_district',
+                    'personal_informations.last_name',
+                    'personal_informations.first_name',
+                    'last_production_datas.date_harvested',
+                    'farm_profiles.type_rice_variety',
+                    'farm_profiles.prefered_variety',
+                    
+                )
+                ->orderBy('personal_informations.agri_district')
+                ->get();
+    
+            // Group the data by district
+            $harvestSchedule = [];
+            foreach ($harvestData as $data) {
+                $harvestSchedule[$data->agri_district][] = [
+                    'last_name' => $data->last_name,
+                    'first_name' => $data->first_name,
+                    'date_harvested' => $data->date_harvested,
+                    'type_rice_variety' => $data->type_rice_variety,
+                    'prefered_variety' => $data->prefered_variety,
+                ];
+            }
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            return view('admin.rice_schedule.rice_harvest', compact('harvestSchedule','totalRiceProduction'));
+        } catch (\Exception $ex) {
+            // Log the exception for debugging purposes
+            dd($ex);
+            return redirect()->back()->with('message', 'Something went wrong');
+        }
+        
+    }
+
+    // crop production per district
+    public function ProductionperRice(){
+        try {
+            $riceProductionData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+                ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+                ->select(
+                    'personal_informations.*',
+                    'farm_profiles.*',
+                    'fixed_costs.*',
+                    'machineries_useds.*',
+                    'variable_costs.*',
+                    'personal_informations.agri_district',
+            
+                    'personal_informations.last_name',
+                    'personal_informations.first_name',
+                    'last_production_datas.date_planted',
+                    'last_production_datas.date_harvested',
+                    'last_production_datas.yield_tons_per_kg',
+                    'last_production_datas.unit_price_palay_per_kg',
+                    'last_production_datas.unit_price_rice_per_kg',
+                    'last_production_datas.gross_income_palay',
+                    'last_production_datas.gross_income_rice',
+                    'last_production_datas.type_of_product'
+                )
+                // ->where('last_production_datas.type_of_product', 'rice',) // Filter for rice production only
+                ->orderBy('personal_informations.agri_district')
+                ->get();
+    
+            // Group the data by district
+            $riceProductionSchedule = [];
+            foreach ($riceProductionData as $data) {
+                $riceProductionSchedule[$data->agri_district][] = [
+                    'last_name' => $data->last_name,
+                    'first_name' => $data->first_name,
+                    'date_planted' => $data->date_planted,
+                    'date_harvested' => $data->date_harvested,
+                    'yield_tons_per_kg' => $data->yield_tons_per_kg,
+                    'unit_price_palay_per_kg' => $data->unit_price_palay_per_kg,
+                    'unit_price_rice_per_kg' => $data->unit_price_rice_per_kg,
+                    'gross_income_palay' => $data->gross_income_palay,
+                    'gross_income_rice' => $data->gross_income_rice,
+                    'type_of_product' => $data->type_of_product
+                ];
+            }
+    
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            return view('admin.crop_production.rice_crops', compact('riceProductionSchedule','totalRiceProduction'));
+        } catch (\Exception $ex) {
+            // Log the exception for debugging purposes
+            dd($ex);
+            return redirect()->back()->with('message', 'Something went wrong');
+        }
+        
+    }
+}

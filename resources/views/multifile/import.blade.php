@@ -1,6 +1,7 @@
 @extends('admin.dashb')
 @section('admin')
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 
 <div class="page-content">
 
@@ -10,7 +11,7 @@
 
   <div class="row">
     <div class="col-md-12 grid-margin">
-      <div class="card">
+     <div class="card border rounded">
         
         <div class="card-body">
           
@@ -24,7 +25,7 @@
   <!--end for Production Cost-->
   <div class="row">
     <div class="col-md-6 grid-margin stretch-card">
-      <div class="card">
+     <div class="card border rounded">
         <div class="card-body">
           @if (session('status'))
           <div class="alert alert-success" role="alert">
@@ -32,7 +33,7 @@
           </div>
            
           @endif
-            <h6 class="card-title">Multiple Import File</h6>
+            <h6 class="card-title">Multiple Import File</h6><br><br>
             <p class="text-muted mb-3">Import excel file, csv file or Msacces file only.</p>
             <div class="form-errors"></div>
             <form id="upload-form" method="post" enctype="multipart/form-data" onsubmit="saveForm(event)">

@@ -59,7 +59,7 @@
               </div>
 
               <div class="col-md-3 mb-3">
-                <label class="form-expand" for="total_transport_per_deliverycost">Total Transport/DeliveryCost:</label>
+                <label class="form-expand" for="total_transport_per_deliverycost">Total DeliveryCost(PHP):</label>
                 <input type="text" class="form-control placeholder-text @error('total_transport_per_deliverycost') is-invalid @enderror" name="total_transport_per_deliverycost" id="totalLaborCostInput" placeholder="Enter total transport cost" value="{{ old('total_transport_per_deliverycost') }}" >
                 @error('total_transport_per_deliverycost')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -90,4 +90,32 @@
     
     </div>
   
-  </div>@endsection
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    //  total Transport cost in decimal formats
+document.addEventListener('DOMContentLoaded', function() {
+    // Get input elements
+    const totalLaborCostInput = document.getElementById('totalLaborCostInput');
+  
+
+    // Add event listeners for input events
+    totalLaborCostInput.addEventListener('input', formatDecimal);
+   
+
+    // Function to format input values as decimal
+    function formatDecimal(event) {
+        const input = event.target;
+        // Get the input value
+        let value = input.value;
+        // Remove any non-numeric characters and leading zeroes
+        value = value.replace(/[^0-9.]/g, '');
+        // Format the value as a decimal number
+        value = parseFloat(value).toFixed(2);
+        // Update the input value
+        input.value = value;
+    }
+    
+});
+  </script>
+  @endsection

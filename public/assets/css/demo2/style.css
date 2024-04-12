@@ -86,6 +86,13 @@
             }
         }
         
+        .table> :not(caption)>*>* {
+            padding: 0.85rem 0.85rem;
+            /* background-color: var(--bs-table-bg); */
+            border-bottom-width: 1px;
+            box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+        }
+        
         body {
             margin: 0;
             font-family: var(--bs-body-font-family);
@@ -1915,7 +1922,7 @@
         
         .table> :not(caption)>*>* {
             padding: 0.85rem 0.85rem;
-            background-color: var(--bs-table-bg);
+            /* background-color: var(--bs-table-bg); */
             border-bottom-width: 1px;
             box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
         }
@@ -5219,7 +5226,7 @@
             --bs-card-spacer-x: 1.5rem;
             --bs-card-title-spacer-y: 0.875rem;
             --bs-card-border-width: 1px;
-            --bs-card-border-color: #000;
+            --bs-card-border-color: #000000;
             --bs-card-border-radius: 1.4rem;
             --bs-card-inner-border-radius: calc(0.25rem - 1px);
             --bs-card-cap-padding-y: 0.875rem;
@@ -5256,7 +5263,7 @@
             --bs-card-spacer-x: 1.5rem;
             --bs-card-title-spacer-y: 0.875rem;
             --bs-card-border-width: 1px;
-            --bs-card-border-color: #000;
+            --bs-card-border-color: #198754;
             --bs-card-border-radius: 1.4rem;
             --bs-card-inner-border-radius: calc(0.25rem - 1px);
             --bs-card-cap-padding-y: 0.875rem;
@@ -8068,7 +8075,7 @@
         }
         
         .border {
-            border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         
         .border-0 {
@@ -20678,6 +20685,11 @@
             flex-grow: 1;
             padding: 25px;
             margin-top: 60px;
+            user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -o-user-select: none;
         }
         
         .main-wrapper .page-wrapper .page-contents {
@@ -20689,6 +20701,11 @@
         @media (max-width: 767px) {
             .main-wrapper .page-wrapper .page-content {
                 padding: 50px 15px;
+                user-select: none;
+                -moz-user-select: none;
+                -khtml-user-select: none;
+                -webkit-user-select: none;
+                -o-user-select: none;
             }
         }
         
@@ -20706,6 +20723,11 @@
         
         .main-wrapper .page-wrapper.full-page .page-content {
             margin-top: 0;
+            user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -o-user-select: none;
         }
         
         @media (max-width: 991px) {
@@ -20723,16 +20745,31 @@
             overflow-y: auto;
             border-left: 1px solid #172340;
             display: none;
+            user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -o-user-select: none;
         }
         
         @media (min-width: 1200px) {
             .page-content .content-nav-wrapper {
                 display: block;
+                user-select: none;
+                -moz-user-select: none;
+                -khtml-user-select: none;
+                -webkit-user-select: none;
+                -o-user-select: none;
             }
         }
         
         .page-content .content-nav-wrapper .content-nav {
             padding: 0px 25px;
+            user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -o-user-select: none;
         }
         
         .page-content .content-nav-wrapper .content-nav .nav-item .nav-link {
@@ -20742,6 +20779,11 @@
             color: #7987a1;
             display: flex;
             align-items: center;
+            user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -o-user-select: none;
         }
         
         .navbar {

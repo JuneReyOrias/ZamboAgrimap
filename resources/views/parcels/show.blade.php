@@ -1,7 +1,8 @@
 @extends('admin.dashb')
 @section('admin')
 
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 <div class="page-content">
 
     <nav class="page-breadcrumb">
@@ -10,8 +11,7 @@
    
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
-          
+        <div class="card border rounded">
           <div class="card-body">
             @if (session('message'))
             <div class="alert alert-success" role="alert">
@@ -24,11 +24,11 @@
                 <a  href="{{route('parcels.new_parcels')}}"button  class="btn btn-success me-md-2">Add New Polygon</button></a></p>
               
               </div>   
-            <h6 class="card-title"><span>I.</span>Personal Information</h6>
-  
+            <h4 class="mb-3 mb-md-0">Parcellary Boarders</h4>
+              <br>
          <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
            <div class="table-responsive tab ">
-            <table class="table table table-info">
+            <table class="table table-bordered datatable">
                 <thead class="thead-light">
                     <tr >
                       <th>No.</th>
@@ -67,6 +67,7 @@
                         <th>Point 11 lng</th>
                         <th>Point 12 lat</th>
                         <th>Point 12 lng</th>
+                        <th>Area</th>
                         <th>created</th>
                         <th>updated</th>
                         <th>Action</th>

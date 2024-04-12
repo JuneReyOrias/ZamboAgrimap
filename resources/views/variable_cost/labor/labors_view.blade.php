@@ -1,7 +1,8 @@
 @extends('admin.dashb')
 @section('admin')
 
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 
 <div class="page-content">
 
@@ -22,15 +23,15 @@
                
             @endif
             <h6 class="card-title"><span>V.</span>Variable Cost</h6>
-            <h5 class="card-title"><span>b.</span>labors</h5>
+           <br><br> <h5 class="card-title"><span>b.</span>labors</h5>
             
-       
+       <br><br>
             <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
          
           
           
             <div class="table-responsive tab ">
-                <table class="table table table-info">
+                <table class="table table bordered datatable">
                     <thead class="thead-light">
                         <tr >
                             <th>No.</th>

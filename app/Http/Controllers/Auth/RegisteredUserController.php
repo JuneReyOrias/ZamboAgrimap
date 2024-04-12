@@ -31,51 +31,47 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterRequest $request): RedirectResponse
     { 
-         try{
-        // dd($request->all());
-        $data= $request->validated();
-        $data= $request->all();
-        $users= User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'agri_district' => $request->input('agri_district'),
-            'password' => $request->input('password'),
-            'role' => $request->input('role'),
-           
-        ]);
-       
-        $users->save();
-        return redirect('/login')->with('message','Registered uccesssfully');
+        try {
+            // Fetch validated data directly into $data
+            $data = $request->validated();
+            
+            $user = new User;
+            $user->name = $request['name'];
+            $user->email = $request['email'];
+            $user->agri_district = $request['agri_district'];
+            $user->password = bcrypt($request['password']); // Hash the password for security
+            $user->role = $request['role'];
+            // dd($data);
+            $user->save();
+            
+            return redirect('/login')->with('message', 'Registered successfully');
+        } catch(\Exception $ex) {
+            dd($ex);
+            return redirect('/register')->with('message', 'Something went wrong');
+        }
+    }
     
+ 
+    // // {
+    // //     $request->validate([
+    // //         'name' => ['required', 'string', 'max:255'],
+    // //         'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+    // //         'agri_district' => ['required', 'string', 'max:255'],
+    // //         'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    // //         'role' => ['required', 'string', 'max:255'],
+    // //     ]);
+
+    // //     $user = User::create([
+    // //         'name' => $request->name,
+    // //         'email' => $request->email,
+    // //         'agri_district' => $request->agri_district,
+    // //         'password' => Hash::make($request->password),
+    // //         'role' => $request->role,
+    // //     ]);
+
+    // //     event(new Registered($user));
+
+    // //     Auth::login($user);
+
+    // //     return redirect(RouteServiceProvider::HOME);
     }
-    catch(\Exception $ex){
-        // dd($ex);
-        return redirect('/register')->with('message','Someting went wrong');
-    }
-
-    
-    }
-    // {
-    //     $request->validate([
-    //         'name' => ['required', 'string', 'max:255'],
-    //         'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-    //         'agri_district' => ['required', 'string', 'max:255'],
-    //         'password' => ['required', 'confirmed', Rules\Password::defaults()],
-    //         'role' => ['required', 'string', 'max:255'],
-    //     ]);
-
-    //     $user = User::create([
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'agri_district' => $request->agri_district,
-    //         'password' => Hash::make($request->password),
-    //         'role' => $request->role,
-    //     ]);
-
-    //     event(new Registered($user));
-
-    //     Auth::login($user);
-
-    //     return redirect(RouteServiceProvider::HOME);
-    // }
-}

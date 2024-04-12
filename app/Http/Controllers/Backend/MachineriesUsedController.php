@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MachineriesUsedtRequest;
 use App\Http\Requests\UpdateMachineriesUsedRequest;
+use App\Models\LastProductionDatas;
 use App\Models\MachineriesUsed;
 use App\Models\MachineriesUseds;
 use Illuminate\Http\Request;
@@ -45,14 +46,16 @@ class MachineriesUsedController extends Controller
 // machineries used view 
 public function MachineriesVieew(){
     $machineries= MachineriesUseds::orderBy('id','desc')->paginate(20);
-    return view('machineries_used.machine_create',compact('machineries'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('machineries_used.machine_create',compact('machineries','totalRiceProduction'));
 }
 
 
 // fixed cost update
 public function editMachineries($id){
    $machineries=MachineriesUseds::find($id);
-    return view('machineries_used.machine_edit',compact('machineries'));
+   $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('machineries_used.machine_edit',compact('machineries','totalRiceProduction'));
 }
 
 
@@ -94,12 +97,12 @@ public function updateMachineries(MachineriesUsedtRequest $request,$id)
         $data->save();     
         
     
-        return redirect('/view-machineries-used')->with('message','Machineries Used Data Updated successsfully');
+        return redirect('/admin-view-machineries-used')->with('message','Machineries Used Data Updated successsfully');
     
     }
     catch(\Exception $ex){
         // dd($ex); // Debugging statement to inspect the exception
-        return redirect('/edit-machineries-used/{machineries}')->with('message','Someting went wrong');
+        return redirect('/admin-edit-machineries-used/{machineries}')->with('message','Someting went wrong');
         
     }   
 } 

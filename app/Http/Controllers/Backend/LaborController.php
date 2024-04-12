@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\laborRequest;
 use App\Models\Labor;
+use App\Models\LastProductionDatas;
 use Illuminate\Http\Request;
 
 class LaborController extends Controller
@@ -18,7 +19,8 @@ class LaborController extends Controller
     }
     public function LaborsVar(){
         $pesticides= Labor::all();
-    return view('variable_cost.labor.labor_store',compact('pesticides'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.labor.labor_store',compact('pesticides','totalRiceProduction'));
     }
     /**
      * Show the form for creating a new resource.
@@ -38,11 +40,11 @@ class LaborController extends Controller
             $data= $request->all();
             Labor::create($data);
     
-            return redirect('/fertilizer')->with('message','Labors data added successsfully');
+            return redirect('/admin-fertilizer')->with('message','Labors data added successsfully');
         
         }
         catch(\Exception $ex){
-            return redirect('/labor')->with('message','Someting went wrong');
+            return redirect('/admin-labor')->with('message','Someting went wrong');
         }
     }
 
@@ -52,7 +54,8 @@ class LaborController extends Controller
 
 public function laborView(){
     $labors= Labor::orderBy('id','desc')->paginate(10);
-    return view('variable_cost.labor.labors_view',compact('labors'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.labor.labors_view',compact('labors','totalRiceProduction'));
 }
 
 
@@ -61,7 +64,8 @@ public function laborView(){
 
 public function editlabor($id){
     $labors= Labor::find($id);
-    return view('variable_cost.labor.labors_edit',compact('labors'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.labor.labors_edit',compact('labors','totalRiceProduction'));
 }
 
 public function updateslabor(LaborRequest $request,$id)
@@ -83,12 +87,12 @@ public function updateslabor(LaborRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/view-variable-cost-labor')->with('message','Labor Data Updated successsfully');
+       return redirect('/admin-view-variable-cost-labor')->with('message','Labor Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('/update-variable-cost-labor/{labors}')->with('message','Someting went wrong');
+       return redirect('/admin-update-variable-cost-labor/{labors}')->with('message','Someting went wrong');
        
    }   
 } 

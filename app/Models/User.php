@@ -69,7 +69,7 @@ class User extends Authenticatable
     }
     public function parcellaryboundaries()
     {
-        return $this->hasMany(ParcelBoarder::class,'id','users_id');
+        return $this->hasMany(ParcellaryBoundaries::class,'id','users_id');
     }
     public function riceboarders()
     {
@@ -79,6 +79,14 @@ class User extends Authenticatable
     {
         return $this->getKey();
     }
+
+  // Define the relationship with AgriDistrict
+  public function agriDistrict()
+  {
+      return $this->belongsTo(AgriDistrict::class, 'agri_districts_id');
+  }
+
+
     // The 'boot' method to automatically load personalInformations after user creation
     protected static function boot()
     {

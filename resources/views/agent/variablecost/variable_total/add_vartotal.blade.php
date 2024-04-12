@@ -1,7 +1,8 @@
 
 @extends('agent.agent_Dashboard')
 @section('agent') 
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 <div class="page-content">
 
     <nav class="page-breadcrumb">
@@ -13,7 +14,7 @@
     </div> --}}
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
+        <div class="card border rounded">
      
           <div class="card-body">
             {{-- @if($errors->any())
@@ -88,7 +89,7 @@
 
             @endphp
                 
-                <input type="hidden" id="pesticides_id" class="form-control mb-4 mb-md-0" name="total_cost_fertilizers" i value="{{ $pesticide->total_cost_pesticides}}">
+                <input type="hidden" id="pesticides_id" class="form-control mb-4 mb-md-0" name="total_cost_pesticides" i value="{{ $pesticide->total_cost_pesticides}}">
                  
               </div>
    {{-- hidden id of delivery cost to fetch to total variable cost--}}
@@ -148,10 +149,10 @@
              $seed= App\Models\Seed::find($id)->latest()->first();
 
               @endphp
-                  <label class="form-expand" for="seeds_id">Total Seed Cost:</label>
+                  <label class="form-expand" for="seeds_id">Total Seed Cost(PHP):</label>
                   <select  class="form-control mb-4 mb-md-0" name="seeds_id" aria-label="seeds_id">
                     {{-- @foreach ( $seed->sortByDesc('id') as  $seed) --}}
-                            <option  value="{{ $seed->id }}">{{ $seed->total_seed_cost }}</option>
+                            <option  value="{{ $seed->id }}">{{ number_format($seed->total_seed_cost,2) }}</option>
                         {{-- @endforeach --}}
                     </select>
                 </div>
@@ -165,10 +166,10 @@
               $labor= App\Models\Labor::find($id)->latest()->first();
 
               @endphp
-                  <label class="form-expand" for="labors_id">Total Labor Cost:</label>
+                  <label class="form-expand" for="labors_id">Total Labor Cost(PHP):</label>
                   <select  class="form-control mb-4 mb-md-0" name="labors_id" aria-label="labors_id">
                     {{-- @foreach ( $labor as  $labor) --}}
-                            <option value="{{ $labor->id }}">{{ $labor->total_labor_cost}}</option>
+                            <option value="{{ $labor->id }}">{{ number_format($labor->total_labor_cost,2)}}</option>
                         {{-- @endforeach --}}
                     </select>
                 </div>
@@ -182,10 +183,10 @@
               $fertilize= App\Models\Fertilizer::find($id)->latest()->first();
 
               @endphp
-                  <label class="form-expand" for="fertilizers_id">Total Fertilizers Cost:</label>
+                  <label class="form-expand" for="fertilizers_id">Total Fertilizers Cost(PHP):</label>
                   <select  class="form-control mb-4 mb-md-0" name="fertilizers_id" aria-label="fertilizers_id">
                     {{-- @foreach ($profile->sortByDesc('id') as $location) --}}
-                        <option  value="{{ $fertilize->id }}">{{ $fertilize->total_cost_fertilizers	}}</option>
+                        <option  value="{{ $fertilize->id }}">{{ number_format($fertilize->total_cost_fertilizers,2)	}}</option>
                     {{-- @endforeach --}}
                 </select>
                 </div>
@@ -199,10 +200,10 @@
               $pesticide= App\Models\Pesticide::find($id)->latest()->first();
 
               @endphp
-                  <label class="form-expand" for="pesticides_id">Total Pesticides Cost:</label>
+                  <label class="form-expand" for="pesticides_id">Total Pesticides Cost(PHP):</label>
                   <select class="form-control mb-4 mb-md-0" name="pesticides_id" aria-label="pesticides_id">
                     {{-- @foreach ( $farmprofile->sortByDesc('id') as  $farmprofile) --}}
-                            <option value="{{ $pesticide->id }}">{{ $pesticide->total_cost_pesticides }}</option>
+                            <option value="{{ $pesticide->id }}">{{ number_format($pesticide->total_cost_pesticides,2) }}</option>
                         {{-- @endforeach --}}
                     </select>
                 </div>
@@ -215,10 +216,10 @@
               $transport = App\Models\Transport::find($id)->latest()->first();
 
               @endphp
-                  <label class="form-expand" for="transports_id">Total Delivery Cost:</label>
+                  <label class="form-expand" for="transports_id">Total Delivery Cost(PHP):</label>
                   <select class="form-control mb-4 mb-md-0" name="transports_id" aria-label="transports_id">
                   
-                        <option value="{{ $transport->id }}">{{ $transport->total_transport_per_deliverycost }}</option>
+                        <option value="{{ $transport->id }}">{{ number_format($transport->total_transport_per_deliverycost,2) }}</option>
                  
                 </select>
                 </div>
@@ -286,5 +287,31 @@ document.getElementById('total_machinery_fuel_cost').addEventListener('input', c
 calculateTotalVariableCost();
 
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  //  total FUEL cost in decimal formats
+document.addEventListener('DOMContentLoaded', function() {
+  // Get input elements
+  const totalLaborCostInput = document.getElementById('total_machinery_fuel_cost');
 
+
+  // Add event listeners for input events
+  total_machinery_fuel_cost.addEventListener('input', formatDecimal);
+ 
+
+  // Function to format input values as decimal
+  function formatDecimal(event) {
+      const input = event.target;
+      // Get the input value
+      let value = input.value;
+      // Remove any non-numeric characters and leading zeroes
+      value = value.replace(/[^0-9.]/g, '');
+      // Format the value as a decimal number
+      value = parseFloat(value).toFixed(2);
+      // Update the input value
+      input.value = value;
+  }
+  
+});
+</script>
   @endsection

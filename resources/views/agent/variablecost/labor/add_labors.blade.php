@@ -49,7 +49,7 @@
               </div>
 
               <div class="col-md-3 mb-3">
-                <label class="form-expand" for="rate_per_person">Rate per Person:</label>
+                <label class="form-expand" for="rate_per_person">Rate per Person(PHP):</label>
                 <input type="text" class="form-control placeholder-text @error('rate_per_person') is-invalid @enderror" name="rate_per_person" id="unitPriceInput" placeholder="Enter rate/person" value="{{ old('rate_per_person') }}" >
                 @error('rate_per_person')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -57,7 +57,7 @@
               </div>
 
               <div class="col-md-3 mb-3">
-                <label class="form-expand" for="total_labor_cost">Total Labor Cost:</label>
+                <label class="form-expand" for="total_labor_cost">Total Labor Cost(PHP):</label>
                 <input type="text" class="form-control placeholder-text @error('total_labor_cost') is-invalid @enderror" name="total_labor_cost" id="totalLaborCostInput" placeholder="Enter total labor cost" value="{{ old('total_labor_cost') }}" >
                 @error('total_labor_cost')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -103,7 +103,30 @@
 
     // Attach event listeners to trigger calculation on input change
     document.getElementById("quantityInput").addEventListener("input", calculateTotalLaborCost);
-    document.getElementById("unitPriceInput").addEventListener("input", calculateTotalLaborCost);
+   
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // Get input elements
+    const unitPriceInput = document.getElementById('unitPriceInput');
+
+    // Add event listeners for input events
+    unitPriceInput.addEventListener('input', formatDecimal);
+  
+
+    // Function to format input values as decimal
+    function formatDecimal(event) {
+        const input = event.target;
+        // Get the input value
+        let value = input.value;
+        // Remove any non-numeric characters and leading zeroes
+        value = value.replace(/[^0-9.]/g, '');
+        // Format the value as a decimal number
+        value = parseFloat(value).toFixed(2);
+        // Update the input value
+        input.value = value;
+    }
+        
+});
 </script>
   
   

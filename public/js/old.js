@@ -3,6 +3,9 @@ let markers = []; // Global array to track markers
 let polygons = []; // Global array to track markers
 let infoWindows = []; // Global array to track info windows
 let parcels = []; // Global array to track markers
+let parcelary = [];
+let kmlLayer = [];
+
 function initMap() {
     // Create LatLng objects for different locations
     let map; // Global map variable
@@ -80,7 +83,7 @@ function initMap() {
             home_address, nameof_farmers_ass_org_coops, tenurial_status, no_of_years_as_farmers, land_title_no,
             lot_no, area_prone_to, ecosystem, type_rice_variety, prefered_variety, plant_schedule_wetseason,
             plant_schedule_dryseason, no_of_cropping_yr, yield_kg_ha, source_of_capital, rsba_register,
-            pcic_insured, government_assisted, sex, total_physical_area_has, rice_area_cultivated_has, description, ) {
+            pcic_insured, government_assisted, sex, total_physical_area_has, rice_area_cultivated_has, description, agri_district, rice_farm_address, city) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.location_name = district;
@@ -110,6 +113,9 @@ function initMap() {
             this.total_physical_area_has = total_physical_area_has;
             this.rice_area_cultivated_has = rice_area_cultivated_has;
             this.description = description;
+            this.agri_district = agri_district;
+            this.rice_farm_address = rice_farm_address;
+            this.city = city;
 
 
 
@@ -144,6 +150,9 @@ function initMap() {
         let cropping = location.getAttribute("data-cropping")
         let yieldha = location.getAttribute("data-yieldha")
         let capital = location.getAttribute("data-capital")
+        let agrDistrict = location.getAttribute("data-agrDistrict")
+        let farmAddress = location.getAttribute("data-farmAddress")
+        let farmCity = location.getAttribute("data-farmCity")
         let description = location.getAttribute("data-description")
 
         let rsba = location.getAttribute("data-rsba")
@@ -154,7 +163,8 @@ function initMap() {
         let cultivated_has = location.getAttribute("data-cultivated_has")
         listOfFarm.push(new farmdistricts(parseFloat(lat), parseFloat(long), loc, parseFloat(farm_lat), parseFloat(farm_long), last, mother, address,
             farm_org, status, parseFloat(years), landtitle, lotno, areaprone, ecosystem, typevariety,
-            prefered, wetseason, dryseason, cropping, yieldha, capital, rsba, pcic, assisted, sex, area_has, cultivated_has, description));
+            prefered, wetseason, dryseason, cropping, yieldha, capital, rsba, pcic, assisted, sex, area_has, cultivated_has, description,
+            agrDistrict, farmAddress, farmCity));
     })
 
     //polygons
@@ -310,7 +320,7 @@ function initMap() {
             parseFloat(pareightlat), parseFloat(pareightlong), parseFloat(parninelat), parseFloat(parninelong),
             parseFloat(partenlat), parseFloat(partenlong), parseFloat(parelevenlat), parseFloat(parelevenlong),
             parseFloat(paronetwelvelat), parseFloat(partwelvelong), parcolors, parname, arpowner_na, brgy_name, lot_no, pkind_desc,
-            puse_desc, actual_used, tct_no
+            puse_desc, actual_used, tct_no,
         ));
     })
     const locationZC = { lat: 6.9214, lng: 122.0790 }; // ZAMBOANGA CITY LATLANG
@@ -370,13 +380,14 @@ function initMap() {
         const userRole = getCurrentUserRole();
         let editButton = '';
 
-        if (userRole === 'agent' || userRole === 'admin') {
-            editButton = `<button onclick="editFarm(${farm.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
-        }
+
         return `
-        <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        
+        <div  style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
 
         <h4 style="margin-bottom: 10px;Align-tex:center;">Farmer Informations</h4>
+        <div class="table-responsive">
+
         <table style="width:100%; border-collapse: collapse;">
         <tr style="background-color: #c6e2ff;">
             <td style="padding: 8px;"><strong>FullName:</strong></td>
@@ -391,8 +402,8 @@ function initMap() {
         <td style="padding: 8px;">${farm.sex}</td>
     </tr>
         <tr style="background-color: #eaf7fa;">
-            <td style="padding: 8px;"><strong>Home Address:</strong></td>
-            <td style="padding: 8px;">${farm.home_address}</td>
+            <td style="padding: 8px;"><strong>Farm Address:</strong></td>
+            <td style="padding: 8px;">${farm.city}</td>
         </tr>
         <tr style="background-color:#c6e2ff;">
             <td style="padding: 8px;"><strong>Tenurial Status:</strong></td>
@@ -472,8 +483,12 @@ function initMap() {
         <td style="padding: 8px;">${farm.rice_area_cultivated_has}</td>
         </tr>
     </table>
+    </div>
     ${editButton} 
     </div>
+    </div>
+        
+        </div>
         `;
     }
 
@@ -517,57 +532,85 @@ function initMap() {
         if (userRole === 'agent' || userRole === 'admin') {
             editButton = `<button onclick="editFarm(${parcelary.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
         }
+
         return `
         <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-
-        <h4 style="margin-bottom: 10px;Align-tex:center;">Parcel Boarders</h4>
-        <table style="width:100%; border-collapse: collapse;">
-                <tr style="background-color: #c6e2ff;">
-                    <td style="padding: 8px;"><strong>ParcelName:</strong></td>
-                    <td style="padding: 8px;">${parcelary.parcel_name}</td>
-                </tr>
-                <tr style="background-color:#eaf7fa;">
-                    <td style="padding: 8px; "><strong>ARPOwner Name:</strong></td>
-                    <td style="padding: 8px;">${parcelary.arpowner_na}</td>
-                </tr>
-                <tr style="background-color: #c6e2ff;">
-                <td style="padding: 8px;"><strong>Brgy. Name:</strong></td>
-                <td style="padding: 8px;">${parcelary.brgy_name}</td>
-                </tr>
-                <tr style="background-color:#eaf7fa;">
-                <td style="padding: 8px; "><strong>Land Title no.:</strong></td>
-                <td style="padding: 8px;">${parcelary.tct_no}</td>
-            </tr>
-            <tr style="background-color: #c6e2ff;">
-            <td style="padding: 8px;"><strong>Lot No.:</strong></td>
-            <td style="padding: 8px;">${parcelary.lot_no}</td>
-            </tr>
-                <tr style="background-color: #eaf7fa;">
-                <td style="padding: 8px;"><strong>Pkind Desc:</strong></td>
-                <td style="padding: 8px;">${parcelary.pkind_desc}</td>
-                </tr>
-                <tr style="background-color:#c6e2ff;">
-                <td style="padding: 8px; "><strong>Pused Desc:</strong></td>
-                <td style="padding: 8px;">${parcelary.puse_desc}</td>
-                </tr>
-                <tr style="background-color:#eaf7fa;">
-                <td style="padding: 8px;"><strong>Actual Used:</strong></td>
-                <td style="padding: 8px;">${parcelary.actual_used}</td>
-                </tr>
-               
-    </table>
-    ${editButton} 
-    </div>
-        `;
+            <h4 style="margin-bottom: 10px; text-align: center;">Farmer Information</h4>
+            <div class="table-responsive">
+                <table style="width:100%; border-collapse: collapse;">
+                    <tr style="background-color: #c6e2ff;">
+                        <td style="padding: 8px;"><strong>Parcel Name:</strong></td>
+                        <td style="padding: 8px;">${parcelary.parcel_name}</td>
+                    </tr>
+                    <tr style="background-color:#eaf7fa;">
+                        <td style="padding: 8px; "><strong>ARPOwner Name:</strong></td>
+                        <td style="padding: 8px;">${parcelary.arpowner_na}</td>
+                    </tr>
+                    <tr style="background-color: #c6e2ff;">
+                        <td style="padding: 8px;"><strong>Brgy. Name:</strong></td>
+                        <td style="padding: 8px;">${parcelary.brgy_name}</td>
+                    </tr>
+                    <tr style="background-color:#eaf7fa;">
+                        <td style="padding: 8px; "><strong>Land Title No.:</strong></td>
+                        <td style="padding: 8px;">${parcelary.tct_no}</td>
+                    </tr>
+                    <tr style="background-color: #c6e2ff;">
+                        <td style="padding: 8px;"><strong>Lot No.:</strong></td>
+                        <td style="padding: 8px;">${parcelary.lot_no}</td>
+                    </tr>
+                    <tr style="background-color: #eaf7fa;">
+                        <td style="padding: 8px;"><strong>Pkind Desc:</strong></td>
+                        <td style="padding: 8px;">${parcelary.pkind_desc}</td>
+                    </tr>
+                    <tr style="background-color:#c6e2ff;">
+                        <td style="padding: 8px; "><strong>Pused Desc:</strong></td>
+                        <td style="padding: 8px;">${parcelary.puse_desc}</td>
+                    </tr>
+                    <tr style="background-color:#eaf7fa;">
+                        <td style="padding: 8px;"><strong>Actual Used:</strong></td>
+                        <td style="padding: 8px;">${parcelary.actual_used}</td>
+                    </tr>
+                </table>
+            </div>
+            ${editButton} 
+        </div>`;
     }
-    // Access the KML file name from the global window object
 
-    // Add this code for the KML layer (if needed)
-    const kmlLayer = new google.maps.KmlLayer({
-        url: `/storage/kml_folder/{{ $fileName }}`,
-        map: map,
-        preserveViewport: true
-    });
+    // Access the KML file name from the global window object
+    // Fetch KML/KMZ files from the server
+    // Load KML/KMZ file and add to map
+
+    // Create the map instance
+    ;
+
+    // Fetch KML content from server
+
+    // const fetchUrl = `/map/arcmap`; // URL to fetch KML content
+
+    // Parse and add polygons
+    function uploadFile() {
+        var formData = new FormData();
+        var fileInput = document.getElementById("file");
+        var file = fileInput.files[0];
+        formData.append("file", file);
+
+        fetch("/kml-import", {
+                method: "POST",
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Parse the KML/KMZ file and display on the map
+                var kmlLayer = new google.maps.KmlLayer({
+                    url: data.file_path,
+                    map: map,
+                });
+            })
+            .catch(error => console.error("Error:", error));
+
+    }
+
+
     // URL image of markers pin
     const imagefarmers = "../assets/images/mappin.png";
     //farmers pin locations

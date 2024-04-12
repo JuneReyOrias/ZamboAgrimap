@@ -1,7 +1,8 @@
 @extends('admin.dashb')
 @section('admin')
 
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 <div class="page-content">
 
   <nav class="page-breadcrumb">
@@ -10,7 +11,7 @@
  
   <div class="row">
     <div class="col-md-12 grid-margin">
-      <div class="card">
+      <div class="card border rounded">
         
         <div class="card-body">
           <div class="card-body">

@@ -1,16 +1,17 @@
 
 @extends('agent.agent_Dashboard')
 @section('agent') 
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 <div class="page-content">
 
     <nav class="page-breadcrumb">
   
     </nav>
-   
+    <div id="personal_info_section"class="table-section">
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
+        <div class="card border rounded">
           
           <div class="card-body">
             @if (session('message'))
@@ -20,11 +21,11 @@
             </div>
                
             @endif
-            <h6 class="card-title"><span>I.</span>Personal Information</h6>
+            <h4 class="mb-3 mb-md-0">Personal Informations</h4> <br>
   
          <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
            <div class="table-responsive tab ">
-            <table class="table table table-info">
+            <table class="table table-bordered datatable">
                 <thead class="thead-light">
                     <tr >
                         <th>Farmer No.</th>
@@ -63,7 +64,7 @@
                         <td>{{  $personalinformation->middle_name }}</td>
                         <td>{{  $personalinformation->last_name }}</td>
                         <td>{{  $personalinformation->extension_name }}</td>
-                        <td>{{  $personalinformation->home_address}}</td>
+                        <td>{{  $personalinformation->barangay.' ,'.$personalinformation->agri_district.' ,'.$personalinformation->city}}</td>
                         <td>{{  $personalinformation->sex }}</td>
                         <td>{{  $personalinformation->religion }}</td>
                         <td>{{  $personalinformation->date_of_birth }}</td>
@@ -86,10 +87,10 @@
   
                         <td>
                            
-                             <a href="{{route('agent.personal_info.update_records',  $personalinformation->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                             <a href="{{route('agent.personal_info.update_records',  $personalinformation->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                   <form  action="{{ route('agent.personal_info.delete', $personalinformation->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                     @csrf
-                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                            
                             </form>
                             {{-- <div class="col-sm">

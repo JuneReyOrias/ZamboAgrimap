@@ -1,6 +1,7 @@
 @extends('admin.dashb')
 @section('admin')
-
+@extends('layouts._footer-script')
+@extends('layouts._head')
 
 <div class="page-content">
 
@@ -10,8 +11,7 @@
    
     <div class="row">
       <div class="col-md-12 grid-margin">
-        <div class="card">
-          
+        <div class="card border rounded">
           <div class="card-body">
             @if (session('message'))
             <div class="alert alert-success" role="alert">
@@ -20,11 +20,11 @@
             </div>
                
             @endif
-            <h6 class="card-title"><span>I.</span>Personal Information</h6>
-  
+            <h6 class="card-title"><span>I.</span>Personal Information (View, Edit, Delete)</h6>
+            <br><br>
          <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
            <div class="table-responsive tab ">
-            <table class="table table table-info">
+            <table class="table table-bordered datatable">
                 <thead class="thead-light">
                     <tr >
                       <th>No.</th>
@@ -65,7 +65,7 @@
                         <td>{{  $personalinformation->middle_name }}</td>
                         <td>{{  $personalinformation->last_name }}</td>
                         <td>{{  $personalinformation->extension_name }}</td>
-                        <td>{{  $personalinformation->home_address}}</td>
+                        <td>{{  $personalinformation->barangay.','. $personalinformation->agri_district.','. $personalinformation->city}}</td>
                         <td>{{  $personalinformation->sex }}</td>
                         <td>{{  $personalinformation->religion }}</td>
                         <td>{{  $personalinformation->date_of_birth }}</td>

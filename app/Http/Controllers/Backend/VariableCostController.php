@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VariableCostRequest;
+use App\Models\LastProductionDatas;
 use App\Models\VariableCost;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,8 @@ class VariableCostController extends Controller
     }
     public function VariableForms(){
         $variablecost= VariableCost::all();
-    return view('variable_cost.variable_index',compact('variablecost'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.variable_index',compact('variablecost','totalRiceProducion'));
     }
     /**
      * Show the form for creating a new resource.
@@ -61,11 +63,11 @@ class VariableCostController extends Controller
                 $data= $request->all();
                VariableCost::create($data);
         
-                return redirect('/production')->with('message','Variable Cost added successsfully');
+                return redirect('/admin-lastproduction-data')->with('message','Variable Cost added successsfully');
             
             }
             catch(\Exception $ex){
-                return redirect('/variable')->with('message','Someting went wrong');
+                return redirect('/admin-variablecost')->with('message','Someting went wrong');
             }
         }
     }
@@ -74,7 +76,8 @@ class VariableCostController extends Controller
 // varaible cost view, edit, update and delete access by agent
 public function  varView(){
     $variable= VariableCost::orderBy('id','desc')->paginate(10);
-    return view('variable_cost.var_show',compact('variable'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.var_show',compact('variable','totalRiceProduction'));
 }
 
 
@@ -83,7 +86,8 @@ public function  varView(){
 
 public function editvar($id){
    $variable= VariableCost::find($id);
-    return view('variable_cost.var_update',compact('variable'));
+   $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.var_update',compact('variable','totalRiceProduction'));
 }
 
 public function updatesvar(VariableCostRequest $request,$id)
@@ -114,12 +118,12 @@ public function updatesvar(VariableCostRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/view-variable-cost')->with('message','Variable Cost Data Updated successsfully');
+       return redirect('/admin-view-variable-cost')->with('message','Variable Cost Data Updated successsfully');
    
    }
    catch(\Exception $ex){
        dd($ex); // Debugging statement to inspect the exception
-       return redirect('/edit-variable-cost/{variable}')->with('message','Someting went wrong');
+       return redirect('/admin-edit-variable-cost/{variable}')->with('message','Someting went wrong');
        
    }   
 } 

@@ -46,15 +46,52 @@
                
          
                 <div class="col-md-3 mb-3">
-                  <label class="form-expand" for="name_of_fertilizer">Name Of Ferilizer:</label>
-                  <input type="text" class="form-control placeholder-text " name="name_of_fertilizer" id="validationCustom01" placeholder=" Enter fertilizer name" value="{{ old('name_of_fertilizer') }}" >
-                </div>
-                  <div class="col-md-3 mb-3">
-                    <label class="form-expand" for="type_of_fertilizer">Type of Fertilizer:</label>
-                    <input type="text" class="form-control placeholder-text @error('type_of_fertilizer') is-invalid @enderror" name="type_of_fertilizer" id="validationCustom01" placeholder="Enter type fertilizer" value="{{ old('type_of_fertilizer') }}" >
-                 
-                  </div>
+                  <label class="form-expand" for="name_of_fertilizer">Name Of Fertilizer:</label>
+                  
                
+                <select class="form-control placeholder-text @error('name_of_fertilizer') is-invalid @enderror" name="name_of_fertilizer" id="selectpostharvest" onchange="checkpostharvest()" aria-label="label select e">
+                  <option selected disabled>Select</option>
+                  <option value="Nitrogen Fertilizers" {{ old('name_of_fertilizer') == 'Nitrogen Fertilizers' ? 'selected' : '' }}>Nitrogen Fertilizers</option>
+                  <option value="Phosphorus Fertilizers" {{ old('name_of_fertilizer') == 'Phosphorus Fertilizers' ? 'selected' : '' }}>Phosphorus Fertilizers</option>
+                  <option value="Potassium Fertilizers" {{ old('name_of_fertilizer') == 'Potassium Fertilizers' ? 'selected' : '' }}>Potassium Fertilizers</option>
+                  <option value="Compound Fertilizers" {{ old('name_of_fertilizer') == 'Compound Fertilizers' ? 'selected' : '' }}>Compound Fertilizers</option>
+                  <option value="Organic Fertilizers" {{ old('name_of_fertilizer') == 'Organic Fertilizers' ? 'selected' : '' }}>Organic Fertilizers</option>
+                  <option value="Slow-Release Fertilizers" {{ old('name_of_fertilizer') == 'Slow-Release Fertilizers' ? 'selected' : '' }}>Slow-Release Fertilizers</option>
+                  <option value="Micronutrient Fertilizers" {{ old('name_of_fertilizer') == 'Micronutrient Fertilizers' ? 'selected' : '' }}>Micronutrient Fertilizers</option>
+                  <option value="Liquid Fertilizers" {{ old('name_of_fertilizer') == 'Liquid Fertilizers' ? 'selected' : '' }}>Liquid Fertilizers</option>
+                  <option value="other" {{ old('name_of_fertilizer') == 'other' ? 'selected' : '' }}>other</option>
+                 
+                </select>
+                
+              </div>
+              <div class="col-md-3 mb-3" id="additionalFertilizerField" style="display: none;">
+                <label class="form-expand" for="additionalFertilizer">Add Prefer Name Of Fertilizer</label>
+                <input type="text" class="form-control" name="additionalFertilizer" id="additionalFertilizer"placeholder="Enter fertilizer name">
+            </div>
+
+              {{-- SELECT TYPE OF FERTILIZER --}}
+              <div class="col-md-3 mb-3" id="fertilizerInput" style="display: none;">
+                <label class="form-expand" for="type_of_fertilizer">Type of Fertilizer</label>
+                <select class="form-control" name="type_of_fertilizer" id="SelectFertilizer">
+                  <option selected disabled>Select</option>
+                    <!-- Options will be dynamically populated based on the selected fertilizer category -->
+                </select>
+              </div>
+              
+           
+                {{-- add new postharvest Machineries used --}}
+                <div class="col-md-3 mb-3" id="preferFertilizerinput" style="display: none;">
+                  <label for="preferFertilizerinput">Type of Fertilizer</label>
+                  <input type="text" id="preferFertilizerinput" class="form-control placeholder-text @error('type_of_fertilizers') is-invalid @enderror" name="type_of_fertilizers" placeholder=" Enter type of fertilizer" value="{{ old('type_of_fertilizers') }}">
+                  @error('type_of_fertilizers')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+             
+                
+                
+          
+          
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="no_ofsacks">No. of Sacks:</label>
                   <input type="text" class="form-control placeholder-text @error('no_ofsacks') is-invalid @enderror" name="no_ofsacks" id="no_ofsacks" placeholder="Enter no of sacks" value="{{ old('no_ofsacks') }}" >
@@ -64,7 +101,7 @@
                 </div>
                
                 <div class="col-md-3 mb-3">
-                  <label class="form-expand" for="unitprice_per_sacks">Unit Price per sacks:</label>
+                  <label class="form-expand" for="unitprice_per_sacks">Unit Price per sacks(PHP):</label>
                   <input type="text" class="form-control placeholder-text @error('unitprice_per_sacks') is-invalid @enderror" name="unitprice_per_sacks" id="unitprice_per_sacks" placeholder="Enter unit price/sacks" value="{{ old('unitprice_per_sacks') }}" >
                   @error('unitprice_per_sacks')
                   <div class="invalid-feedback">{{ $message }}</div>
@@ -72,7 +109,7 @@
                 </div>
 
                 <div class="col-md-3 mb-3">
-                  <label class="form-expand" for="total_cost_fertilizers">Total Cost Fertilizers:</label>
+                  <label class="form-expand" for="total_cost_fertilizers">Total Cost Fertilizers(PHP):</label>
                   <input type="text" class="form-control placeholder-text @error('total_cost_fertilizers') is-invalid @enderror" name="total_cost_fertilizers" id="total_cost_fertilizers" placeholder="Enter total cost" value="{{ old('total_cost_fertilizers') }}" >
                   @error('total_cost_fertilizers')
                   <div class="invalid-feedback">{{ $message }}</div>
@@ -107,7 +144,7 @@
     
     </div>
   
-  </div>
+  </div> <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     // Get references to the input fields
     const no_ofsacks = document.getElementById('no_ofsacks');
@@ -131,5 +168,160 @@
     
     // Initial calculation when the page loads
     calculateTotalFertilizerCost();
+
+
+
+
+    function populateFertilizers(fertilizerCategory) {
+        var fertilizerSelect = document.getElementById("SelectFertilizer");
+
+        // Clear previous options
+        fertilizerSelect.innerHTML = '';
+
+        // Populate fertilizers based on selected category
+        var fertilizers = [];
+        switch (fertilizerCategory) {
+            case 'Nitrogen Fertilizers':
+                fertilizers = ["Urea", "Ammonium Sulfate (AS)"];
+                break;
+            case 'Phosphorus Fertilizers':
+                fertilizers = ["Diammonium Phosphate (DAP)", "Triple Superphosphate (TSP)"];
+                break;
+            case 'Potassium Fertilizers':
+                fertilizers = ["Potassium Chloride (Muriate of Potash)", "Potassium Sulfate"];
+                break;
+         case 'Compound Fertilizers':
+                fertilizers = ["10-10-10, ", "0-10-10, 14-14-14:"];
+                break;
+        case 'Organic Fertilizers':
+                fertilizers = ["Compost", "Manure", "Fertilizer I"];
+                break;
+        case 'Slow-Release Fertilizers':
+                fertilizers = ["Polymer-Coated Urea", "Controlled-Release Fertilizers"];
+                break;    
+         case 'Micronutrient Fertilizers':
+                fertilizers = ["Foliar Sprays", "Soil Amendments"];
+                break; 
+      
+        case 'Liquid Fertilizers':
+                fertilizers = ["Fertigation Solutions", "Foliar Sprays"];
+                break;
+        case 'other':
+                fertilizers = ["N/A"];
+                break;  
+       
+            // Add cases for other fertilizer categories as needed
+        
+        }
+
+        // Populate dropdown with fertilizers
+        fertilizers.forEach(function(fertilizer) {
+            var option = document.createElement("option");
+            option.text = fertilizer;
+            option.value = fertilizer;
+            fertilizerSelect.appendChild(option); // Append option to select element
+        });
+
+        // Add an option to add new fertilizer
+        var addNewOption = document.createElement("option");
+        addNewOption.text = "Add type of fertilizer";
+        addNewOption.value = "";
+        fertilizerSelect.appendChild(addNewOption);
+    }
+
+    // Function to handle the fertilizer selection
+    function handleFertilizerSelection() {
+        var fertilizerSelect = document.getElementById("SelectFertilizer");
+        var selectedOption = fertilizerSelect.value;
+
+        if (selectedOption === "") {
+            var newFertilizer = prompt("Enter new type of fertilizer:");
+            if (newFertilizer !== null && newFertilizer !== "") {
+                // Add the new fertilizer to the dropdown
+                var option = document.createElement("option");
+                option.text = newFertilizer;
+                option.value = newFertilizer;
+                fertilizerSelect.insertBefore(option, fertilizerSelect.lastChild); // Add option before the last option ("Add New Fertilizer")
+                // Select the newly added fertilizer
+                fertilizerSelect.value = newFertilizer;
+            }
+        }
+    }
+
+    // Function to check selected fertilizer category and display fertilizer input accordingly
+    function checkFertilizer() {
+    var fertilizerCategory = document.getElementById("selectpostharvest").value;
+    var fertilizerInput = document.getElementById("fertilizerInput");
+    var additionalFertilizerField = document.getElementById("additionalFertilizerField");
+    var preferFertilizerinput = document.getElementById("preferFertilizerinput")
+    if (fertilizerCategory !== "other" && fertilizerCategory !== "AdditionalOption") {
+        fertilizerInput.style.display = "block"; // Show fertilizer input
+        additionalFertilizerField.style.display = "none"; // Show additional fertilizer field
+        preferFertilizerinput.style.display = "none"; // Show additional fertilizer field
+        populateFertilizers(fertilizerCategory); // Populate fertilizers based on selected category
+    } 
+    else if (fertilizerCategory === "other") {
+        fertilizerInput.style.display = "none"; // Hide fertilizer input
+        additionalFertilizerField.style.display = "block"; // Show additional fertilizer field
+        preferFertilizerinput.style.display = "block"; // Show additional fertilizer field
+       
+    } 
+    else if (fertilizerCategory === "AdditionalOption") {
+        fertilizerInput.style.display = "none"; // Hide fertilizer input
+        additionalFertilizerField.style.display = "block"; // Show additional fertilizer field
+        preferFertilizerinput.style.display = "none"; // Show additional fertilizer field
+        // Additional actions specific to the Additional Option can be added here
+    }
+    else {
+        fertilizerInput.style.display = "none"; // Hide fertilizer input
+        additionalFertilizerField.style.display = "none"; // Hide additional fertilizer field
+        additionalFertilizerField.style.display = "none"; // Show additional fertilizer field
+    }
+}
+document.getElementById("additionalFertilizer").addEventListener("change", function() {
+        var newTenure = this.value.trim();
+        if (newTenure !== '') {
+          var select = document.getElementById("selectpostharvest");
+          var option = document.createElement("option");
+          option.text = newTenure;
+          option.value = newTenure;
+          select.add(option);
+        } })
+
+    // Call the checkFertilizer function when the page loads
+    window.onload = checkFertilizer;
+
+    // Call the checkFertilizer function when the fertilizer selection changes
+    document.getElementById("selectpostharvest").addEventListener("change", checkFertilizer);
+
+    // Call the handleFertilizerSelection function when a fertilizer is selected
+    document.getElementById("SelectFertilizer").addEventListener("change", handleFertilizerSelection);
+
+
+// cost per fertilize  and total cost in decimal formats
+document.addEventListener('DOMContentLoaded', function() {
+    // Get input elements
+    const unitprice_per_sacks = document.getElementById('unitprice_per_sacks');
+  
+
+    // Add event listeners for input events
+    unitprice_per_sacks.addEventListener('input', formatDecimal);
+   
+
+    // Function to format input values as decimal
+    function formatDecimal(event) {
+        const input = event.target;
+        // Get the input value
+        let value = input.value;
+        // Remove any non-numeric characters and leading zeroes
+        value = value.replace(/[^0-9.]/g, '');
+        // Format the value as a decimal number
+        value = parseFloat(value).toFixed(2);
+        // Update the input value
+        input.value = value;
+    }
+    
+});
     </script>
+    
   @endsection

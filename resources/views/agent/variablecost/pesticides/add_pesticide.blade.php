@@ -45,14 +45,53 @@
          
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="pesticides_name">Pesticides Name:</label>
-                  <input type="text" class="form-control placeholder-text " name="pesticides_name" id="validationCustom01" placeholder=" Enter pesticides name" value="{{ old('pesticides_name') }}" >
+
+                  <select class="form-control @error('pesticides_name') is-invalid @enderror" name="pesticides_name"id="selectPesticideName"onchange="checkIPesticideName()" aria-label="Floating label select e">
+                    <option selected disabled>Select</option>
+                    <option value="Glyphosate" {{ old('pesticides_name') == 'Glyphosate' ? 'selected' : '' }}>Glyphosate</option>
+                      <option value="Malathion" {{ old('pesticides_name') == 'Malathion' ? 'selected' : '' }}>Malathion</option>
+                      <option value="Diazinon" {{ old('pesticides_name') == 'Diazinon' ? 'selected' : '' }}>Diazinon</option>
+                      <option value="Chlorpyrifos" {{ old('pesticides_name') == 'Chlorpyrifos' ? 'selected' : '' }}>Chlorpyrifos</option>
+                      <option value="Lambda-cyhalothrin" {{ old('pesticides_name') == 'Lambda-cyhalothrin' ? 'selected' : '' }}>Lambda-cyhalothrin</option>
+                      <option value="Imidacloprid" {{ old('pesticides_name') == 'Imidacloprid' ? 'selected' : '' }}>Imidacloprid</option>
+                      <option value="Cypermethrin" {{ old('pesticides_name') == 'Cypermethrin' ? 'selected' : '' }}>Cypermethrin</option>
+                      <option value="N/A" {{ old('pesticides_name') == 'N/A' ? 'selected' : '' }}>N/A</option>
+                    <option value="OtherPestName" {{ old('pesticides_name') == 'OtherPestName' ? 'selected' : '' }}>Others</option>
+    
+                  
+                  </select>
+   
                 </div>
-                  <div class="col-md-3 mb-3">
-                    <label class="form-expand" for="type_ofpesticides">Type of Pesticides:</label>
-                    <input type="text" class="form-control placeholder-text @error('type_ofpesticides') is-invalid @enderror" name="type_ofpesticides" id="validationCustom01" placeholder="Enter type of pesticides" value="{{ old('type_ofpesticides') }}" >
-                 
-                  </div>
-               
+                {{-- IF YOU SELECTED the list of the pesticide name then show this type of pesticides --}}
+                <div class="col-md-3 mb-3" id="PesticideSelected" style="display: none;">
+                  <label for="PesticideSelected">Type of Pesticides:</label>
+                  <select class="form-control @error('type_ofpesticides') is-invalid @enderror" name="type_ofpesticides"id="selectIDType"onchange="checkIDtype()" aria-label="Floating label select e">
+                    <option selected disabled>Select</option>
+                    <option value="Herbicide" {{ old('type_ofpesticides') == 'Herbicide' ? 'selected' : '' }}>Herbicide</option>
+                      <option value="Insecticide" {{ old('type_ofpesticides') == 'Insecticide' ? 'selected' : '' }}>Insecticide</option>
+                      <option value="N/A" {{ old('type_ofpesticides') == 'N/A' ? 'selected' : '' }}>N/A</option>
+                      <option value="Others" {{ old('type_ofpesticides') == 'Others' ? 'selected' : '' }}>Other</option>
+
+                  </select>
+              @error('type_ofpesticides')
+                  <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+                </div>
+                {{-- when selected a others then open window of input of the prefer pesticide naem and type of pesticide  --}}
+                <div class="col-md-3 mb-3" id="OthersInput" style="display: none;">
+                  <label for="OthersInput">Prefer Pesticide name:</label>
+                  <input type="text" id="OthersInput" class="form-control placeholder-text @error('add_PestName') is-invalid @enderror"name="add_PestName" id="validationCustom02" placeholder="Enter pesticide name"  value="{{ old('add_PestName') }}">
+                  @error('add_PestName')
+                  <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+              </div>
+              <div class="col-md-3 mb-3" id="OtherIDInput" style="display: none;">
+                <label for="OtherIDInput">Type of Pesticide:</label>
+                <input type="text" id="OtherIDInput" class="form-control placeholder-text @error('add_typePest') is-invalid @enderror"name="Add_typePest" id="validationCustom02" placeholder="Enter type of pesticide"  value="{{ old('add_typePest') }}">
+                @error('add_typePest')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+            </div>
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="no_of_l_kg">Number of L or kg:</label>
                   <input type="text" class="form-control placeholder-text @error('no_of_l_kg') is-invalid @enderror" name="no_of_l_kg" id="no_of_l_kg" placeholder="Enter no of L or Kg" value="{{ old('no_of_l_kg') }}" >
@@ -62,7 +101,7 @@
                 </div>
                
                 <div class="col-md-3 mb-3">
-                  <label class="form-expand" for="unitprice_ofpesticides">Unit Price of Pesticides:</label>
+                  <label class="form-expand" for="unitprice_ofpesticides">Unit Price of Pesticides(PHP):</label>
                   <input type="text" class="form-control placeholder-text @error('unitprice_ofpesticides') is-invalid @enderror" name="unitprice_ofpesticides" id="unitprice_ofpesticides" placeholder="Enter unit price pesticides" value="{{ old('unitprice_ofpesticides') }}" >
                   @error('unitprice_ofpesticides')
                   <div class="invalid-feedback">{{ $message }}</div>
@@ -70,7 +109,7 @@
                 </div>
 
                 <div class="col-md-3 mb-3">
-                  <label class="form-expand" for="total_cost_pesticides">Total Cost Pesticides:</label>
+                  <label class="form-expand" for="total_cost_pesticides">Total Cost Pesticides(PHP):</label>
                   <input type="text" class="form-control placeholder-text @error('total_cost_pesticides') is-invalid @enderror" name="total_cost_pesticides" id="total_cost_pesticides" placeholder="Enter total cost" value="{{ old('total_cost_pesticides') }}" >
                   @error('total_cost_pesticides')
                   <div class="invalid-feedback">{{ $message }}</div>
@@ -108,7 +147,7 @@
     
     </div>
   
-  </div>
+  </div> </div> <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     // Get references to the input fields
     const no_of_l_kg = document.getElementById('no_of_l_kg');
@@ -132,5 +171,59 @@
     
     // Initial calculation when the page loads
     calculateTotalFertilizerCost();
+
+
+
+    
+    </script>
+    <script>
+ //cost per fertilize  and total cost in decimal formats
+document.addEventListener('DOMContentLoaded', function() {
+    // Get input elements
+    const unitprice_ofpesticides = document.getElementById('unitprice_ofpesticides');
+  
+
+    // Add event listeners for input events
+    unitprice_ofpesticides.addEventListener('input', formatDecimal);
+   
+
+    // Function to format input values as decimal
+    function formatDecimal(event) {
+        const input = event.target;
+        // Get the input value
+        let value = input.value;
+        // Remove any non-numeric characters and leading zeroes
+        value = value.replace(/[^0-9.]/g, '');
+        // Format the value as a decimal number
+        value = parseFloat(value).toFixed(2);
+        // Update the input value
+        input.value = value;
+    }
+    
+});
+
+// dropdown of pesticides name
+function checkIPesticideName() {
+    var selectPesticideName = document.getElementById("selectPesticideName");
+    var PesticideSelected = document.getElementById("PesticideSelected");
+    var OthersInput = document.getElementById("OthersInput");
+    var OtherIDInput = document.getElementById("OtherIDInput");
+
+    if (selectPesticideName.value === "Glyphosate" || selectPesticideName.value === "Malathion" || selectPesticideName.value === "Diazinon" || selectPesticideName.value === "Chlorpyrifos" || selectPesticideName.value === "Lambda-cyhalothrin" || selectPesticideName.value === "Imidacloprid" || selectPesticideName.value === "Cypermethrin" || selectPesticideName.value === "N/A") {
+        PesticideSelected.style.display = "block";
+        OthersInput.style.display = "none";
+        OtherIDInput.style.display = "none";
+    } else if (selectPesticideName.value === "OtherPestName") {
+        OthersInput.style.display = "block";
+        OtherIDInput.style.display = "block";
+        PesticideSelected.style.display = "none";
+    } else {
+        PesticideSelected.style.display = "none";
+        OthersInput.style.display = "none";
+        OtherIDInput.style.display = "none";
+    }
+}
+
+
     </script>
   @endsection

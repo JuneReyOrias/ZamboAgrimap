@@ -5,6 +5,7 @@ use App\Models\FixedCost;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FixedCostRequest;
 use App\Http\Requests\UpdateFixedCostRequest;
+use App\Models\LastProductionDatas;
 use Illuminate\Http\Request;
 
 class FixedCostController extends Controller
@@ -45,13 +46,15 @@ class FixedCostController extends Controller
     // fixed cost view
     public function FixedCostView(){
         $fixedcosts=FixedCost::orderBy('id','desc')->paginate(20);
-        return view('fixed_cost.fixed_create',compact('fixedcosts'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('fixed_cost.fixed_create',compact('fixedcosts','totalRiceProduction'));
     }
     
     // fixed cost update
     public function editFixedcost($id){
         $fixedcosts=FixedCost::find($id);
-        return view('fixed_cost.fixed_edit',compact('fixedcosts'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('fixed_cost.fixed_edit',compact('fixedcosts','totalRiceProduction'));
     }
     
     public function updateFixedcosts(FixedCostRequest $request,$id)
@@ -78,12 +81,12 @@ class FixedCostController extends Controller
             $data->save();     
             
         
-            return redirect('/view-fixedcost')->with('message','Fixed cost Data Updated successsfully');
+            return redirect('/admin-view-fixedcost')->with('message','Fixed cost Data Updated successsfully');
         
         }
         catch(\Exception $ex){
             // dd($ex); // Debugging statement to inspect the exception
-            return redirect('/edit-fixedcost/{fixedcost}')->with('message','Someting went wrong');
+            return redirect('/admin-edit-fixedcost/{fixedcost}')->with('message','Someting went wrong');
             
         }   
     } 

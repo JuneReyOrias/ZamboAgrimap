@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FertilizerRequest;
 use App\Models\Fertilizer;
 use App\Models\Labor;
+use App\Models\LastProductionDatas;
 use Illuminate\Http\Request;
 
 class FertilizerController extends Controller
@@ -27,7 +28,8 @@ class FertilizerController extends Controller
     }
     public function FertilizersVar(){
         $pesticides= Fertilizer::all();
-    return view('variable_cost.fertilizer.fertilizer_store',compact('pesticides'));
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.fertilizer.fertilizer_store',compact('pesticides','totalRiceProduction'));
     }
     /**
      * Store a newly created resource in storage.
@@ -56,7 +58,8 @@ class FertilizerController extends Controller
 
 public function fertilizerView(){
     $fertilizers= Fertilizer::orderBy('id','desc')->paginate(10);
-    return view('variable_cost.fertilizer.view',compact('fertilizers'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.fertilizer.view',compact('fertilizers','totalRiceProduction'));
 }
 
 
@@ -65,7 +68,8 @@ public function fertilizerView(){
 
 public function editfertilizer($id){
     $fertilizers= Fertilizer::find($id);
-    return view('variable_cost.fertilizer.edit',compact('fertilizers'));
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('variable_cost.fertilizer.edit',compact('fertilizers','totalRiceProduction'));
 }
 
 public function updatesfertilizer(FertilizerRequest $request,$id)
@@ -88,12 +92,12 @@ public function updatesfertilizer(FertilizerRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/view-variable-cost-fertilizer')->with('message','Fertilizer Data Updated successsfully');
+       return redirect('/admin-view-variable-cost-fertilizer')->with('message','Fertilizer Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('/edit-variable-cost-fertilizer/{fertilizers}')->with('message','Someting went wrong');
+       return redirect('/admin-edit-variable-cost-fertilizer/{fertilizers}')->with('message','Someting went wrong');
        
    }   
 } 
