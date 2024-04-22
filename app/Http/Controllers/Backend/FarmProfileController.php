@@ -357,6 +357,7 @@ class FarmProfileController extends Controller
     // agent farm profile update data view
     public function EditFarmProfile($id){
         $farmprofiles=FarmProfile::find($id);
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
         return view('farm_profile.farm_edit',compact('farmprofiles','totalRiceProduction'));
     }
     

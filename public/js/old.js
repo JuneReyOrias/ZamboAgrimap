@@ -337,11 +337,9 @@ function initMap() {
     //Districts informations info window
     function districtContent(profiles) {
         const userRole = getCurrentUserRole();
-        let editButton = '';
 
-        if (userRole === 'agent' || userRole === 'admin') {
-            editButton = `<button onclick="editFarm(${profiles.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
-        }
+
+
         return `
         <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
 
@@ -364,7 +362,7 @@ function initMap() {
     <td style="padding: 8px;">${profiles.longitude}</td>
 </tr>
     </table>
-    ${editButton} 
+    
     </div>
         `;
     }

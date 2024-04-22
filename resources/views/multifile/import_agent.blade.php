@@ -32,20 +32,16 @@
           </div>
            
           @endif
-            <h6 class="card-title">Multiple Import File</h6>
-            <p class="text-muted mb-3">Import excel file, csv file or Msacces file only.</p>
-            <div class="form-errors"></div>
-            <form id="upload-form" method="post" enctype="multipart/form-data">
-              @csrf
-              <div class="form-group mb-3">
-                  <label for="upload_file">Upload</label>
-                  <input type="file" class="form-control" id="upload_file" name="upload_file" aria-describedby="uploadHelp">
-                  <span class="text-danger input_image_err formErrors"></span>
-              </div>
-              <div class="form-group mb-2 text-center">
-                  <button type="submit" class="btn btn-primary me-2">Submit</button>
-              </div>
-          </form>
+          <h6 class="card-title">Multiple Import File</h6><br><br>
+          <p class="text-muted mb-3">Import excel file, csv file or Msacces file only.</p>
+          <div class="form-errors"></div>
+          <form id="upload-form" method="post" enctype="multipart/form-data" onsubmit="saveForm(event)">
+            @csrf
+            <input type="file" name="upload_file"><br>
+            <div class="form-group mb-2 text-end">
+              <button type="submit" class="btn btn-success me-2">Upload</button>
+            </div>
+        </form>
           @endsection
           @push('scripts')
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

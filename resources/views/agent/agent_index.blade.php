@@ -34,7 +34,7 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-baseline">
                 <h6 class="card-title mb-0">Total Numbers of Farms</h6>
-                <div class="dropdown mb-2">
+                {{-- <div class="dropdown mb-2">
                   <a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
                   </a>
@@ -45,7 +45,7 @@
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
                   </div>
-                </div>
+                </div> --}}
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
@@ -69,7 +69,7 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-baseline">
                 <h6 class="card-title mb-0">Total Area PLanted</h6>
-                <div class="dropdown mb-2">
+                {{-- <div class="dropdown mb-2">
                   <a type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
                   </a>
@@ -80,21 +80,21 @@
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
                   </div>
-                </div>
+                </div> --}}
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
                   <h3 class="mb-2">{{ number_format($totalAreaPlanted, 2) }}</h3>
-                  <div class="d-flex align-items-baseline">
+                  <div class="d-flex align-items-center">
                     {{-- <p class="text-danger">
                       <span>-2.8%</span>
                       <i data-feather="arrow-down" class="icon-sm mb-1"></i>
                     </p> --}}
                   </div>
                 </div>
-                <div class="col-6 col-md-12 col-xl-7">
+                {{-- <div class="col-6 col-md-12 col-xl-7">
                   <div id="ordersChart" class="mt-md-3 mt-xl-0"></div>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>
@@ -104,7 +104,7 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-baseline">
                 <h6 class="card-title mb-0">Total Area Yield(Kg/Ha)</h6>
-                <div class="dropdown mb-2">
+                {{-- <div class="dropdown mb-2">
                   <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
                   </a>
@@ -115,7 +115,7 @@
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
                   </div>
-                </div>
+                </div> --}}
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
@@ -148,7 +148,7 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-baseline">
                 <h6 class="card-title mb-0">Total Cost</h6>
-                <div class="dropdown mb-2">
+                {{-- <div class="dropdown mb-2">
                   <a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
                   </a>
@@ -159,7 +159,7 @@
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
                   </div>
-                </div>
+                </div> --}}
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
@@ -183,7 +183,7 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-baseline">
                 <h6 class="card-title mb-0">Average  Yield  Per Area Planted (Kg/Ha)</h6>
-                <div class="dropdown mb-2">
+                {{-- <div class="dropdown mb-2">
                   <a type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
                   </a>
@@ -194,7 +194,7 @@
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
                     <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
                   </div>
-                </div>
+                </div> --}}
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
@@ -206,9 +206,9 @@
                     </p> --}}
                   </div>
                 </div>
-                <div class="col-6 col-md-12 col-xl-7">
+                {{-- <div class="col-6 col-md-12 col-xl-7">
                   <div id="ordersChart" class="mt-md-3 mt-xl-0"></div>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>
@@ -241,9 +241,9 @@
                     </p> --}}
                   </div>
                 </div>
-                <div class="col-6 col-md-12 col-xl-7">
+                {{-- <div class="col-6 col-md-12 col-xl-7">
                   <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
-                </div>
+                </div> --}}
               </div>
               
             </div>
@@ -273,24 +273,7 @@
               </div>
             </div>
           </div>
-          <div class="row align-items-start">
-            <div class="col-md-7">
-              <p class="text-muted tx-13 mb-3 mb-md-0">Farmers Revenue  income usually from the sale of palay and rice.</p>
-            </div>
-            <div class="col-md-5 d-flex justify-content-md-end">
-              <div class="btn-group mb-3 mb-md-0" role="group" aria-label="Basic example">
-                <!--<button type="button" class="btn btn-outline-primary">Today</button>
-                <button type="button" class="btn btn-outline-primary d-none d-md-block">Week</button>-->
-                {{-- <button type="button" class="btn btn-primary">Month</button>
-                <button type="button" class="btn btn-outline-primary">Year</button> --}}
-              </div>
-            </div>
-          </div>
-          <div id="revenueChart" ></div>
-        </div>
-      </div>
-    </div>
-  </div> <!-- row -->
+ 
 
   <div class="row">
     <div class="col-lg-7 col-xl-8 grid-margin stretch-card">

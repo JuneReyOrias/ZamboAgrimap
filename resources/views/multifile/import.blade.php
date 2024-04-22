@@ -38,17 +38,22 @@
             <div class="form-errors"></div>
             <form id="upload-form" method="post" enctype="multipart/form-data" onsubmit="saveForm(event)">
               @csrf
-       
-                <div class="form-group mb-3">
+              <input type="file" name="upload_file"><br>
+              <div class="form-group mb-2 text-end">
+                <button type="submit" class="btn btn-success me-2">Upload</button>
+              </div>
+          </form>
+           
+                {{-- <div class="form-group mb-3">
                   <label for=inputemail>Upload</label>
-                  <input type="file" class ="form-control" id="myDropify" name="upload_file" aria-describedby="emailHelp">
+                  <input type="file" class ="form-control" name="upload_file" aria-describedby="emailHelp">
                   <span class="text-danger input_image_err formErrors"></span>
               </div>
             <div class="form-group mb-2 text-center">
               <button type="submit" class="btn btn-primary me-2">Submit</button>
             </div>
              
-            </form>
+            </form> --}}
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
             integrity="sha384-oBqDVmz9ATKxIep9tiCx5/Z9fNEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
             </script>

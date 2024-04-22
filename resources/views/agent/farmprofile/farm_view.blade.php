@@ -103,7 +103,7 @@
                         <td>{{ $farmprofile->updated_at}}</td>
                         <td>
                            
-                             <a href="{{route('agent.farmprofile.farm_update', $farmprofile->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                            <a href="{{route('agent.far mprofile.farm_update', $farmprofile->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                 
                              <form  action="{{ route('agent.farmprofile.delete', $farmprofile->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                 {{-- {{ csrf_field()}} --}}@csrf

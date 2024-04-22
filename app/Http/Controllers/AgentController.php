@@ -33,6 +33,7 @@ use App\Models\PersonalInformations;
 use App\Http\Requests\PersonalInformationsRequest;
 use App\Http\Controllers\Backend\PersonalInformationsController;
 use App\Models\Transport;
+use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 
 class AgentController extends Controller
@@ -2047,13 +2048,127 @@ public function AyalaFarmers()
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
+            // Specify the agri district you want to filter by
+                // Calculate the age for each farmer
+                foreach ($FarmersData as $farmer) {
+                    // Calculate the age for each farmer
+                    $dateOfBirth = $farmer->date_of_birth;
+                    $age = Carbon::parse($dateOfBirth)->age;
 
-        return view('agent.agriDistricts.ayala_farmers', compact('FarmersData'));
+                    // Add the age to the farmer object
+                    $farmer->age = $age;
+                }
+            // Count the number of farmers in the "ayala" district
+            $totalfarms = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->where('farm_profiles.agri_districts', 'ayala')
+            ->distinct()
+            ->count('personal_informations.id');
+
+              // Calculate the total area planted in the "ayala" district
+            $totalAreaPlantedAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'ayala')
+            ->sum('total_physical_area_has');
+            $totalAreaYieldAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'ayala')
+            ->sum('yield_kg_ha');
+         
+             // Calculate the total fixed cost in the "ayala" district
+            $totalFixedCostAyala = DB::table('fixed_costs')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+            ->where('farm_profiles.agri_districts', 'ayala')
+            ->sum('fixed_costs.total_amount');
+            
+                  // Calculate the total machineries cost in the "ayala" district
+                  $totalMachineriesUsedAyala= DB::table('machineries_useds')
+                  ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+                  ->where('farm_profiles.agri_districts', 'ayala')
+                  ->sum('machineries_useds.total_cost_for_machineries');
+
+                // Calculate the total variable cost in the "ayala" district
+                $totalVariableCostAyala = DB::table('variable_costs')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+                ->where('farm_profiles.agri_districts', 'ayala')
+                ->sum('variable_costs.total_variable_cost');
+
+                    // Calculate the total rice production in the Ayala district
+                    $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+                    ->where('farm_profiles.agri_districtS', 'Ayala')
+                    ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                              // Count owner tenants
+                            $countOwnerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'ayala')
+                            ->where('farm_profiles.tenurial_status', 'owner')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenant tenants
+                            $countTillerTenantTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'ayala')
+                            ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenants
+                            $countTillerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'ayala')
+                            ->where('farm_profiles.tenurial_status', 'tiller')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count lease tenants
+                            $countLeaseTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'ayala')
+                            ->where('farm_profiles.tenurial_status', 'lease')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+                        // Count owner tenants
+                    $countOwner = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'ayala')
+                    ->where('farm_profiles.tenurial_status', 'owner')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // total farmers organizattion
+                    $countorg = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'ayala')
+                    ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+                    ->count('personal_informations.nameof_farmers_ass_org_coop');
+
+
+                // Calculate rice productivity in the Ayala district
+                $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+                 // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+     
+            $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+            $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+            $totalCost= VariableCost::sum('total_variable_cost');
+                
+            $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+            $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('agent.agriDistricts.ayala_farmers', compact('FarmersData','totalRiceProduction',
+        'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+        'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+        'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+        'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner','countorg'
+    ));
     } catch (\Exception $ex) {
         // Log the exception for debugging purposes
         dd($ex);
         return redirect()->back()->with('message', 'Something went wrong');
     }
+
+       
 }
 
 public function show($id)
@@ -2109,13 +2224,124 @@ public function TumagaFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
+             // Calculate the age for each farmer
+             foreach ($FarmersData as $farmer) {
+                // Calculate the age for each farmer
+                $dateOfBirth = $farmer->date_of_birth;
+                $age = Carbon::parse($dateOfBirth)->age;
 
-        return view('agent.agriDistricts.tumaga_farmers', compact('FarmersData'));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
-    }
+                // Add the age to the farmer object
+                $farmer->age = $age;
+            }
+        // Count the number of farmers in the "ayala" district
+        $totalfarms = DB::table('personal_informations')
+        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+        ->where('farm_profiles.agri_districts', 'tumaga')
+        ->distinct()
+        ->count('personal_informations.id');
+
+          // Calculate the total area planted in the "tumaga" district
+        $totalAreaPlantedAyala = DB::table('farm_profiles')
+        ->where('agri_districts', 'tumaga')
+        ->sum('total_physical_area_has');
+        $totalAreaYieldAyala = DB::table('farm_profiles')
+        ->where('agri_districts', 'tumaga')
+        ->sum('yield_kg_ha');
+     
+         // Calculate the total fixed cost in the "tumaga" district
+        $totalFixedCostAyala = DB::table('fixed_costs')
+        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+        ->where('farm_profiles.agri_districts', 'tumaga')
+        ->sum('fixed_costs.total_amount');
+        
+              // Calculate the total machineries cost in the "tumaga" district
+              $totalMachineriesUsedAyala= DB::table('machineries_useds')
+              ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+              ->where('farm_profiles.agri_districts', 'tumaga')
+              ->sum('machineries_useds.total_cost_for_machineries');
+
+            // Calculate the total variable cost in the "tumaga" district
+            $totalVariableCostAyala = DB::table('variable_costs')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+            ->where('farm_profiles.agri_districts', 'tumaga')
+            ->sum('variable_costs.total_variable_cost');
+
+                // Calculate the total rice production in the Ayala district
+                $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+                ->where('farm_profiles.agri_districtS', 'Ayala')
+                ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                          // Count owner tenants
+                        $countOwnerTenants = DB::table('personal_informations')
+                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                        ->where('farm_profiles.agri_districts', 'tumaga')
+                        ->where('farm_profiles.tenurial_status', 'owner')
+                        ->distinct()
+                        ->count('farm_profiles.tenurial_status');
+
+                        // Count tiller tenant tenants
+                        $countTillerTenantTenants = DB::table('personal_informations')
+                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                        ->where('farm_profiles.agri_districts', 'tumaga')
+                        ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                        ->distinct()
+                        ->count('farm_profiles.tenurial_status');
+
+                        // Count tiller tenants
+                        $countTillerTenants = DB::table('personal_informations')
+                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                        ->where('farm_profiles.agri_districts', 'tumaga')
+                        ->where('farm_profiles.tenurial_status', 'tiller')
+                        ->distinct()
+                        ->count('farm_profiles.tenurial_status');
+
+                        // Count lease tenants
+                        $countLeaseTenants = DB::table('personal_informations')
+                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                        ->where('farm_profiles.agri_districts', 'tumaga')
+                        ->where('farm_profiles.tenurial_status', 'lease')
+                        ->distinct()
+                        ->count('farm_profiles.tenurial_status');
+                    // Count owner tenants
+                $countOwner = DB::table('personal_informations')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->where('farm_profiles.agri_districts', 'tumaga')
+                ->where('farm_profiles.tenurial_status', 'owner')
+                ->distinct()
+                ->count('farm_profiles.tenurial_status');
+                //count no of farmers organization
+                $countorg = DB::table('personal_informations')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->where('farm_profiles.agri_districts', 'tumaga')
+                ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+                ->count('personal_informations.nameof_farmers_ass_org_coop');
+            
+            // Calculate rice productivity in the Ayala district
+            $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+             // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+ 
+        $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+        $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+        $totalCost= VariableCost::sum('total_variable_cost');
+            
+        $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+        $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    return view('agent.agriDistricts.tumaga_farmers', compact('FarmersData','totalRiceProduction',
+    'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+    'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+    'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+    'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
+    'countorg'
+));
+} catch (\Exception $ex) {
+    // Log the exception for debugging purposes
+    dd($ex);
+    return redirect()->back()->with('message', 'Something went wrong');
+}
+
    
 }
 
@@ -2139,13 +2365,125 @@ public function CuliananFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
+             // Calculate the age for each farmer
+             foreach ($FarmersData as $farmer) {
+                // Calculate the age for each farmer
+                $dateOfBirth = $farmer->date_of_birth;
+                $age = Carbon::parse($dateOfBirth)->age;
 
-        return view('agent.agriDistricts.culianan_farmers', compact('FarmersData'));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
-    }
+                // Add the age to the farmer object
+                $farmer->age = $age;
+            }
+        // Count the number of farmers in the "ayala" district
+        $totalfarms = DB::table('personal_informations')
+        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+        ->where('farm_profiles.agri_districts', 'culianan')
+        ->distinct()
+        ->count('personal_informations.id');
+
+          // Calculate the total area planted in the "culianan" district
+        $totalAreaPlantedAyala = DB::table('farm_profiles')
+        ->where('agri_districts', 'culianan')
+        ->sum('total_physical_area_has');
+        $totalAreaYieldAyala = DB::table('farm_profiles')
+        ->where('agri_districts', 'culianan')
+        ->sum('yield_kg_ha');
+     
+         // Calculate the total fixed cost in the "culianan" district
+        $totalFixedCostAyala = DB::table('fixed_costs')
+        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+        ->where('farm_profiles.agri_districts', 'culianan')
+        ->sum('fixed_costs.total_amount');
+        
+              // Calculate the total machineries cost in the "culianan" district
+              $totalMachineriesUsedAyala= DB::table('machineries_useds')
+              ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+              ->where('farm_profiles.agri_districts', 'culianan')
+              ->sum('machineries_useds.total_cost_for_machineries');
+
+            // Calculate the total variable cost in the "culianan" district
+            $totalVariableCostAyala = DB::table('variable_costs')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+            ->where('farm_profiles.agri_districts', 'culianan')
+            ->sum('variable_costs.total_variable_cost');
+
+                // Calculate the total rice production in the Ayala district
+                $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+                ->where('farm_profiles.agri_districtS', 'Ayala')
+                ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                          // Count owner tenants
+                        $countOwnerTenants = DB::table('personal_informations')
+                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                        ->where('farm_profiles.agri_districts', 'culianan')
+                        ->where('farm_profiles.tenurial_status', 'owner')
+                        ->distinct()
+                        ->count('farm_profiles.tenurial_status');
+
+                        // Count tiller tenant tenants
+                        $countTillerTenantTenants = DB::table('personal_informations')
+                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                        ->where('farm_profiles.agri_districts', 'culianan')
+                        ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                        ->distinct()
+                        ->count('farm_profiles.tenurial_status');
+
+                        // Count tiller tenants
+                        $countTillerTenants = DB::table('personal_informations')
+                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                        ->where('farm_profiles.agri_districts', 'culianan')
+                        ->where('farm_profiles.tenurial_status', 'tiller')
+                        ->distinct()
+                        ->count('farm_profiles.tenurial_status');
+
+                        // Count lease tenants
+                        $countLeaseTenants = DB::table('personal_informations')
+                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                        ->where('farm_profiles.agri_districts', 'culianan')
+                        ->where('farm_profiles.tenurial_status', 'lease')
+                        ->distinct()
+                        ->count('farm_profiles.tenurial_status');
+                    // Count owner tenants
+                $countOwner = DB::table('personal_informations')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->where('farm_profiles.agri_districts', 'culianan')
+                ->where('farm_profiles.tenurial_status', 'owner')
+                ->distinct()
+                ->count('farm_profiles.tenurial_status');
+                //count no of farmers organization
+                $countorg = DB::table('personal_informations')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->where('farm_profiles.agri_districts', 'culianan')
+                ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+                ->count('personal_informations.nameof_farmers_ass_org_coop');
+            
+            // Calculate rice productivity in the Ayala district
+                    $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+                    // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+        
+                $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+                $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+                $totalCost= VariableCost::sum('total_variable_cost');
+                    
+                $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+                $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                return view('agent.agriDistricts.culianan_farmers', compact('FarmersData','totalRiceProduction',
+                'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+                'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+                'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+                'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
+                'countorg'
+            ));
+            } catch (\Exception $ex) {
+                // Log the exception for debugging purposes
+                dd($ex);
+                return redirect()->back()->with('message', 'Something went wrong');
+            }       
+
+       
    
 }
 
@@ -2168,13 +2506,124 @@ public function ManicahanFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
+                  // Calculate the age for each farmer
+                  foreach ($FarmersData as $farmer) {
+                    // Calculate the age for each farmer
+                    $dateOfBirth = $farmer->date_of_birth;
+                    $age = Carbon::parse($dateOfBirth)->age;
 
-        return view('agent.agriDistricts.manicahan_farmers', compact('FarmersData'));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
-    }
+                    // Add the age to the farmer object
+                    $farmer->age = $age;
+                }
+    // Count the number of farmers in the "ayala" district
+    $totalfarms = DB::table('personal_informations')
+    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+    ->where('farm_profiles.agri_districts', 'manicahan')
+    ->distinct()
+    ->count('personal_informations.id');
+
+      // Calculate the total area planted in the "manicahan" district
+    $totalAreaPlantedAyala = DB::table('farm_profiles')
+    ->where('agri_districts', 'manicahan')
+    ->sum('total_physical_area_has');
+    $totalAreaYieldAyala = DB::table('farm_profiles')
+    ->where('agri_districts', 'manicahan')
+    ->sum('yield_kg_ha');
+ 
+     // Calculate the total fixed cost in the "manicahan" district
+    $totalFixedCostAyala = DB::table('fixed_costs')
+    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+    ->where('farm_profiles.agri_districts', 'manicahan')
+    ->sum('fixed_costs.total_amount');
+    
+          // Calculate the total machineries cost in the "manicahan" district
+          $totalMachineriesUsedAyala= DB::table('machineries_useds')
+          ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+          ->where('farm_profiles.agri_districts', 'manicahan')
+          ->sum('machineries_useds.total_cost_for_machineries');
+
+        // Calculate the total variable cost in the "manicahan" district
+        $totalVariableCostAyala = DB::table('variable_costs')
+        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+        ->where('farm_profiles.agri_districts', 'manicahan')
+        ->sum('variable_costs.total_variable_cost');
+
+            // Calculate the total rice production in the Ayala district
+            $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+            ->where('farm_profiles.agri_districtS', 'Ayala')
+            ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                      // Count owner tenants
+                    $countOwnerTenants = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'manicahan')
+                    ->where('farm_profiles.tenurial_status', 'owner')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // Count tiller tenant tenants
+                    $countTillerTenantTenants = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'manicahan')
+                    ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // Count tiller tenants
+                    $countTillerTenants = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'manicahan')
+                    ->where('farm_profiles.tenurial_status', 'tiller')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // Count lease tenants
+                    $countLeaseTenants = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'manicahan')
+                    ->where('farm_profiles.tenurial_status', 'lease')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+                // Count owner tenants
+            $countOwner = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->where('farm_profiles.agri_districts', 'manicahan')
+            ->where('farm_profiles.tenurial_status', 'owner')
+            ->distinct()
+            ->count('farm_profiles.tenurial_status');
+            //count no of farmers organization
+            $countorg = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->where('farm_profiles.agri_districts', 'manicahan')
+            ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+            ->count('personal_informations.nameof_farmers_ass_org_coop');
+        
+        // Calculate rice productivity in the Ayala district
+                $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+                // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+    
+            $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+            $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+            $totalCost= VariableCost::sum('total_variable_cost');
+                
+            $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+            $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            return view('agent.agriDistricts.manicahan_farmers', compact('FarmersData','totalRiceProduction',
+            'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+            'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+            'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
+            'countorg'
+        ));
+        } catch (\Exception $ex) {
+            // Log the exception for debugging purposes
+            dd($ex);
+            return redirect()->back()->with('message', 'Something went wrong');
+        }       
+       
   
 }
 
@@ -2197,13 +2646,124 @@ public function CuruanFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
+                 // Calculate the age for each farmer
+                 foreach ($FarmersData as $farmer) {
+                    // Calculate the age for each farmer
+                    $dateOfBirth = $farmer->date_of_birth;
+                    $age = Carbon::parse($dateOfBirth)->age;
 
-        return view('agent.agriDistricts.curuan_farmers', compact('FarmersData'));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
-    }
+                    // Add the age to the farmer object
+                    $farmer->age = $age;
+                }
+    // Count the number of farmers in the "ayala" district
+    $totalfarms = DB::table('personal_informations')
+    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+    ->where('farm_profiles.agri_districts', 'curuan')
+    ->distinct()
+    ->count('personal_informations.id');
+
+      // Calculate the total area planted in the "curuan" district
+    $totalAreaPlantedAyala = DB::table('farm_profiles')
+    ->where('agri_districts', 'curuan')
+    ->sum('total_physical_area_has');
+    $totalAreaYieldAyala = DB::table('farm_profiles')
+    ->where('agri_districts', 'curuan')
+    ->sum('yield_kg_ha');
+ 
+     // Calculate the total fixed cost in the "curuan" district
+    $totalFixedCostAyala = DB::table('fixed_costs')
+    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+    ->where('farm_profiles.agri_districts', 'curuan')
+    ->sum('fixed_costs.total_amount');
+    
+          // Calculate the total machineries cost in the "curuan" district
+          $totalMachineriesUsedAyala= DB::table('machineries_useds')
+          ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+          ->where('farm_profiles.agri_districts', 'curuan')
+          ->sum('machineries_useds.total_cost_for_machineries');
+
+        // Calculate the total variable cost in the "curuan" district
+        $totalVariableCostAyala = DB::table('variable_costs')
+        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+        ->where('farm_profiles.agri_districts', 'curuan')
+        ->sum('variable_costs.total_variable_cost');
+
+            // Calculate the total rice production in the Ayala district
+            $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+            ->where('farm_profiles.agri_districtS', 'Ayala')
+            ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                      // Count owner tenants
+                    $countOwnerTenants = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'curuan')
+                    ->where('farm_profiles.tenurial_status', 'owner')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // Count tiller tenant tenants
+                    $countTillerTenantTenants = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'curuan')
+                    ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // Count tiller tenants
+                    $countTillerTenants = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'curuan')
+                    ->where('farm_profiles.tenurial_status', 'tiller')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // Count lease tenants
+                    $countLeaseTenants = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'curuan')
+                    ->where('farm_profiles.tenurial_status', 'lease')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+                // Count owner tenants
+            $countOwner = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->where('farm_profiles.agri_districts', 'curuan')
+            ->where('farm_profiles.tenurial_status', 'owner')
+            ->distinct()
+            ->count('farm_profiles.tenurial_status');
+            //count no of farmers organization
+            $countorg = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->where('farm_profiles.agri_districts', 'curuan')
+            ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+            ->count('personal_informations.nameof_farmers_ass_org_coop');
+        
+        // Calculate rice productivity in the Ayala district
+                $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+                // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+    
+            $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+            $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+            $totalCost= VariableCost::sum('total_variable_cost');
+                
+            $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+            $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            return view('agent.agriDistricts.curuan_farmers', compact('FarmersData','totalRiceProduction',
+            'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+            'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+            'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
+            'countorg'
+        ));
+        } catch (\Exception $ex) {
+            // Log the exception for debugging purposes
+            dd($ex);
+            return redirect()->back()->with('message', 'Something went wrong');
+        }       
+        
    
 }
 
@@ -2226,13 +2786,125 @@ public function VitaliFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
+          
+            // Calculate the age for each farmer
+            foreach ($FarmersData as $farmer) {
+                // Calculate the age for each farmer
+                $dateOfBirth = $farmer->date_of_birth;
+                $age = Carbon::parse($dateOfBirth)->age;
 
-        return view('agent.agriDistricts.vitali_farmers', compact('FarmersData'));
+                // Add the age to the farmer object
+                $farmer->age = $age;
+            }
+// Count the number of farmers in the "ayala" district
+$totalfarms = DB::table('personal_informations')
+->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+->where('farm_profiles.agri_districts', 'vitali')
+->distinct()
+->count('personal_informations.id');
+
+  // Calculate the total area planted in the "vitali" district
+$totalAreaPlantedAyala = DB::table('farm_profiles')
+->where('agri_districts', 'vitali')
+->sum('total_physical_area_has');
+$totalAreaYieldAyala = DB::table('farm_profiles')
+->where('agri_districts', 'vitali')
+->sum('yield_kg_ha');
+
+ // Calculate the total fixed cost in the "vitali" district
+$totalFixedCostAyala = DB::table('fixed_costs')
+->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+->where('farm_profiles.agri_districts', 'vitali')
+->sum('fixed_costs.total_amount');
+
+      // Calculate the total machineries cost in the "vitali" district
+      $totalMachineriesUsedAyala= DB::table('machineries_useds')
+      ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+      ->where('farm_profiles.agri_districts', 'vitali')
+      ->sum('machineries_useds.total_cost_for_machineries');
+
+    // Calculate the total variable cost in the "vitali" district
+    $totalVariableCostAyala = DB::table('variable_costs')
+    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+    ->where('farm_profiles.agri_districts', 'vitali')
+    ->sum('variable_costs.total_variable_cost');
+
+        // Calculate the total rice production in the Ayala district
+        $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+        ->where('farm_profiles.agri_districtS', 'Ayala')
+        ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                  // Count owner tenants
+                $countOwnerTenants = DB::table('personal_informations')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->where('farm_profiles.agri_districts', 'vitali')
+                ->where('farm_profiles.tenurial_status', 'owner')
+                ->distinct()
+                ->count('farm_profiles.tenurial_status');
+
+                // Count tiller tenant tenants
+                $countTillerTenantTenants = DB::table('personal_informations')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->where('farm_profiles.agri_districts', 'vitali')
+                ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                ->distinct()
+                ->count('farm_profiles.tenurial_status');
+
+                // Count tiller tenants
+                $countTillerTenants = DB::table('personal_informations')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->where('farm_profiles.agri_districts', 'vitali')
+                ->where('farm_profiles.tenurial_status', 'tiller')
+                ->distinct()
+                ->count('farm_profiles.tenurial_status');
+
+                // Count lease tenants
+                $countLeaseTenants = DB::table('personal_informations')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->where('farm_profiles.agri_districts', 'vitali')
+                ->where('farm_profiles.tenurial_status', 'lease')
+                ->distinct()
+                ->count('farm_profiles.tenurial_status');
+            // Count owner tenants
+        $countOwner = DB::table('personal_informations')
+        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+        ->where('farm_profiles.agri_districts', 'vitali')
+        ->where('farm_profiles.tenurial_status', 'owner')
+        ->distinct()
+        ->count('farm_profiles.tenurial_status');
+        //count no of farmers organization
+        $countorg = DB::table('personal_informations')
+        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+        ->where('farm_profiles.agri_districts', 'vitali')
+        ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+        ->count('personal_informations.nameof_farmers_ass_org_coop');
+    
+    // Calculate rice productivity in the Ayala district
+            $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+            // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+
+        $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+        $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+        $totalCost= VariableCost::sum('total_variable_cost');
+            
+        $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+        $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        return view('agent.agriDistricts.vitali_farmers', compact('FarmersData','totalRiceProduction',
+        'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+        'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+        'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+        'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
+        'countorg'
+    ));
     } catch (\Exception $ex) {
         // Log the exception for debugging purposes
         dd($ex);
         return redirect()->back()->with('message', 'Something went wrong');
-    }
+    }       
+       
   
 }
 public function RiceCrop(){
@@ -2296,5 +2968,9 @@ public function RiceCrop(){
 // multiple impor of excels in Dataase access by agent
 public function ExcelFile(){
     return view('agent.mutipleFile.import_excelFile');
+}
+
+public function FarmersReport(){
+    
 }
 }

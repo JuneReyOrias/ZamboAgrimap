@@ -16,6 +16,8 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use Nette\Utils\Strings;
 use App\Models\KmlFile;
+use Illuminate\Support\Facades\Auth;
+
 class PersonalInformationsController extends Controller
 {
 
@@ -87,7 +89,12 @@ public function Personalfarms() {
     {
         $personalInformation= PersonalInformations::all();
         $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    return view('personalinfo.index',compact('personalInformation','totalRiceProduction'));
+        $user = Auth::user(); // Assuming you're using Laravel's authentication
+
+        // Fetching user's id and agri_district
+        $user_id = $user->id;
+        $agri_district = $user->agri_district;
+    return view('personalinfo.index',compact('personalInformation','totalRiceProduction','user_id','agri_district'));
     }
     public function Agent(): View
     {

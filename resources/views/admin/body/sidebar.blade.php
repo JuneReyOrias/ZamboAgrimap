@@ -42,7 +42,7 @@
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false" aria-controls="uiComponents">
             <i class="link-icon" data-feather="list"></i>
-            <span class="link-title">Agri-Districts</span>
+            <span class="link-title"> Reports/Agri-Districts</span>
             <i class="link-arrow" data-feather="chevron-down"></i>
           </a>
           <div class="collapse" id="uiComponents">
@@ -193,7 +193,8 @@
               </li> --}}
             </ul>
           </div>
-        </li> <li class="nav-item">
+        </li> 
+        {{-- <li class="nav-item">
           <a class="nav-link"  data-bs-toggle="collapse" href="#schedule" role="button" aria-expanded="false" aria-controls="charts">
             <i class="link-icon" data-feather="calendar"></i>
             <span class="link-title">Schedule</span>
@@ -210,7 +211,7 @@
             
             </ul>
           </div>
-        </li>
+        </li> --}}
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#tables" role="button" aria-expanded="false" aria-controls="tables">
             <i class="link-icon" data-feather="bar-chart-2"></i>

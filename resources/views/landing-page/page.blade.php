@@ -68,10 +68,10 @@
                     <a  href="{{route('login')}}" href="javascript:void(0)">Log in</a>
               
                   </li>
-                  <li class="nav-item">
+                  {{-- <li class="nav-item">
                     <a href="{{route('register')}}" href="javascript:void(0)" >Register</a>
               
-                  </li>
+                  </li> --}}
                 </ul>
               </div>
 
@@ -1265,7 +1265,7 @@
                   Zambo AgriMap is an innovative geo-mapping tool
                   designed specifically for Zamboanga City. 
                 </p>
-                <ul class="ud-widget-socials">
+                {{-- <ul class="ud-widget-socials">
                   <li>
                     <a href="https://twitter.com/MusharofChy">
                       <i class="lni lni-facebook-filled"></i>
@@ -1286,7 +1286,7 @@
                       <i class="lni lni-linkedin-original"></i>
                     </a>
                   </li>
-                </ul>
+                </ul> --}}
               </div>
             </div>
 
@@ -1465,12 +1465,12 @@
                 </li> --}}
               </ul>
             </div>
-            <div class="col-md-4">
+            {{-- <div class="col-md-4">
               <p class="ud-footer-bottom-right">
                Developed by
                 <a href="https://uideck.com" rel="nofollow">OJR</a>
               </p>
-            </div>
+            </div> --}}
           </div>
         </div>
       </div>
@@ -1490,9 +1490,7 @@
     <script src="landing_page/assets/js/auth.js"></script>
     <script src="landing_page/assets/js/signup.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    {{-- <script src="landing_page/assets/js/todo.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> --}}
+
     <script>
       // ==== for menu scroll
       const pageLink = document.querySelectorAll(".ud-menu-scroll");

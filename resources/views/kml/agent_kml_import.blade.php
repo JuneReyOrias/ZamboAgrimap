@@ -63,13 +63,15 @@
               </div>
           @endif --}}
   
-               <div class="card-header">Upload KML File</div>
+               <div class="">Upload KML File</div>
   
                <div class="card-body">
-                <form action{{url('uploadkml') }} method="POST" enctype="multipart/form-data">
+                <form action{{url('upload') }} method="POST" enctype="multipart/form-data">
                   @csrf
                   <input type="file" name="kmlFile">
-                  <button type="submit">Upload</button>
+                  <div class="form-group mb-2 text-end">
+                    <button type="submit" class="btn btn-success me-2">Upload</button>
+                  </div>
               </form>
             </div>
             

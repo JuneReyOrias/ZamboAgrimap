@@ -70,7 +70,9 @@
               <form action{{url('upload') }} method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="file" name="kmlFile">
-                <button type="submit">Upload</button>
+                <div class="form-group mb-2 text-end">
+                  <button type="submit" class="btn btn-success me-2">Upload</button>
+                </div>
             </form>
           </div>
           

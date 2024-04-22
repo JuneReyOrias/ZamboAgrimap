@@ -47,7 +47,16 @@
 </head>
 <body>
     
-	<div class="main-wrapper" style="background-image: url('.../upload/pin.png');">
+
+{{-- <div class="main-wrapper" style=" background-image: url(https://watchmendailyjournal.com/wp-content/uploads/2023/04/da.jpg);">
+
+		
+         
+						
+
+
+  </div> --}}
+  <div class="main-wrapper"  style=" background-image: url(Upload/rice.JPG);">
 		<div class="page-wrapper full-pages">
 			<div class="page-content d-flex align-items-center justify-content-center">
 
@@ -57,7 +66,7 @@
               
 							<div class="row">
                 <div class="col-md-4 pe-md-0">
-                  <div class="auth-side-wrapper">
+                  <div class="auth-side-wrapper"  style=" background-image: url(Upload/rice.JPG);">
 
                   </div>
                 </div>
@@ -90,12 +99,7 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                       </div>
-                      {{-- <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input"id="togglePasswordVisibilityCheckbox">
-                        <label class="form-check-label" for="togglePasswordVisibilityCheckbox">
-                          Remember me
-                        </label>
-                      </div> --}}
+                    
                       <div>
                        <!-- <a href="../../dashboard.html" class="btn btn-primary me-2 mb-2 mb-md-0 text-white">Login</a>-->
                        <button type="submit" class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
@@ -110,7 +114,7 @@
 						</div>
 					</div>
 				</div>
-
+      </div>
 			</div>
 		</div>
 	</div>

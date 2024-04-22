@@ -23,7 +23,7 @@
     <a href="javascript:;" class="dropdown-item py-2"><i class="flag-icon flag-icon-pt" title="pt" id="pt"></i> <span class="ms-1"> Portuguese </span></a>
     <a href="javascript:;" class="dropdown-item py-2"><i class="flag-icon flag-icon-es" title="es" id="es"></i> <span class="ms-1"> Spanish </span></a>
                 </div>-->
-</li>
+{{-- </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="appsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i data-feather="grid"></i>
@@ -51,14 +51,14 @@
                         <a href="javascript:;">View all</a>
                     </div>
                 </div>
-            </li>
+            </li> --}}
  
             @php
  $id =Auth::user()->id;
         $agent = App\Models\User:: find($id);
             @endphp
 
-            <li class="nav-item dropdown">
+            {{-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i data-feather="mail"></i>
                 </a>
@@ -133,7 +133,7 @@
                         <a href="javascript:;">View all</a>
                     </div>
                 </div>
-            </li>
+            </li> --}}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i data-feather="bell"></i>
@@ -214,16 +214,16 @@
                         </div>
                     </div>
     <ul class="list-unstyled p-1">
-      <li class="dropdown-item py-2">
+      {{-- <li class="dropdown-item py-2">
         <a href="pages/general/profile.html" class="text-body ms-0">
           <i class="me-2 icon-md" data-feather="user"></i>
           <span>Profile</span>
         </a>
-      </li>
+      </li> --}}
       <li class="dropdown-item py-2">
         <a href="{{route('agent.profile.agent_profiles')}}" class="text-body ms-0">
           <i class="me-2 icon-md" data-feather="edit"></i>
-          <span>Edit Profile</span>
+          <span>Profile</span>
         </a>
       </li>
       {{-- <li class="dropdown-item py-2">

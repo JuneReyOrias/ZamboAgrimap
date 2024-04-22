@@ -14,411 +14,1588 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @endif
-   
-<div class="d-flex flex-wrap justify-content-center">
-    <button class="btn btn-primary mx-2 my-2" onclick="showAllSections()">View All</button>
-<button class="btn btn-primary mx-2 my-2" onclick="showSection('personal_info')">Personal Info</button>
-<button class="btn btn-primary mx-2 my-2" onclick="showSection('farm_profile')">Farm Profile</button>
-<button class="btn btn-primary mx-2 my-2" onclick="showSection('fixed_cost')">Fixed Cost</button>
-<button class="btn btn-primary mx-2 my-2" onclick="showSection('machineries')">Machineries</button>
-<button class="btn btn-primary mx-2 my-2" onclick="showSection('variable_cost')">Variable Cost</button>
-<button class="btn btn-primary mx-2 my-2" onclick="showSection('last_production_data')">Last Production Data</button>
-</div>
+    <div class="dropdown d-flex flex-wrap justify-content-between align-items-center">
+      <h4 class="mb-3 mb-md-0 font-weight-bold">Tumaga Rice Farmers</h4>
+      
+      <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
+          <span class="input-group-text input-group-addon bg-transparent border-primary" data-toggle><i data-feather="calendar" class="text-primary"></i></span>
+          <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input>
+      </div>
+     
+      <button type="button" class="btn btn-primary btn-icon-text me-2 mb-2 mb-md-0" onclick="printTableContent()" data-toggle="popover" title="Print" data-content="Click to print the table content.">
+        <i class="btn-icon-prepend" data-feather="printer"></i>
+        Print Table
+    </button>
+    <button onclick="printPersonalInfo()" class="btn btn-primary">Print Report</button>
+    {{-- <button type="button" class="btn btn-primary btn-icon-text me-2 mb-2 mb-md-0" data-toggle="popover" title="Download Report" data-content="Your report will be downloaded once clicked.">
+      <i class="btn-icon-prepend" data-feather="download-cloud"></i>
+  </button> --}}
+      {{-- <button type="button" class="btn btn-primary btn-icon-text me-2 mb-2 mb-md-0">
+          <i class="btn-icon-prepend" data-feather="download-cloud"></i>
+          Download
+      </button> --}}
+  
+      <div class="btn-group">
+          <button class="btn btn-primary dropdown-toggle dropdown-success" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Menu
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <button class="dropdown-item" onclick="showSection('personal_info')">Report</button>
+              <!-- <button class="dropdown-item" onclick="showAllSections()">View All</button> -->
+              <button class="dropdown-item dropdown-success" onclick="showSection('fixed_cost')">Farmers Info</button>
+              {{-- <button class="dropdown-item" onclick="showSection('farm_profile')">Farm Profile</button> --}}
+          </div>
+      </div>
+  </div>
+  
+      
+      
 
-<br>
-
-<h4 class="mb-3 mb-md-0">Tumaga Rice Farmers Info</h4>
-
+      
+      {{-- <style>
+        /* Define font sizes for different screen sizes */
+        @media (max-width: 576px) {
+            .table td,
+            .table th {
+                font-size: 12px; /* Adjust the font size as needed */
+            }
+        }
+        @media (max-width: 326px) {
+           
+            .table th {
+                font-size: 12px; /* Adjust the font size as needed */
+            }
+        }
+    </style> --}}
     <!-- Personal Info Table Section -->
-    <div id="personal_info_section"class="table-section">
+    <div id="fixed_cost_section"class="table-section" >
       
         <br>
-        <div class="card border rounded">
-            <div class="card-body">
-                <h4 class="mb-3 mb-md-0">Personal Informations</h4>
+        {{-- <div class="card border rounded">
+            <div class="card-body"> --}}
+                <h4 class="mb-3 mb-md-0">Farmers Information</h4>
       
-        <div class="table-responsive tab">
-            <table  class="table table-bordered datatable">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Farmer No.</th>
-                        <th>FirtsName</th>
-                        <th>MiddleName</th>
-                        <th>LastName</th>
-                        <th>ExtentionName</th>
-                        <th>Home Address</th>
-                        <th>Sex</th>
-                        <th>Religion</th>
-                        <th>date_of_birth</th>
-                        <th>place_of_birth</th>
-                        <th>contact no.</th>
-                        <th>civil_status</th>
-                        <th>name of legal spuse</th>
-                        <th>mothers_maiden_name</th>
-                        <th>highest_formal_education</th>
-                        <th>person_with_disability</th>
-                        <th>pwd_id_no</th>
-                        <th>government_issued_id</th>
-                        <th>id_type</th>
-                        <th>gov_id_no</th>
-                        <th>member_ofany_farmers_ass_org_coop</th>
-                        <th>nameof_farmers_ass_org_coop</th>
-                        <th>name_contact_person</th>
-                        <th>cp_tel_no</th>
-                       
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($FarmersData->where('agri_district','tumaga') as $personalinformation)
-                        <tr class="table-light">
-                            <td>{{  $personalinformation->personal_informations_id }}</td>
-                  
-                            <td>{{  $personalinformation->first_name }}</td>
-                <td>{{  $personalinformation->middle_name }}</td>
-                <td>{{  $personalinformation->last_name }}</td>
-                <td>{{  $personalinformation->extension_name }}</td>
-                <td>{{  $personalinformation->barangay.' ,'.$personalinformation->agri_district.' ,'.$personalinformation->city}}</td>
-                <td>{{  $personalinformation->sex }}</td>
-                <td>{{  $personalinformation->religion }}</td>
-                <td>{{  $personalinformation->date_of_birth }}</td>
-                <td>{{  $personalinformation->place_of_birth}}</td>
-                <td>{{  $personalinformation->contact_no }}</td>
-                <td>{{  $personalinformation->civil_status }}</td>
-                <td>{{  $personalinformation->name_legal_spouse }}</td>
-                <td>{{  $personalinformation->no_of_children }}</td>
-                <td>{{  $personalinformation->mothers_maiden_name }}</td>
-                <td>{{  $personalinformation->highest_formal_education }}</td>
-                <td>{{  $personalinformation->person_with_disability}}</td>
-                <td>{{  $personalinformation->government_issued_id }}</td>
-                <td>{{  $personalinformation->id_type }}</td>
-                <td>{{  $personalinformation->gov_id_no }}</td>
-                <td>{{  $personalinformation->member_ofany_farmers_ass_org_coop }}</td>
-                <td>{{  $personalinformation->nameof_farmers_ass_org_coop }}</td>
-                <td>{{  $personalinformation->name_contact_person }}</td>
-                <td>{{  $personalinformation->cp_tel_no }}</td>   
-            
-                <td>
-                           
-                    {{-- <a href="{{ route('agent.tumaga.show_personal_info', ['id' => $personalinformation->id]) }}" class="btn btn-primary">Show Details</a> --}}
+                <div class="table-responsive tab">
+                  <table id="printTable" class="table table-bordered table-sm datatable">
+              
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Farmer No.</th>
+                                <th>Farmers Name</th>
+                                <th>Farm Address</th>
+                                <th>Farmer Org/assoc/coop</th>
+                                <th>Tenurial Status</th>
+                                <th>Total Fixed Cost</th>
+                                <th>Total Machineries Used</th>
+                                <th>Variable Cost</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($FarmersData->where('agri_district','tumaga') as $personalinformation)
+                            <tr class="table-light">
+                                <td class=" d-md-table-cell">{{ $personalinformation->personal_informations_id }}</td>
+                                <td class=" d-md-table-cell">
+                                    <?php
+                                    // Define variables
+                                    $first_name = $personalinformation->first_name;
+                                    $middle_name = $personalinformation->middle_name;
+                                    $last_name = $personalinformation->last_name;
+                                    $extension_name = $personalinformation->extension_name;
+                                
+                                    // Construct the full name
+                                    $full_name = $first_name;
+                                
+                                    // Check and append the middle name
+                                    if (!empty($middle_name) && $middle_name !== 'N/A') {
+                                        $full_name .= ' ' . $middle_name;
+                                    }
+                                
+                                    $full_name .= ', ' . $last_name;
+                                
+                                    // Check if extension_name is not empty and not equal to "N/A"
+                                    if (!empty($extension_name) && $extension_name !== 'N/A') {
+                                        $full_name .= ' ' . $extension_name;
+                                    }
+                                
+                                    // Output the full name
+                                    echo htmlspecialchars($full_name);
+                                    ?>
+                                </td>
+                                
+                                <td class=" d-sm-table-cell">{{ $personalinformation->rice_farm_address . ', ' . $personalinformation->agri_district . ', ' . $personalinformation->city }}</td>
+                                <td class=" d-sm-table-cell">
+                                    {{ $personalinformation->nameof_farmers_ass_org_coop !== 'N/A' ? $personalinformation->nameof_farmers_ass_org_coop : 'No farms org/assoc/coop' }}
+                                </td>
+                                
+                                <td class=" d-sm-table-cell">{{ $personalinformation->tenurial_status }}</td>
+                                <td class=" d-sm-table-cell">{{ $personalinformation->total_amount }}</td>
+                                <td class=" d-sm-table-cell">{{ $personalinformation->total_cost_for_machineries }}</td>
+                                <td class=" d-sm-table-cell"> {{ $personalinformation->total_transport_per_deliverycost	}}</td>
+                                <td class=" d-sm-table-cell">
+                                    <a href="#" title="View" data-toggle="modal" data-target="#exampleModal{{ $personalinformation->personal_informations_id }}">
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="fa fa-eye" aria-hidden="true"></i> 
+                                        </button>
+                                    </a>
+                                </td>
+                                
+                            </tr>
 
-         {{-- <form  action="{{ route('agent.personal_info.delete', $personalinformation->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
-           @csrf
-                       <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                  
-                   </form> --}}
-                   {{-- <div class="col-sm">
-                       <form action="{{ route('personalinfo.destroy', $personalinformation->id) }}" method="post">
-                         @csrf
-                         @method('DELETE')
-                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                       </form>
-                   </div> --}}
-               </td>
-            </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal{{ $personalinformation->personal_informations_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Farmers Information</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          
+ 
+
+                                            <form>
+                                             
+                                              
+                                              
+                                              <div class="box d-flex flex-column align-items-center">
+                                                <img style="height: 70px; width: 70px;" src="{{ url('upload/rice.JPG') }}" alt="Profile Image" class="img-fluid mb-4">
+                                                <p class="text">{{$full_name}}</p>
+                                                <p class="text">Age:{{$personalinformation->age}}</p>
+                                                <div id="overlay">
+                                                    <div class="image">
+                                                        <div class="trick"></div>
+                                                    </div>
+                                                
+                                                </div>
+                                            </div>
+                                            
+                                          
+                                                    <div class="panel-group align-items-left" id="accordion" role="tablist" aria-multiselectable="true">
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading" role="tab" id="headingOne">
+                                                                <h4 class="panel-title">
+                                                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="" aria-controls="collapseOne">
+                                                                        <div class="title btn btn-success btn-outline btn-lg">Personal Info</div>
+                                                                    </a>
+                                                                </h4>
+                                                            </div>
+                                                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                                                <div class="panel-body">
+                                                                  <br>
+                                                                  <div class="row mb-3">
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Farmers Org/Assoc/Coop:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0"> {{ $personalinformation->nameof_farmers_ass_org_coop !== 'N/A' ? $personalinformation->nameof_farmers_ass_org_coop : 'No farms org/assoc/coop' }}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Home Address:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{$personalinformation->barangay . ', ' . $personalinformation->agri_district . ', ' . $personalinformation->city }}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Sex:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{ $personalinformation->sex }}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Civil Status:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{$personalinformation->civil_status}}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Religion:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{$personalinformation->religion}}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Date iof Birth:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{$personalinformation->date_of_birth}}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                                 
+                                                                      </div>
+                                                                   </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading" role="tab" id="headingTwo">
+                                                                <h4 class="panel-title">
+                                                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                                        <div class="title btn btn-success btn-outline btn-lg">Farm Profile </div>
+                                                                    </a>
+                                                                </h4>
+                                                            </div>
+                                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                                                <div class="panel-body">
+                                                                  <br>
+                                                                  <div class="row mb-3">
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Tenurial Status:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{ $personalinformation->tenurial_status }}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Farm Address:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{ $personalinformation->rice_farm_address . ', ' . $personalinformation->agri_district . ', ' . $personalinformation->city }}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Years as Farmers:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{ $personalinformation->no_of_years_as_farmers }}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Land Title:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{$personalinformation->land_title_no}}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Lot No.:</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{$personalinformation->lot_no}}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                      <div class="col-sm-3">
+                                                                        <p class="mb-0">Total Physical area (HAS):</p>
+                                                                      </div>
+                                                                      <div class="col-sm-9">
+                                                                        <p class="text-muted mb-0">{{$personalinformation->total_physical_area_has}}</p>
+                                                                      </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                      <div class="row">
+                                                                        <div class="col-sm-3">
+                                                                          <p class="mb-0">Rice Area Cultivated (HAS):</p>
+                                                                        </div>
+                                                                        <div class="col-sm-9">
+                                                                          <p class="text-muted mb-0">{{$personalinformation->rice_area_cultivated_has}}</p>
+                                                                        </div>
+                                                                      </div>
+                                                                    
+                                                                      <hr>
+                                                                      <div class="row">
+                                                                        <div class="col-sm-3">
+                                                                          <p class="mb-0">Area Prone To:</p>
+                                                                        </div>
+                                                                        <div class="col-sm-9">
+                                                                          <p class="text-muted mb-0">{{$personalinformation->area_prone_to}}</p>
+                                                                        </div>
+                                                                      </div>
+                                                                      <hr>
+                                                                      <div class="row">
+                                                                        <div class="col-sm-3">
+                                                                          <p class="mb-0">Ecosystem:</p>
+                                                                        </div>
+                                                                        <div class="col-sm-9">
+                                                                          <p class="text-muted mb-0">{{$personalinformation->ecosystem}}</p>
+                                                                        </div>
+                                                                      </div>
+                                                                      <hr>
+                                                                      <div class="row">
+                                                                        <div class="col-sm-3">
+                                                                          <p class="mb-0">Rice Variety:</p>
+                                                                        </div>
+                                                                        <div class="col-sm-9">
+                                                                          <p class="text-muted mb-0"> @if(strtoupper($personalinformation->type_rice_variety) === 'N/A')
+                                                                            @if(strtoupper($personalinformation->prefered_variety) === 'N/A')
+                                                                                N/A
+                                                                            @else
+                                                                                {{ $personalinformation->prefered_variety }}
+                                                                            @endif
+                                                                        @else
+                                                                            {{ $personalinformation->type_rice_variety }}
+                                                                        @endif</p>
+                                                                        </div>
+                                                                      </div>
+                                                                        <hr>
+                                                                        <div class="row">
+                                                                          <div class="col-sm-3">
+                                                                            <p class="mb-0">Yield(tons/has):</p>
+                                                                          </div>
+                                                                          <div class="col-sm-9">
+                                                                            <p class="text-muted mb-0">{{$personalinformation->yield_kg_ha}}</p>
+                                                                          </div>
+                                                                        </div>
+                                                                        <hr>
+                                                                     
+                                                                            
+                                                                                  <!-- Add more form fields as needed -->
+                                                                              </div>
+                                                                             
+                                                               
+                                                                                  <!-- Add more form fields as needed -->
+                                                                              </div>
+                                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="panel panel-default">
+                                                          <div class="panel-heading" role="tab" id="headingthree">
+                                                              <h4 class="panel-title">
+                                                                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsethree" aria-expanded="" aria-controls="collapsethree">
+                                                                      <div class="title btn btn-success btn-outline btn-lg">Fixed Cost</div>
+                                                                  </a>
+                                                              </h4>
+                                                          </div>
+                                                          <div id="collapsethree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingthree">
+                                                              <div class="panel-body">
+                                                                <br>
+                                                                <div class="row mb-3">
+                                                                                
+                                                                        <div class="row">
+                                                                          <div class="col-sm-3">
+                                                                            <p class="mb-0">Particular:</p>
+                                                                          </div>
+                                                                          <div class="col-sm-9">
+                                                                            <p class="text-muted mb-0">{{ $personalinformation->particular }}</p>
+                                                                          </div>
+                                                                        </div>
+                                                                        <hr>
+                                                                        <div class="row">
+                                                                          <div class="col-sm-3">
+                                                                            <p class="mb-0">No. of has:</p>
+                                                                          </div>
+                                                                          <div class="col-sm-9">
+                                                                            <p class="text-muted mb-0">{{ $personalinformation->no_of_ha }}</p>
+                                                                          </div>
+                                                                        </div>
+                                                                        <hr>
+                                                                        <div class="row">
+                                                                          <div class="col-sm-3">
+                                                                            <p class="mb-0">Cost/Has:</p>
+                                                                          </div>
+                                                                          <div class="col-sm-9">
+                                                                            <p class="text-muted mb-0">{{$personalinformation->cost_per_ha}}</p>
+                                                                          </div>
+                                                                        </div>
+                                                                        <hr>
+                                                                        <div class="row">
+                                                                          <div class="col-sm-3">
+                                                                            <p class="mb-0">Total Amount:</p>
+                                                                          </div>
+                                                                          <div class="col-sm-9">
+                                                                            <p class="text-muted mb-0">{{$personalinformation->total_amount}}</p>
+                                                                          </div>
+                                                                        </div>
+                                                                       
+                                                                      
+                                                            
+                                                                                <!-- Add more form fields as needed -->
+                                                                            </div>
+                                                                                                                                </div>
+                                                          </div>
+                                                          
+                                                      </div>
+
+                                                      <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="headingfour">
+                                                            <h4 class="panel-title">
+                                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsefour" aria-expanded="" aria-controls="collapsefour">
+                                                                    <div class="title btn btn-success btn-outline btn-lg">Machineries Used</div>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapsefour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingfour">
+                                                            <div class="panel-body">
+                                                              <br>
+                                                           
+                                                                <div class="col">
+                                                                 
+                                                                      <label for="full_name">Plowing</label></label>
+                                                              </div>
+                                                              {{-- plowing --}}
+                                                              <div class="row mb-3">
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Machineries Used (Plowing):</p>
+                                                                </div>
+                                                                <br>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{ $personalinformation->plowing_machineries_used }}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Ownership (Plowing):</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{ $personalinformation->plo_ownership_status }}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">No of Plowing:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->no_of_plowing}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Cost/Plowing:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->cost_per_plowing}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Plowing Cost:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->plowing_cost}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                         
+                                                              <br>
+                                                           
+                                                              <div class="col">
+                                                               
+                                                                    <label for="full_name"> Harrowing</label>
+                                                            </div>
+
+                                                            {{-- harrowing --}}
+                                                            <div class="row mb-3">
+                                                            <div class="row">
+                                                              <div class="col-sm-3">
+                                                                <p class="mb-0">Machineries Used (Harrowing):</p>
+                                                              </div>
+                                                              <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">{{ $personalinformation->harrowing_machineries_used }}</p>
+                                                              </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                              <div class="col-sm-3">
+                                                                <p class="mb-0">Ownership (Harrowing):</p>
+                                                              </div>
+                                                              <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">{{ $personalinformation->plo_ownership_status }}</p>
+                                                              </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                              <div class="col-sm-3">
+                                                                <p class="mb-0">No of Harrowing:</p>
+                                                              </div>
+                                                              <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">{{$personalinformation->no_of_harrowing}}</p>
+                                                              </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                              <div class="col-sm-3">
+                                                                <p class="mb-0">Cost/Plowing:</p>
+                                                              </div>
+                                                              <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">{{$personalinformation->cost_per_harrowing}}</p>
+                                                              </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                              <div class="col-sm-3">
+                                                                <p class="mb-0">Harrowing Cost:</p>
+                                                              </div>
+                                                              <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">{{$personalinformation->harrowing_cost}}</p>
+                                                              </div>
+                                                            </div>
+                                                            <hr> 
+                                                            <br>
+                                                           
+                                                            <div class="col">
+                                                             
+                                                                  <label for="full_name"> Harvesting</label>
+                                                          </div>
+                                                             {{-- harvesting --}}
+                                                             <div class="row mb-3">
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Machineries Used (Harvest):</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{ $personalinformation->harvesting_machineries_used }}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Ownership (harvest):</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{ $personalinformation->harvest_ownership_status }}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Harvest Cost:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->harvesting_cost}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <br>
+                                                           
+                                                            <div class="col">
+                                                             
+                                                                  <label for="full_name"> PostHarvest</label>
+                                                          </div>
+                                                             {{-- harvesting --}}
+                                                             <div class="row mb-3">
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Machineries Used (PostHarvest):</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{ $personalinformation->postharvest_machineries_used }}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Ownership (Postharvest):</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{ $personalinformation->postharv_ownership_status}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">PostHarvest Cost:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->post_harvest_cost}}</p>
+                                                                </div>
+                                                              </div>
+                                                            
+                                                          
+                                                                              <!-- Add more form fields as needed -->
+                                                                          </div>
+                                                                                                                              </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    </div>
+                                                  </div>
+                                                   
+
+                                                </div>
+                                                <div class="panel panel-default">
+                                                  <div class="panel-heading" role="tab" id="HeadingFive">
+                                                      <h4 class="panel-title">
+                                                          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsefive" aria-expanded="" aria-controls="collapsefive">
+                                                              <div class="title btn btn-success btn-outline btn-lg">Variable Cost</div>
+                                                          </a>
+                                                      </h4>
+                                                  </div>
+                                                  <div id="collapsefive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="HeadingFive">
+                                                      <div class="panel-body">
+                                                        <br>
+                                                        <div class="row mb-3">
+                                                                        
+                                                                <div class="row">
+                                                                  <div class="col-sm-3">
+                                                                    <p class="mb-0">Seed Cost:</p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                    <p class="text-muted mb-0">{{ $personalinformation->total_seed_cost }}</p>
+                                                                  </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                  <div class="col-sm-3">
+                                                                    <p class="mb-0">Labor Cost:</p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                    <p class="text-muted mb-0">{{ $personalinformation->total_labor_cost }}</p>
+                                                                  </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                  <div class="col-sm-3">
+                                                                    <p class="mb-0">Fertilizer Cost:</p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                    <p class="text-muted mb-0">{{$personalinformation->total_cost_fertilizers}}</p>
+                                                                  </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                  <div class="col-sm-3">
+                                                                    <p class="mb-0">Pesticide Cost:</p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                    <p class="text-muted mb-0">{{$personalinformation->total_cost_pesticides}}</p>
+                                                                  </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                  <div class="col-sm-3">
+                                                                    <p class="mb-0">Transport Cost:</p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                    <p class="text-muted mb-0">{{$personalinformation->total_transport_per_deliverycost}}</p>
+                                                                  </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                  <div class="col-sm-3">
+                                                                    <p class="mb-0">Total Machinery Fuel Cost:</p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                    <p class="text-muted mb-0">{{$personalinformation->total_machinery_fuel_cost}}</p>
+                                                                  </div>
+                                                                </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                  <div class="col-sm-3">
+                                                                    <p class="mb-0">Total Variable Cost:</p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                    <p class="text-muted mb-0">{{$personalinformation->total_variable_cost}}</p>
+                                                                  </div>
+                                                                </div>
+                                                                <hr>
+                                                               
+                                                              
+                                                    
+                                                                        <!-- Add more form fields as needed -->
+                                                                    </div>
+                                                                                                                        </div>
+                                                  </div>
+                                                  
+                                              </div>
+
+                                              <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingsix">
+                                                    <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapsesix" aria-expanded="" aria-controls="collapsesix">
+                                                            <div class="title btn btn-success btn-outline btn-lg">Last Production</div>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapsesix" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingsix">
+                                                    <div class="panel-body">
+                                                      <br>
+                                                      <div class="row mb-3">
+                                                                      
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Seed Source:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{ $personalinformation->seed_source }}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Area planted:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{ $personalinformation->area_planted }}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Yield (tons/kg):</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->yield_tons_per_kg}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Unit Price Palay/kg:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->unit_price_palay_per_kg}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Unit Price Rice/kg:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->unit_price_rice_per_kg}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Sold To:</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->sold_to}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Gross Income (Palay):</p>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->gross_income_palay}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                              <div class="row">
+                                                                <div class="col-sm-3">
+                                                                  <p class="mb-0">Gross Income (Rice):</p>
+                                                                </div> 
+                                                                <div class="col-sm-9">
+                                                                  <p class="text-muted mb-0">{{$personalinformation->gross_income_rice}}</p>
+                                                                </div>
+                                                              </div>
+                                                              <hr>
+                                                                     
+                                                                  </div>
+                                                                                                                      </div>
+                                                </div>
+                                                
+                                            </div>
+                                            </form>
+                                                                 
+                                        </div>
+                                        {{-- <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div> --}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                
+    {{-- </div>
+</div> --}}
     </div>
 
-    <!-- Farm Profile Table Section -->
-    <div id="farm_profile_section" style="display: none;">
-        <br>
-        <div class="card border rounded">
-            <div class="card-body">
-                <h4 class="mb-3 mb-md-0">Farm Profile</h4>
-      
-        <div class="table-responsive tab">
-            <table  class="table table-bordered datatable">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Farmer No.</th>
-                        <th>tenurial status</th>
-                        <th>rice farm address</th>
-                        <th>no of years as farmers</th>
-                        <th>gps longitude</th>
-                        <th>gps latitude</th>
-                        <th>total physical area has</th>
-                        <th>rice_area_cultivated has</th>
-                        <th>land_title_no</th>
-                        <th>lot_no</th>
-                        <th>area_prone_to</th>
-                        <th>ecosystem</th>
-                        <th>type_rice_variety</th>
-                        <th>prefered_variety</th>
-                        <th>plant_schedule_wetseason</th>
-                        <th>plant_schedule_dryseason'</th>
-                        <th>no_of_cropping_yr</th>
-                        <th>yield_kg_ha</th>
-                        <th>rsba_register</th>
-                        <th>pcic_insured</th>
-                        <th>source_of_capital</th>
-                        <th>remarks_recommendation</th>
-                        <th>oca_district_office</th>
-                        <th>name_technicians</th>
-                        <th>date_interview</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($FarmersData->where('agri_district','tumaga') as $farmers)
-                        <tr class="table-light">
-                            <td>{{  $farmers->personal_informations_id }}</td>
-                  
-                            <td>{{ $farmers->tenurial_status }}</td>
-                            <td>{{ $farmers->rice_farm_address }}</td>
-                            <td>{{ $farmers->no_of_years_as_farmers }}</td>
-                            <td>{{ $farmers->gps_longitude }}</td>
-                            <td>{{ $farmers->gps_latitude}}</td>
-                            <td>{{ $farmers->total_physical_area_has }}</td>
-                            <td>{{ $farmers->rice_area_cultivated_has }}</td>
-                            <td>{{ $farmers->land_title_no }}</td>
-                            <td>{{ $farmers->lot_no}}</td>
-                            <td>{{ $farmers->area_prone_to}}</td>
-                            <td>{{ $farmers->ecosystem }}</td>
-                            <td>{{ $farmers->type_rice_variety }}</td>
-                            <td>{{ $farmers->prefered_variety }}</td>
-                            <td>{{ $farmers->plant_schedule_wetseason }}</td>
-                            <td>{{ $farmers->plant_schedule_dryseason}}</td>
-                            <td>{{ $farmers->no_of_cropping_yr }}</td>
-                            <td>{{ $farmers->yield_kg_ha}}</td>
-                            <td>{{ $farmers->rsba_register}}</td>
-                            <td>{{ $farmers->pcic_insured }}</td>
-                            <td>{{ $farmers->source_of_capital}}</td>
-                            <td>{{ $farmers->remarks_recommendation}}</td>
-                            <td>{{ $farmers->oca_district_office}}</td>
-                            <td>{{ $farmers->name_technicians}}</td>
-                            <td>{{ $farmers->date_interview}}</td>        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-    </div>
+   
 
     <!-- Fixed Cost Table Section -->
-    <div id="fixed_cost_section" style="display: none;">
+    <div id="personal_info_section" style="display: none;">
        <br>
-       <div class="card border rounded">
-        <div class="card-body">
-            <h4 class="mb-3 mb-md-0">Fixed Cost</h4>
-  
-    <div class="table-responsive tab">
-        <table  class="table table-bordered datatable">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Farmer No.</th>
-                        <th>particular(FixedCost)</th>
-                        <th>no of has</th>
-                         <th>cost per has</th>
-                        <th>total Fixed Cost</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($FarmersData->where('agri_district','tumaga') as $farmers)
-                        <tr class="table-light">
-                            <td>{{  $farmers->personal_informations_id }}</td>
-                  
-                            <td>{{ $farmers->particular }}</td>
-                            <td>{{ $farmers->no_of_ha }}</td>
-                            <td>{{ number_format($farmers->cost_per_ha,2)}}</td>
-                            <td>{{ number_format($farmers->total_amount,2) }}</td>      </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-</div>
-    <!-- Machineries Table Section -->
-    <div id="machineries_section" style="display: none;">
-        <br>
-        <div class="card border rounded">
+     
+ 
+
+  <div class="row">
+    <div class="col-12 col-xl-12 stretch-card">
+      <div class="row flex-grow-1">
+        <div class="col-md-4 grid-margin stretch-card">
+          <div class="card">
             <div class="card-body">
-                <h4 class="mb-3 mb-md-0">Machineries Used Cost</h4>
-      
-        <div class="table-responsive tab">
-            <table  class="table table-bordered datatable">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Farmer No.</th>
-                        <th>plowing_machineries_used</th>
-                        <th>plo_ownership_status</th>
-                        <th>no_of_plowing</th>
-                        <th>plowing_cost</th>
-                        <th>harrowing_machineries_used</th>
-                        <th>harro_ownership_status</th>
-                        <th>no_of_harrowing</th>
-                        <th>harrowing_cost</th>
-                        <th>harvesting_machineries_used</th>
-                        <th>harvest_ownership_status</th>
-                        <th>harvesting_cost</th>
-                        <th>postharvest_machineries_used</th>
-                        <th>postharv_ownership_status</th>
-                        <th>post_harvest_cost</th>
-                        <th>total_cost_for_machineries'</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($FarmersData->where('agri_district','tumaga') as $farmers)
-                        <tr class="table-light">
-                            <td>{{  $farmers->personal_informations_id }}</td>
-                  
-                            <td>{{ $farmers->plowing_machineries_used }}</td>
-                            <td>{{ $farmers->plo_ownership_status }}</td>
-                            <td>{{ $farmers->no_of_plowing }}</td>
-                            <td>{{ number_format($farmers->plowing_cost,2) }}</td>
-                            <td>{{ $farmers->harrowing_machineries_used}}</td>
-                            <td>{{ $farmers->harro_ownership_status }}</td>
-                            <td>{{ $farmers->no_of_harrowing }}</td>
-                            <td>{{ number_format($farmers->harrowing_cost,2 )}}</td>
-                            <td>{{ $farmers->harvesting_machineries_used}}</td>
-                            <td>{{ $farmers->harvest_ownership_status}}</td>
-                            <td>{{ number_format($farmers->harvesting_cost,2)}}</td>
-                            <td>{{ $farmers->postharvest_machineries_used }}</td>
-                            <td>{{ $farmers->postharv_ownership_status }}</td>
-                            <td>{{ number_format($farmers->post_harvest_cost,2) }}</td>
-                            <td>{{ number_format($farmers->total_cost_for_machineries,2)}}</td>     </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
-    </div>
-
-    <!-- Variable Cost Table Section -->
-    <div id="variable_cost_section" style="display: none;">
-        <br>
-        <div class="card border rounded">
-            <div class="card-body">
-                <h4 class="mb-3 mb-md-0">Variable Cost</h4>
-      
-        <div class="table-responsive tab">
-            <table  class="table table-bordered datatable">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Farmer No.</th>
-                        <th>total seed cost</th>
-                        <th>total labor cost</th>
-                        <th>total cost ferilizers</th>
-                        <th>total cost of pesticides</th>
-                        <th>total transport/delivery cost</th>
-                        <th>total machinery/delivery cost</th>
-                        <th>total variable cost</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($FarmersData->where('agri_district','tumaga') as $farmers)
-                        <tr class="table-light">
-                            <td>{{  $farmers->personal_informations_id }}</td>
-                  
-                            <td>{{ number_format($farmers->total_seed_cost,2) }}</td>
-                            <td>{{ number_format($farmers->total_labor_cost,2)}}</td>
-                            <td>{{ number_format($farmers->total_cost_fertilizers,2) }}</td>
-                            <td>{{ number_format($farmers->total_cost_pesticides,2)}}</td>
-                            <td>{{ number_format($farmers->total_transport_per_deliverycost,2)}}</td>
-                            <td>{{number_format($farmers->total_machinery_fuel_cost,2) }}</td>
-                            <td>{{number_format($farmers->total_variable_cost,2)}}</td>
-                            </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-        </div>
-    </div>
-
-
-    <!-- Last Production Data Table Section -->
-    <div id="last_production_data_section" style="display: none;">
-        <br>
-        <div class="card border rounded">
-            <div class="card-body">
-                <h4 class="mb-3 mb-md-0">Last Production Data</h4>
-      
-        <div class="table-responsive tab">
-            <table  class="table table-bordered datatable">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Farmer No.</th>
-                        <th>seed_type_used</th>
-                        <th>seeds_used_in_kg</th>
-                        <th>seed_source</th>
-                        <th>no_of_fertilizer_used</th>
-                        <th>no_of_pesticides_used</th>
-                        <th>no_of_insecticides_used</th>
-                        <th>area_planted</th>
-                        <th>date_planted</th>
-                        <th>date_harvested</th>
-                        <th>yield_tons_per_kg</th>
-                        <th>unitprice_palay_kgt</th>
-                        <th>unitprice_rice_kg</th>
-                        <th>type_ofproduct</th>
-                        <th>sold_to</th>
-                        <th>palay_milled'</th>
-                        <th>gross_income_palay'</th>
-                        <th>gross_income_rice'</th>
-                      
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($FarmersData->where('agri_district','tumaga') as $farmers)
-                        <tr class="table-light">
-                            <td>{{  $farmers->personal_informations_id }}</td>
-                  
-                            <td>{{ $farmers->seeds_typed_used}}</td>
-                            <td>{{ $farmers->seeds_used_in_kg}}</td>
-                            <td>{{ $farmers->seed_source}}</td>
-                            <td>{{ $farmers->no_of_fertilizer_used_in_bags}}</td>
-                            <td>{{ $farmers->no_of_pesticides_used_in_l_per_kg}}</td>
-                            <td>{{ $farmers->no_of_insecticides_used_in_l }}</td>
-                            <td>{{ $farmers->area_planted }}</td>
-                            <td>{{ $farmers->date_planted}}</td>
-                            <td>{{ $farmers->date_harvested}}</td>
-                            <td>{{ $farmers->yield_tons_per_kg}}</td>
-                            <td>{{ $farmers->unit_price_palay_per_kg}}</td>
-                            <td>{{ $farmers->unit_price_rice_per_kg}}</td>
-                            <td>{{ $farmers->type_of_product}}</td>
-                            <td>{{ $farmers->sold_to}}</td>
-                            <td>{{ $farmers->if_palay_milled_where}}</td>
-                            <td>{{ $farmers->gross_income_palay}}</td>
-                            <td>{{ $farmers->gross_income_rice}}</td>
-                            </tr>
-                    @endforeach
-                      </tbody>
-                  </table>
+              <div class="d-flex justify-content-between align-items-baseline">
+                <h6 class="card-title mb-0">No. of Farmers</h6>
+                {{-- <div class="dropdown mb-2">
+                  <a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                  </div>
+                </div> --}}
               </div>
-             </div>
+              <div class="row">
+                <div class="col-6 col-md-12 col-xl-5"><br>
+                  <h3 class="mb-2">{{ number_format($totalfarms, 2) }}</h3>
+                  <div class="d-flex align-items-baseline">
+                    {{-- <p class="text-success">
+                      <span>+3.3%</span>
+                      <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                    </p> --}}
+                  </div>
+                </div>
+                {{-- <div class="col-6 col-md-12 col-xl-7">
+                     <!-- Add a canvas element for the bar chart -->
+                <canvas id="farmersBarChart" width="200" height="200"></canvas>
+                </div> --}}
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="col-md-4 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-baseline">
+                <h6 class="card-title mb-0">Total Area PLanted</h6>
+                {{-- <div class="dropdown mb-2">
+                  <a type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                  </div>
+                </div> --}}
+              </div>
+              <div class="row">
+                <div class="col-6 col-md-12 col-xl-5"><br>
+                  <h3 class="mb-2">{{ number_format($totalAreaPlantedAyala, 2) }}</h3>
+                  <div class="d-flex align-items-baseline">
+                    {{-- <p class="text-danger">
+                      <span>-2.8%</span>
+                      <i data-feather="arrow-down" class="icon-sm mb-1"></i>
+                    </p> --}}
+                  </div>
+                </div>
+                {{-- <div class="col-6 col-md-12 col-xl-7">
+                  <div id="ordersChart" class="mt-md-3 mt-xl-0"></div>
+                </div> --}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-baseline">
+                <h6 class="card-title mb-0">Total Area Yield(Kg/Ha)</h6>
+                {{-- <div class="dropdown mb-2">
+                  <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                  </div>
+                </div> --}}
+              </div>
+              <div class="row">
+                <div class="col-6 col-md-12 col-xl-5"><br>
+                  <h3 class="mb-2">{{ number_format($totalAreaYieldAyala, 2) }}</h3>
+                  <div class="d-flex align-items-baseline">
+                    {{-- <p class="text-success">
+                      <span>+2.8%</span>
+                      <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                    </p> --}}
+                  </div>
+                </div>
+                {{-- <div class="col-6 col-md-12 col-xl-7">
+                  <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                </div> --}}
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
+  </div> <!-- row -->
+  
 
+  <div class="row">
+    <div class="col-12 col-xl-12 stretch-card">
+      <div class="row flex-grow-1">
+        <div class="col-md-4 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-baseline">
+                <h6 class="card-title mb-0">Total  Fixed Cost</h6>
+                {{-- <div class="dropdown mb-2">
+                  <a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                  </div>
+                </div> --}}
+              </div>
+              <div class="row">
+                <div class="col-6 col-md-12 col-xl-5"><br>
+                  <h3 class="mb-2">{{ number_format($totalFixedCostAyala, 2) }}</h3>
+                  <div class="d-flex align-items-baseline">
+                    {{-- <p class="text-success">
+                      <span>+3.3%</span>
+                      <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                    </p> --}}
+                  </div>
+                </div>
+                {{-- <div class="col-6 col-md-12 col-xl-7">
+                  <div id="customersChart" class="mt-md-3 mt-xl-0"></div>
+                </div> --}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-baseline">
+                <h6 class="card-title mb-0">Total Machineries Used</h6>
+                {{-- <div class="dropdown mb-2">
+                  <a type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                  </div>
+                </div> --}}
+              </div>
+              <div class="row">
+                <div class="col-6 col-md-12 col-xl-5"><br>
+                  <h3 class="mb-2">{{ number_format($totalMachineriesUsedAyala, 2) }}</h3>
+                  <div class="d-flex align-items-baseline">
+                    {{-- <p class="text-danger">
+                      <span>-2.8%</span>
+                      <i data-feather="arrow-down" class="icon-sm mb-1"></i>
+                    </p> --}}
+                  </div>
+                </div>
+                {{-- <div class="col-6 col-md-12 col-xl-7">
+                  <div id="ordersChart" class="mt-md-3 mt-xl-0"></div>
+                </div> --}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-baseline">
+                <h6 class="card-title mb-0">Total Variable Cost</h6>
+                {{-- <div class="dropdown mb-2">
+                  <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                  </div>
+                </div> --}}
+              </div>
+              <div class="row">
+                <div class="col-6 col-md-12 col-xl-5"><br>
+                  <h3 class="mb-1">{{ number_format($totalVariableCostAyala, 2) }}</h3>
+                  <div class="d-flex align-items-baseline">
+                    {{-- <p class="text-success">
+                      <span>+2.8%</span>
+                      <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                    </p> --}}
+                  </div>
+                </div>
+                {{-- <div class="col-6 col-md-12 col-xl-7">
+                  <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                </div> --}}
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Average  Yield  Per Area Planted (Kg/Ha)</h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($yieldPerAreaPlanted, 2) }}</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Average Cost Per Area Planted(Ha)</h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($totalRiceProduction, 2) }}</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Rice Farmers Productivity </h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($riceProductivityAyala * 100, 2) }}%</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Owner </h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($countOwner, 2) }}</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Tenant</h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($countOwnerTenants, 2) }}</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Tiller Tenants </h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($countTillerTenantTenants, 2) }}</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Tiller</h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($countTillerTenants, 2) }}</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Lease </h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($countLeaseTenants, 2) }}</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="card-title mb-0">Total Farmers Org/Assoc/Coop</h6>
+                  {{-- <div class="dropdown mb-2">
+                    <a type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
+                    </div>
+                  </div> --}}
+                </div>
+                <div class="row">
+                  <div class="col-6 col-md-12 col-xl-5"><br>
+                    <h3 class="mb-1">{{ number_format($countorg, 2) }}</h3>
+                    <div class="d-flex align-items-baseline">
+                      {{-- <p class="text-success">
+                        <span>+2.8%</span>
+                        <i data-feather="arrow-up" class="icon-sm mb-1"></i>
+                      </p> --}}
+                    </div>
+                  </div>
+                  {{-- <div class="col-6 col-md-12 col-xl-7">
+                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
+                  </div> --}}
+                </div>
+                
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div> <!-- row -->
+
+
+
+
+      </div>
+    </div>
+</div>
+
+
+    
+    </div>
+    </div>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-geo@latest"></script>
+    
 <script>
+// Define the showSection function
 function showSection(sectionName) {
-// Hide all sections
-document.querySelectorAll('[id$="_section"]').forEach(section => {
-section.style.display = 'none';
-});
+    // Hide all sections
+    document.querySelectorAll('[id$="_section"]').forEach(section => {
+        section.style.display = 'none';
+    });
 
-// Show the selected section
-document.getElementById(sectionName + '_section').style.display = 'block';
+    // Show the selected section
+    var selectedSection = document.getElementById(sectionName + '_section');
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
 }
+
+// Display the "fixed_cost_section" first
+showSection('personal_info');
+
+
+
 </script>
 <script>
-    function showAllSections() {
-    // Show all sections
-    document.querySelectorAll('[id$="_section"]').forEach(section => {
-        section.style.display = 'block';
-    });
-}
+                        function showAllSections() {
+                        // Show all sections
+                        document.querySelectorAll('[id$="_section"]').forEach(section => {
+                            section.style.display = 'block';
+                        });
+                    }// Assuming you have the total number of farmers in the Ayala district from the server-side
+                    const totalFarmersAyala = {{ $totalfarms }}; // Replace with the actual variable from server-side
+
+                    // Define the data for the bar chart
+                    const data = {
+                        labels: ['Ayala'], // Labels for the X-axis (district name)
+                        datasets: [
+                            {
+                                label: 'Number of Farmers',
+                                data: [totalFarmersAyala], // Data array (number of farmers)
+                                backgroundColor: '#4caf50', // Green color for bars
+                                borderColor: '#388e3c', // Border color
+                                borderWidth: 1 // Border width
+                            }
+                        ]
+                    };
+
+                    // Define options for the chart
+                    const options = {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true // Start Y-axis at zero
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                display: true,
+                                color: 'black',
+                                formatter: function(value) {
+                                    return value.toLocaleString(); // Format numbers with commas
+                                }
+                            },
+                            legend: {
+                                display: false // Hide the legend
+                            }
+                        },
+                        animation: {
+                            duration: 2000, // Animation duration in milliseconds
+                            easing: 'easeOutCubic', // Easing function for the animation
+                        },
+                        // Add any additional plugins or options for 3D effects here
+                    };
+
+                    // Get the canvas element
+                    const ctx = document.getElementById('farmersBarChart').getContext('2d');
+
+                    // Create the bar chart
+                    const farmersBarChart = new Chart(ctx, {
+                        type: 'bar', // Type of chart
+                        data: data, // Data for the chart
+                        options: options // Options for the chart
+                    });
 
 </script>
+
+<script>
+  function printTableContent() {
+     // Get the table element
+     var table = document.getElementById('printTable');
+ 
+     // Get the description
+     var description = "This table displays information about farmers.";
+ 
+     // Create a new window
+     var printWindow = window.open('', '_blank');
+ 
+     // Write the HTML content to the new window
+     printWindow.document.write('<html><head><title>Print Table</title>');
+ 
+     // Get the CSS styles of the table
+     var tableStyles = document.createElement('style');
+     tableStyles.innerHTML = getComputedStyle(table).cssText;
+ 
+     // Append the CSS styles to the new window
+     printWindow.document.head.appendChild(tableStyles);
+ 
+     // Write the description to the new window
+     printWindow.document.write('<body><p>' + description + '</p>');
+ 
+     // Write the table content to the new window
+     printWindow.document.write(table.outerHTML);
+ 
+     // Close the new window
+     printWindow.document.write('</body></html>');
+     printWindow.document.close();
+ 
+     // Print the content in the new window
+     printWindow.print();
+ 
+     // Close the new window after printing
+     printWindow.close();
+ }
+ 
+ 
+ 
+ 
+ // Function to print the personal_info_section content and its design
+ function printPersonalInfo() {
+     // Get the container element containing the personal_info_section content
+     var container = document.getElementById('personal_info_section');
+ 
+     // Create a new window
+     var printWindow = window.open('', '_blank');
+ 
+     // Write the HTML content to the new window
+     printWindow.document.write('<html><head><title>Print Report</title>');
+ 
+     // Get the CSS styles of the container
+     var containerStyles = document.createElement('style');
+     containerStyles.innerHTML = getComputedStyle(container).cssText;
+ 
+     // Append the CSS styles to the new window
+     printWindow.document.head.appendChild(containerStyles);
+ 
+     // Write the report description above the content
+     printWindow.document.write(`
+         </head>
+         <body>
+             <div class="container-fluid">
+                 <h2>Ayala Farmers Report</h2>
+                 <p>This report contains Ayala Farmers Report.</p>
+             </div>
+             <hr>
+     `);
+ 
+     // Write the personal_info_section content to the new window with space between each data item
+     printWindow.document.write(`
+             <div class="container-fluid">
+                 <div class="row">
+                     <!-- Start of the modified cards -->
+                     ${container.innerHTML.split('</div>').join('</div><div class="mb-4"></div>')}
+                     <!-- End of the modified cards -->
+                 </div>
+             </div>
+         </body>
+     </html>
+     `);
+ 
+     // Close the new window
+     printWindow.document.close();
+ 
+     // Print the content in the new window
+     printWindow.print();
+ 
+     // Close the new window after printing
+     printWindow.close();
+ }
+ 
+</script>
+
+
 @endsection
