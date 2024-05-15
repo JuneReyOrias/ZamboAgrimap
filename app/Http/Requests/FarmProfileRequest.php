@@ -52,7 +52,7 @@ class FarmProfileRequest extends FormRequest
             'total_physical_area_has'=>[
                 'numeric',
                 'regex:/^\d+(\.\d+)?$/',
-                'max:180',
+               
             ],
             'rice_area_cultivated_has'=>[
                 'numeric',
@@ -84,11 +84,7 @@ class FarmProfileRequest extends FormRequest
                 'string',
                 'max:50',
             ],
-            'prefered_variety'=>[
-                'required',
-                'string',
-                'max:50',
-            ],
+        
             'plant_schedule_wetseason'=>[
                 'required',
                 'string',
@@ -168,7 +164,7 @@ class FarmProfileRequest extends FormRequest
             'area_prone_to.required'=>'Please input your area prone to',
             'ecosystem.required'=> 'Please input your ecosystem',
             'type_rice_variety.required'=>'Please input your type rice variety planted',
-            'prefered_variety.required'=> 'Please input your prefered variety',
+           
             'plant_schedule_wetseason.required'=> 'Please input your plant schedule wetseason',
             'plant_schedule_dryseason.required'=> 'Please input your plant schedule dryseason',
             'no_of_cropping_yr.required'=> 'Please choose no of cropping per year',

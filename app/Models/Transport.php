@@ -13,8 +13,9 @@ class Transport extends Model
         'name_of_vehicle',
         'type_of_vehicle',
         'total_transport_per_deliverycost',
-    ]; public function variablecost()
-    {
-        return $this->belongsTo(VariableCost::class, 'id','variable_costs_id')->withDefault();
+    ]; 
+
+    public function variablecost(){
+        return$this->hasMany(VariableCost::class, 'tranports_id');
     }
 }

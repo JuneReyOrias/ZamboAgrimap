@@ -3,15 +3,7 @@
 @extends('admin.dashb')
 @section('admin') 
 @extends('layouts.auth')
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-rel="stylesheet">
-<link rel="shortcut icon" href="../assets/images/mappin.png" />
-<link rel="shortcut icon" href="../assets/images/district.png" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <div class="page-content">
 <nav class="page-breadcrumb">
 <!-- Your existing code here -->
@@ -20,48 +12,21 @@ rel="stylesheet">
   {{ $errors->first('search_error') }}
 </div>
 @endif
-<style>
-/* CSS for responsiveness */
-.table-responsive {
-    overflow-x: auto;
 
-}
-.gm-style .gm-style-iw-c {
-  max-width: 265px;
-
-
-}
-
-@media screen and (max-width: 767px) {
-    /* Adjust padding and font size for smaller screens */
-    table td {
-        padding: 5px;
-        font-size: 9px;
-    }
-}
-
-@media screen and (max-width: 267px) {
-    /* Further adjustments for extra small screens */
-    table td {
-        font-size: 9px;
-    }
-
-    /* Center align the edit button */
-    #editButton {
-        display: block;
-        margin: 0 auto;
-    }
-}
-</style>
 
 {{-- <!-- File input for uploading files -->
 <input type="file" id="fileInput" accept=".kml, .kmz, .geojson"> --}}
 <input type="hidden" id="fileInput" accept=".kml,.kmz">
-<form action="{{ route('map.arcmap') }}" method="GET">
-<input type="text" name="query" placeholder="Search by last name">
-<button type="submit">Search</button>
-</form>
+<div class="d-flex justify-content-between">
+    <form action="{{ route('map.arcmap') }}" method="GET" class="d-flex">
+        <input type="text" name="query" placeholder="Search by last name" class="form-control me-2">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
 
+    <form id="showAllForm" action="{{ route('map.arcmap') }}" method="GET">
+        <button class="btn btn-outline-success" type="submit">All</button>
+    </form>
+</div>
 
 
 {{-- <!-- Container to display search results -->

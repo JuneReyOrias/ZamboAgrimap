@@ -16,12 +16,7 @@ class Labor extends Model
        
     ];
 
-    public function farmprofiles()
-    {
-        return $this->belongsTo(FarmProfile::class, 'farm_profiles_id','id')->withDefault();
-    }
-    public function variablecost()
-    {
-        return $this->belongsTo(VariableCost::class, 'id','labors_id');
+    public function variablecosts(){
+        return$this->hasMany(VariableCost::class, 'labors_id');
     }
 }

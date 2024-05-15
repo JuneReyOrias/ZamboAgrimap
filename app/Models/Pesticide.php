@@ -16,8 +16,7 @@ class Pesticide extends Model
         'unitprice_ofpesticides',
         'total_cost_pesticides',
     ];
-    public function variablecost()
-    {
-        return $this->belongsTo(VariableCost::class, 'id','pesticides_id');
+     public function variablecosts(){
+        return$this->hasMany(VariableCost::class, 'pesticides_id');
     }
 }

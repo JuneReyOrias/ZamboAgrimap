@@ -54,11 +54,44 @@ class FarmProfile extends Model
             'oca_district_office',
             'name_technicians',
             'date_interview',
-        '    farm_images',
-  'user_id', 
+        'image',
+  'users_id', 
   'personal_informations_id',
     ];
 
+
+    public function lastProduction()
+    {
+        return $this->hasMany(LastProductionDatas::class, 'farm_profiles_id');
+    }
+     // relationship  machineries used farm profiles
+ public function varialeCosts()
+ {
+     return $this->hasMany(VariableCost::class, 'farm_profiles_id');
+ }
+
+ // relationship  machineries used farm profiles
+ public function machineries()
+ {
+     return $this->hasMany(MachineriesUseds::class, 'farm_profiles_id');
+ }
+
+
+    // relatioship  fixed cost with the person info and farm profiles
+    public function fixedCosts()
+    {
+        return $this->hasMany(FixedCost::class, 'farm_profiles_id');
+    }
+
+    public function personalInformation()
+    {
+        return $this->belongsTo(PersonalInformations::class, 'personal_informations_id');
+    }
+// model realtion between farm profile and agri district
+    public function agriDistrict()
+    {
+        return $this->belongsTo(AgriDistrict::class, 'agri_districts_id');
+    }
 //    protected $fillable=['farm_no'];
 public function user()
 {

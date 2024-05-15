@@ -1,4 +1,6 @@
-@extends('user.user_Dashboard')
+
+
+@extends('user.user_dashboard')
 
 @section('user')
 
@@ -10,18 +12,19 @@
       <h4 class="mb-3 mb-md-0 " style="font-size: 19px;align-items:center;"> Zamboanga City Rice Industry Dashboard</h4>
     </div>
     <div class="d-flex align-items-center flex-wrap text-nowrap">
-      <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
+      {{-- <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
         <span class="input-group-text input-group-addon bg-transparent border-primary" data-toggle><i data-feather="calendar" class="text-primary"></i></span>
         <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input>
-      </div>
-      <button type="button" class="btn btn-outline-primary btn-icon-text me-2 mb-2 mb-md-0">
-        <i class="btn-icon-prepend" data-feather="printer"></i>
-        Print
-      </button>
-      <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
+      </div> --}}
+    <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0 hide-on-print" onclick="printReport()">
+      <i class="btn-icon-prepend" data-feather="printer"></i>
+      Print
+    </button>
+
+      {{-- <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
         <i class="btn-icon-prepend" data-feather="download-cloud"></i>
         Download Report
-      </button>
+      </button> --}}
     </div>
  
    
@@ -91,9 +94,9 @@
                     </p> --}}
                   </div>
                 </div>
-                <div class="col-6 col-md-12 col-xl-7">
+                {{-- <div class="col-6 col-md-12 col-xl-7">
                   <div id="ordersChart" class="mt-md-3 mt-xl-0"></div>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>
@@ -125,9 +128,9 @@
                     </p> --}}
                   </div>
                 </div>
-                <div class="col-6 col-md-12 col-xl-7">
+                {{-- <div class="col-6 col-md-12 col-xl-7">
                   <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
-                </div>
+                </div> --}}
               </div>
               
             </div>
@@ -168,9 +171,9 @@
                     </p> --}}
                   </div>
                 </div>
-                <div class="col-6 col-md-12 col-xl-7">
+                {{-- <div class="col-6 col-md-12 col-xl-7">
                   <div id="customersChart" class="mt-md-3 mt-xl-0"></div>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>
@@ -202,9 +205,9 @@
                     </p> --}}
                   </div>
                 </div>
-                <div class="col-6 col-md-12 col-xl-7">
+                {{-- <div class="col-6 col-md-12 col-xl-7">
                   <div id="ordersChart" class="mt-md-3 mt-xl-0"></div>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>
@@ -236,9 +239,9 @@
                     </p> --}}
                   </div>
                 </div>
-                <div class="col-6 col-md-12 col-xl-7">
+                {{-- <div class="col-6 col-md-12 col-xl-7">
                   <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
-                </div>
+                </div> --}}
               </div>
               
             </div>
@@ -250,7 +253,7 @@
       </div>
     </div>
   </div> <!-- row -->
-
+      
 
   <div class="row">
     <div class="col-lg-7 col-xl-8 grid-margin stretch-card">
@@ -288,198 +291,85 @@
 
   
   </div>  
-{{-- 
-  <div class="row">
-    <div class="col-lg-5 col-xl-4 grid-margin grid-margin-xl-0 stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-baseline mb-2">
-            <h6 class="card-title mb-0">Active Agent</h6>
-            <div class="dropdown mb-2">
-              <a type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex flex-column">
-            <a href="javascript:;" class="d-flex align-items-center border-bottom pb-3">
-              <div class="me-3">
-                <img src="https://via.placeholder.com/35x35" class="rounded-circle wd-35" alt="user">
-              </div>
-              <div class="w-100">
-                <div class="d-flex justify-content-between">
-                  <h6 class="text-body mb-2">Leonardo Payne</h6>
-                  <p class="text-muted tx-12">12.30 PM</p>
-                </div>
-                <p class="text-muted tx-13">Hey! there I'm available...</p>
-              </div>
-            </a>
-            <a href="javascript:;" class="d-flex align-items-center border-bottom py-3">
-              <div class="me-3">
-                <img src="https://via.placeholder.com/35x35" class="rounded-circle wd-35" alt="user">
-              </div>
-              <div class="w-100">
-                <div class="d-flex justify-content-between">
-                  <h6 class="text-body mb-2">Carl Henson</h6>
-                  <p class="text-muted tx-12">02.14 AM</p>
-                </div>
-                <p class="text-muted tx-13">I've finished it! See you so..</p>
-              </div>
-            </a>
-            <a href="javascript:;" class="d-flex align-items-center border-bottom py-3">
-              <div class="me-3">
-                <img src="https://via.placeholder.com/35x35" class="rounded-circle wd-35" alt="user">
-              </div>
-              <div class="w-100">
-                <div class="d-flex justify-content-between">
-                  <h6 class="text-body mb-2">Jensen Combs</h6>
-                  <p class="text-muted tx-12">08.22 PM</p>
-                </div>
-                <p class="text-muted tx-13">This template is awesome!</p>
-              </div>
-            </a>
-            <a href="javascript:;" class="d-flex align-items-center border-bottom py-3">
-              <div class="me-3">
-                <img src="https://via.placeholder.com/35x35" class="rounded-circle wd-35" alt="user">
-              </div>
-              <div class="w-100">
-                <div class="d-flex justify-content-between">
-                  <h6 class="text-body mb-2">Amiah Burton</h6>
-                  <p class="text-muted tx-12">05.49 AM</p>
-                </div>
-                <p class="text-muted tx-13">Nice to meet you</p>
-              </div>
-            </a>
-            <a href="javascript:;" class="d-flex align-items-center border-bottom py-3">
-              <div class="me-3">
-                <img src="https://via.placeholder.com/35x35" class="rounded-circle wd-35" alt="user">
-              </div>
-              <div class="w-100">
-                <div class="d-flex justify-content-between">
-                  <h6 class="text-body mb-2">Yaretzi Mayo</h6>
-                  <p class="text-muted tx-12">01.19 AM</p>
-                </div>
-                <p class="text-muted tx-13">Hey! there I'm available...</p>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-7 col-xl-8 stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-baseline mb-2">
-            <h6 class="card-title mb-0">Task Updates of Agent</h6>
-            <div class="dropdown mb-2">
-              <a type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
-                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead>
-                <tr>
-                  <th class="pt-0">#</th>
-                  <th class="pt-0">Project Name</th>
-                  <th class="pt-0">Start Date</th>
-                  <th class="pt-0">Due Date</th>
-                  <th class="pt-0">Status</th>
-                  <th class="pt-0">Assign</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>NobleUI jQuery</td>
-                  <td>01/01/2022</td>
-                  <td>26/04/2022</td>
-                  <td><span class="badge bg-danger">Released</span></td>
-                  <td>Leonardo Payne</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>NobleUI Angular</td>
-                  <td>01/01/2022</td>
-                  <td>26/04/2022</td>
-                  <td><span class="badge bg-success">Review</span></td>
-                  <td>Carl Henson</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>NobleUI ReactJs</td>
-                  <td>01/05/2022</td>
-                  <td>10/09/2022</td>
-                  <td><span class="badge bg-info">Pending</span></td>
-                  <td>Jensen Combs</td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>NobleUI VueJs</td>
-                  <td>01/01/2022</td>
-                  <td>31/11/2022</td>
-                  <td><span class="badge bg-warning">Work in Progress</span>
-                  </td>
-                  <td>Amiah Burton</td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                  <td>NobleUI Laravel</td>
-                  <td>01/01/2022</td>
-                  <td>31/12/2022</td>
-                  <td><span class="badge bg-danger">Coming soon</span></td>
-                  <td>Yaretzi Mayo</td>
-                </tr>
-                <tr>
-                  <td>6</td>
-                  <td>NobleUI NodeJs</td>
-                  <td>01/01/2022</td>
-                  <td>31/12/2022</td>
-                  <td><span class="badge bg-primary">Coming soon</span></td>
-                  <td>Carl Henson</td>
-                </tr>
-                <tr>
-                  <td class="border-bottom">3</td>
-                  <td class="border-bottom">NobleUI EmberJs</td>
-                  <td class="border-bottom">01/05/2022</td>
-                  <td class="border-bottom">10/11/2022</td>
-                  <td class="border-bottom"><span class="badge bg-info">Pending</span></td>
-                  <td class="border-bottom">Jensen Combs</td>
-                </tr>
-              </tbody>
-            </table> --}}
-          {{-- </div>
-        </div>  --}}
+
       </div>
     </div>
   </div> <!-- row -->
 <div class="production" ></div>
-  {{-- <script>
-    // Calculate and display rice production percentage
-    document.addEventListener('DOMContentLoaded', function () {
-        var totalAreaYield = parseFloat("{{ $totalAreaYield }}");
-        var totalAreaPlanted = parseFloat("{{ $totalAreaPlanted }}");
-        var totalProduction = 10000; // Example total production, you should replace it with your actual total production value
 
-        var riceProductionPercentage = (totalAreaYield / totalProduction) * 100;
+<script>
+function printReport() {
+    // Apply print styles
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '{{ asset('css/print.css') }}';
+    document.head.appendChild(link);
 
-        document.getElementById('riceProductionPercentage').innerText = 'Rice Production Percentage: ' + riceProductionPercentage.toFixed(2) + '%';
+    // Get current date
+    var currentDate = new Date();
+    var formattedDate = currentDate.toLocaleDateString();
+    var formattedTime = currentDate.toLocaleTimeString();
+
+    // Create a new element to hold the title and the current date
+    const titleElement = document.createElement('div');
+    titleElement.textContent = 'Farmers Data Report';
+    titleElement.style.fontWeight = 'bold'; // Adjust styling as needed
+
+    const currentDateElement = document.createElement('div');
+    currentDateElement.textContent = 'Printed on: ' + currentDate;
+    currentDateElement.style.marginBottom = '20px'; // Adjust styling as needed
+
+    // Insert the title and the current date elements into the document body
+    document.body.insertBefore(titleElement, document.body.firstChild);
+    document.body.insertBefore(currentDateElement, titleElement.nextSibling);
+
+    // Hide the navbar
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        navbar.style.display = 'none';
+    }
+
+    // Hide other elements not to be printed
+    const elementsToHide = document.querySelectorAll('.exclude-from-print');
+    elementsToHide.forEach(element => {
+        element.style.display = 'none';
     });
-</script> --}}
+    document.querySelectorAll('.hide-on-print').forEach(button => {
+            button.style.display = 'none';
+        });
+    // Insert space after "Average Cost per Area Planted"
+    insertSpaceForPrinting();
 
+    // Print only the page content
+    window.print();
+
+    // Show the navbar after printing
+    if (navbar) {
+        navbar.style.display = '';
+    }
+
+    // Show the hidden elements after printing
+    elementsToHide.forEach(element => {
+        element.style.display = '';
+    });
+    document.querySelectorAll('.hide-on-print').forEach(button => {
+            button.style.display = 'block';
+        });
+    // Remove the title and the current date elements after printing
+    titleElement.remove();
+    currentDateElement.remove();
+}
+
+// Function to insert a space after "Average Cost per Area Planted" when printing
+function insertSpaceForPrinting() {
+    const averageCostSection = document.getElementById('average-cost-section'); // Adjust the ID accordingly
+    if (averageCostSection) {
+        const spaceDiv = document.createElement('div');
+        spaceDiv.style.marginBottom = '1000px'; // Adjust the margin as needed
+        averageCostSection.parentNode.insertBefore(spaceDiv, averageCostSection.nextSibling);
+    }
+}
+
+
+</script>
 @endsection

@@ -34,13 +34,14 @@
         <div class="row">
           <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
-              <a class="navbar-brand" href="index.html">
-                <img src="landing_page/assets/images/logo/logo-main.png" alt="Logo" style="width:50px; border-radius:50%; text-align:left;" />
+              <a class="navbar-brand" href="{{url('/')}}">
+                <img src="landing_page/assets/images/logo/logo-main.png" alt="" style="width:50px; border-radius:50%; text-align:left;" />
               </a>
               <button class="navbar-toggler">
                 <span class="toggler-icon"> </span>
                 <span class="toggler-icon"> </span>
                 <span class="toggler-icon"> </span>
+                
               </button>
               {{-- @if($errors->any())
               <ul class="alert alert-warning">
@@ -196,7 +197,7 @@
               <img src="landing_page/assets/images/hero/logo DA.jfif" alt="header-logo"style="width: 500px;border-radius:5%; " />
             </div>
             <div class="ud-hero-image wow fadeInUp" data-wow-delay=".25s">
-              <img src="landing_page/assets/images/hero/geomap.jpg" alt="hero-image" style="border-radius:10%; "/>
+              <img src="landing_page/assets/images/hero/agrimap.png" alt="hero-image" style="border-radius:10%; "/>
               <img
                 src="landing_page/assets/images/hero/dotted-shape.svg"
                 alt="shape"
@@ -1190,7 +1191,7 @@
               </div>
             </div>
           </div>
-          <div class="col-xl-4 col-lg-5">
+          {{-- <div class="col-xl-4 col-lg-5">
             <div
               class="ud-contact-form-wrapper wow fadeInUp"
               data-wow-delay=".2s"
@@ -1236,7 +1237,7 @@
                 </div>
               </form>
             </div>
-          </div>
+          </div> --}}
         </div>
       </div>
     </section>

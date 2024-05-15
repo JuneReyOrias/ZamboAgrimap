@@ -50,7 +50,7 @@
                 
                 <label class="form-expand" for="agri_districts_id">Agri-District:</label>
                 <select class="form-control placeholder-text " name="agri_districts_id" aria-label="agri_districts_id">
-                  @foreach ( $agridistrict as  $agridistrict)
+                  @foreach ( $agriculture as  $agridistrict)
                           <option value="{{ $agridistrict->id }}">{{ $agridistrict->district }}</option>
                       @endforeach
                   </select>

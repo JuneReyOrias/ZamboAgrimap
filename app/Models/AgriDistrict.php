@@ -17,7 +17,14 @@ class AgriDistrict extends Model
         'longitude',
 
     ];
-
+    public function Lastproduction()
+    {
+        return $this->hasMany(LastProductionDatas::class, 'agri_districts_id');
+    }
+    public function farmProfiles()
+    {
+        return $this->hasMany(FarmProfile::class, 'agri_districts_id');
+    }
     public function user()
     {
         return $this->belongsTo(User::class,'user_id','id' )->withDefault();

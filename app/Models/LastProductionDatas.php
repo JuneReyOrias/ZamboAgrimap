@@ -39,4 +39,19 @@ class LastProductionDatas extends Model
     {
         return $this->belongsTo(PersonalInformations::class,'personal_informations_id','id')->withDefault();
     }
+
+    // relation with last productions with personal info anf farm profile
+    public function personalinformation()
+    {
+        return $this->belongsTo(PersonalInformations::class, 'personal_informations_id');
+    }
+
+    public function farmprofile()
+    {
+        return $this->belongsTo(FarmProfile::class, 'farm_profiles_id');
+    }
+    public function agridistrict()
+    {
+        return $this->belongsTo(AgriDistrict::class, 'agri_districts_id');
+    }
 }

@@ -2,9 +2,9 @@
 // github link: https://github.com/RobinHerbots/Inputmask
 
 (function($) {
-  'use strict';
+    'use strict';
 
-  // initializing inputmask
-  $(":input").inputmask();
+    // initializing inputmask
+    $(":input").inputmask();
 
-})(jQuery);
+})(jQuery)

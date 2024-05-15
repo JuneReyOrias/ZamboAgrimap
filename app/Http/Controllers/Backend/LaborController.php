@@ -7,7 +7,18 @@ use App\Http\Requests\laborRequest;
 use App\Models\Labor;
 use App\Models\LastProductionDatas;
 use Illuminate\Http\Request;
+use App\Models\MachineriesUseds;
 
+use App\Models\AgriDistrict;
+use App\Models\FarmProfile;
+use App\Http\Requests\FarmProfileRequest;
+use App\Http\Requests\UpdateFarmProfileRequest;
+use App\Models\PersonalInformations;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Optional;
+use App\Models\KmlFile;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 class LaborController extends Controller
 {
     /**
@@ -17,11 +28,52 @@ class LaborController extends Controller
     {
         //
     }
-    public function LaborsVar(){
-        $pesticides= Labor::all();
-        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    return view('variable_cost.labor.labor_store',compact('pesticides','totalRiceProduction'));
+
+
+
+    public function LaborsVar()
+    {
+       // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $admin = User::find($userId);
+
+        if ($admin) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('users_id', $farmId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+          
+            // Return the view with the fetched data
+            return view('variable_cost.labor.labor_store', compact('admin', 'profile', 'farmprofile','totalRiceProduction','userId'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
     }
+}
     /**
      * Show the form for creating a new resource.
      */
@@ -40,11 +92,11 @@ class LaborController extends Controller
             $data= $request->all();
             Labor::create($data);
     
-            return redirect('/admin-fertilizer')->with('message','Labors data added successsfully');
+            return redirect('/admin-variable-cost-labor')->with('message','Labors data added successsfully');
         
         }
         catch(\Exception $ex){
-            return redirect('/admin-labor')->with('message','Someting went wrong');
+            return redirect('/admin-variable-cost-labor')->with('message','Someting went wrong');
         }
     }
 
@@ -52,22 +104,57 @@ class LaborController extends Controller
 // labors data edit and view by agentt
 
 
-public function laborView(){
-    $labors= Labor::orderBy('id','desc')->paginate(10);
-    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    return view('variable_cost.labor.labors_view',compact('labors','totalRiceProduction'));
+public function editlabor($id)
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $admin = User::find($userId);
+
+        if ($admin) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+         
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+            $agri_districts = $user->agri_district;
+            $agri_districts_id = $user->agri_districts_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('users_id', $farmId)->latest()->first();
+            $labors= Labor::find($id);
+      
+
+            
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('variable_cost.labor.labors_edit', compact('admin', 'profile', 'farmprofile','totalRiceProduction'
+            ,'agri_districts','agri_districts_id','userId','labors'
+            
+            ));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-
-
-
-
-
-public function editlabor($id){
-    $labors= Labor::find($id);
-    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    return view('variable_cost.labor.labors_edit',compact('labors','totalRiceProduction'));
-}
-
 public function updateslabor(LaborRequest $request,$id)
 {
 
@@ -87,7 +174,7 @@ public function updateslabor(LaborRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/admin-view-variable-cost-labor')->with('message','Labor Data Updated successsfully');
+       return redirect('/admin-view-variable-cost-seed')->with('message','Labor Data Updated successsfully');
    
    }
    catch(\Exception $ex){

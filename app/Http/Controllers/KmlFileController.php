@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FarmProfile;
 use App\Models\KmlUpload;
+use App\Models\PersonalInformations;
 use Illuminate\Http\Request;
 use App\Models\KmlFile;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Models\LastProductionDatas;
 use SimpleXMLElement;
 use ZipArchive;
@@ -13,13 +17,54 @@ use Illuminate\Support\Facades\Storage;
 class KmlFileController extends Controller
 {
     // admin import of kml
-    public function index() 
-    
+    public function index()
     {
-        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-        return view('kml.kml_import',compact('totalRiceProduction'));
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // User is authenticated, proceed with retrieving the user's ID
+            $userId = Auth::id();
+    
+            // Find the user based on the retrieved ID
+            $admin = User::find($userId);
+    
+            if ($admin) {
+                // Assuming $user represents the currently logged-in user
+                $user = auth()->user();
+    
+                // Check if user is authenticated before proceeding
+                if (!$user) {
+                    // Handle unauthenticated user, for example, redirect them to login
+                    return redirect()->route('login');
+                }
+    
+                // Find the user's personal information by their ID
+                $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+    
+                // Fetch the farm ID associated with the user
+                $farmId = $user->farm_id;
+    
+                // Find the farm profile using the fetched farm ID
+                $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+    
+          
+    
+                
+                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                // Return the view with the fetched data
+                return view('kml.kml_import', compact('admin', 'profile', 'farmProfile','totalRiceProduction'
+                
+                ));
+            } else {
+                // Handle the case where the user is not found
+                // You can redirect the user or display an error message
+                return redirect()->route('login')->with('error', 'User not found.');
+            }
+        } else {
+            // Handle the case where the user is not authenticated
+            // Redirect the user to the login page
+            return redirect()->route('login');
+        }
     }
-   
     public function upload(Request $request)
     {
         try {
@@ -53,10 +98,54 @@ class KmlFileController extends Controller
     
 
 // agent import of kml
- public function AgentKmlImport(){
-    return view('kml.agent_kml_import');
+ public function AgentKmlImport()
+ {
+     // Check if the user is authenticated
+     if (Auth::check()) {
+         // User is authenticated, proceed with retrieving the user's ID
+         $userId = Auth::id();
+ 
+         // Find the user based on the retrieved ID
+         $agent = User::find($userId);
+ 
+         if ($agent) {
+             // Assuming $user represents the currently logged-in user
+             $user = auth()->user();
+ 
+             // Check if user is authenticated before proceeding
+             if (!$user) {
+                 // Handle unauthenticated user, for example, redirect them to login
+                 return redirect()->route('login');
+             }
+ 
+             // Find the user's personal information by their ID
+             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+ 
+             // Fetch the farm ID associated with the user
+             $farmId = $user->farm_id;
+ 
+             // Find the farm profile using the fetched farm ID
+             $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+ 
+       
+ 
+             
+             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+             // Return the view with the fetched data
+             return view('kml.agent_kml_import', compact('agent', 'profile', 'farmProfile','totalRiceProduction'
+             
+             ));
+         } else {
+             // Handle the case where the user is not found
+             // You can redirect the user or display an error message
+             return redirect()->route('login')->with('error', 'User not found.');
+         }
+     } else {
+         // Handle the case where the user is not authenticated
+         // Redirect the user to the login page
+         return redirect()->route('login');
+     }
  }
-
 //  upload the new kml to database
 public function uploadkml(Request $request)
 {

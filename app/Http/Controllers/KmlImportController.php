@@ -19,7 +19,7 @@ public function index()
         return view('kml.kml_import');
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request,$id)
 {
 
     try {

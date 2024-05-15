@@ -16,10 +16,7 @@
 </li>
           
 
-          @php
-$id =Auth::user()->id;
-      $agent = App\Models\User:: find($id);
-          @endphp
+
 
   
           <li class="nav-item dropdown">
@@ -89,22 +86,33 @@ $id =Auth::user()->id;
        
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img class="wd-30 ht-30 rounded-circle" src="/agentimages/{{$agent->image}}" alt="profile">
+                  
+                @if ($agent->image)
+                <img  class="wd-30 ht-30 rounded-circle" src="/agentimages/{{$agent->image}}" alt="profile">
+              @else
+                <img src="/upload/profile.jpg" alt="default avatar"  class="wd-30 ht-30 rounded-circle">
+              @endif
+                
               </a>
               <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
                   <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
-                      <div class="mb-3">
-                          <img class="wd-80 ht-80 rounded-circle" src="/agentimages/{{$agent->image}}" alt="">
-                      </div>
-                      <div class="text-center">
-                          <p class="tx-16 fw-bolder">{{$agent->name}} </p>
-                          <p class="tx-12 text-muted">{{ $agent->email }}</p>
-                      </div>
+                    <div class="mb-3">
+
+                      @if ($agent->image)
+                      <img class="wd-80 ht-80 rounded-circle" src="/agentimages/{{$agent->image}}" alt="">
+                    @else
+                      <img src="/upload/profile.jpg" alt="default avatar"  class="wd-30 ht-30 rounded-circle">
+                    @endif
+                  </div>
+                  <div class="text-center">
+                    <p class="tx-16 fw-bolder">{{ $agent->first_name.' '.$agent->last_name}}</p>
+                      <p class="tx-12 text-muted">{{ $agent->email }}</p>
+                  </div>
                   </div>
   <ul class="list-unstyled p-1">
     
     <li class="dropdown-item py-2">
-      <a href="{{route('agent.profile.agent_profiles')}}" class="text-body ms-0">
+      <a href="{{route('user.userprofile.profiles')}}" class="text-body ms-0">
         <i class="me-2 icon-md" data-feather="edit"></i>
         <span>Profile</span>
       </a>

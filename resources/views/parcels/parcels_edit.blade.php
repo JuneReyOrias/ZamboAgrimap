@@ -33,9 +33,9 @@
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
       @endif
-          <h6 class="card-title"><span>I.</span>Create New Parcellary Boundary Update</h6>
+          <h6 class="card-title"><span>I.</span>Update Parcellary Boundary</h6>
 
-          
+          <br><br>
           <p class="text-success">Make sure to fill in the required information accurately for each field to define the parcellary boundary correctly. Once all fields are filled, submit the form to create the new parcellary boundary.</p><br>
        
    
@@ -61,6 +61,7 @@
                   </select>
                  
               </div> --}}
+              <h6 class="card-title"><span>I.</span>Parcel owner Informations</h6>
               <div class="col-md-3 mb-3">
                 <label class="form-expand" for="parcel_name">Parcel Name:</label>
                 <input type="text" class="form-control placeholder-text @error('parcel_name') is-invalid @enderror"value="{{$parcels->parcel_name}}" name="parcel_name" id="validationCustom01" placeholder=" Enter parcel name" value="{{ old('parcel_name') }}" >
@@ -118,6 +119,9 @@
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
                 </div>
+                <br><br>
+
+                <h6 class="card-title"><span>II.</span>Parcel Coordinates</h6>
                 <div class="col-md-3 mb-3">
                   <label class="form-expand" for="parone_latitude">Point 1 Latitude:</label>
                   <input type="text" class="form-control placeholder-text @error('parone_latitude') is-invalid @enderror"value="{{$parcels->parone_latitude}}" name="parone_latitude" id="parone_latitude" placeholder="Enter point 1 longitude" value="{{ old('parone_latitude') }}" >
@@ -294,6 +298,8 @@
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
                 </div>
+
+                <h6 class="card-title"><span>III.</span>Parcel color and Area</h6>
                 <div class="col-md-3 mb-3">
                     
                   <label class="form-expand" for="parcolor">Parcel Color:</label>
@@ -304,6 +310,8 @@
                     <option value="#663300" {{ old('parcolor') == '#663300' ? 'selected' : '' }}>Coconut: #663300</option>
                     <option value="#009900" {{ old('parcolor') == '#009900' ? 'selected' : '' }}>Banana: #009900</option>
                     <option value="#0066ff" {{ old('parcolor') == '#0066ff' ? 'selected' : '' }}>FishPond: #0066ff</option>
+                    <option value="#add8e6" {{ old('parcolor') == '#add8e6' ? 'selected' : '' }}>Residential: #add8e6</option>
+                    <option value="#000" {{ old('parcolor') == '#000' ? 'selected' : '' }}>Unknown: #000</option>
                     
                   </select>
 
@@ -323,8 +331,8 @@
            
 
 <div  class="d-grid gap-2 d-md-flex justify-content-md-end">
-  <a  href="{{route('parcels.show')}}"button  class="btn btn-success me-md-2">Back</button></a></p>
-  <button  type="submit" class="btn btn-success me-md-2">Submit</button></a></p>
+  <a  href="{{route('polygon.create')}}"button  class="btn btn-success me-md-2">Back</button></a></p>
+  <button type="submit" class="btn btn-success me-md-2 btn-submit">Save Changes</button>
 </div>
           </form>
         
@@ -342,4 +350,74 @@
 </div>
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script type="text/javascript">
+
+
+  // // Function to handle successful form submission
+  // function handleFormSubmissionSuccess() {
+
+    
+  //     // Display success message after a short delay
+  //     setTimeout(function() {
+  //         swal({
+  //             title: "Farm Profile completed successfully!",
+  //             text: "Thank you for your submission.",
+  //             icon: "success",
+  //         }).then(() => {
+  //             // Redirect to the next page
+  //             window.location.href = "/admin-fixedcost"; // Replace with the actual URL
+  //         });
+  //     }, 500);
+  // }
+
+  // jQuery script for form submission
+  $(document).ready(function() {
+      $(document).on('click', '.btn-submit', function(event) {
+          var form = $(this).closest("form");
+
+          event.preventDefault(); // Prevent the default button action
+
+          swal({
+              title: "Are you sure you want to submit this form?",
+              text: "Please confirm your action.",
+              icon: "warning",
+              buttons: {
+                  cancel: "Cancel",
+                  confirm: {
+                      text: "Yes, Continue!",
+                      value: true,
+                      visible: true,
+                      className: "btn-success",
+                      closeModal: false
+                  }
+              },
+              dangerMode: true,
+          }).then((willSubmit) => {
+              if (willSubmit) {
+                  // Display loading indicator
+                  swal({
+                      title: "Processing...",
+                      text: "Please wait.",
+                      buttons: false,
+                      closeOnClickOutside: false,
+                      closeOnEsc: false,
+                      icon: "info",
+                      timerProgressBar: true,
+                  });
+
+                  // Submit the form after a short delay to allow the loading indicator to be shown
+                  setTimeout(function() {
+                      form.submit(); // Submit the form
+                      handleFormSubmissionSuccess(); // Call the success handling function
+                  }, 500);
+              }
+          });
+      });
+  });
+</script>
+
+
 @endsection

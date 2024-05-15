@@ -10,12 +10,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class ImportFarmProfile implements ToModel,WithHeadingRow
 {
-    protected $personalInformationId;
-
-    public function __construct($personalInformationId)
-    {
-        $this->personalInformationId = $personalInformationId;
-    }
+   
     /**
     * @param array $row
     *
@@ -24,12 +19,12 @@ class ImportFarmProfile implements ToModel,WithHeadingRow
     public function model(array $row)
     {   
 
-        dd($row);
+       
         
 
 
         return new FarmProfile([
-            'personal_information_id' => $this->personalInformationId,
+           
             'tenurial_status' => $row['tenurial_status'],
             'rice_farm_address' => $row['rice_farm_address'],
             'no_of_years_as_farmers' => $row['no_of_years_as_farmers'],

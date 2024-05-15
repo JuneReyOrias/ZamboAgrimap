@@ -6,7 +6,10 @@
 <div class="page-content">
 
   <nav class="page-breadcrumb">
-
+    <div class="progress mb-3">
+      <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">5(F) out of 6 to Complete</div>
+  
+    </div>
   </nav>
   
   <div class="row">
@@ -27,34 +30,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <h6 class="card-title"><span>VI.</span>Variable Cost</h6>
-        <h5 class="card-title"><span>F.</span>Variable Cost Total</h5>
+        <h6 class="card-title"><span>VI.</span>Variable Cost</h6><br><br>
+        <h5 class="card-title"><span>F.</span>Variable Cost Total</h5><br><br>
         <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
       
-         <form action{{url('transports')}} method="post">
+         <form id="myForm" action{{url('store')}} method="post">
             @csrf
 
             <div>
-              @php
-         $id = Auth::id();
-
-         // Find the user by their ID and eager load the personalInformation relationship
-         $seed= App\Models\Seed::find($id)->latest()->first();
-
-          @endphp
+             
               
               <input type="hidden" id="seeds_id" class="form-control mb-4 mb-md-0" name="total_seed_cost" id="seeds_id" value="{{ $seed->total_seed_cost}}">
                
             </div>  
 
             <div>
-              @php
-         $id = Auth::id();
-
-         // Find the user by their ID and eager load the personalInformation relationship
-         $labor= App\Models\Labor::find($id)->latest()->first();
-
-          @endphp
+             
               
               <input type="hidden" id="labors_id" class="form-control mb-4 mb-md-0" name="total_labor_cost" value="{{ $labor->total_labor_cost}}">
                
@@ -62,40 +53,21 @@
 
 
             <div>
-              @php
-         $id = Auth::id();
-
-         // Find the user by their ID and eager load the personalInformation relationship
-         $fertilize= App\Models\Fertilizer::find($id)->latest()->first();
-
-          @endphp
-              
-              <input type="hidden" id="fertilizers_id" class="form-control mb-4 mb-md-0" name="total_cost_fertilizers" i value="{{ $fertilize->total_cost_fertilizers}}">
+            
+              <input type="hidden" id="fertilizers_id" class="form-control mb-4 mb-md-0" name="total_cost_fertilizers" i value="{{ $fertilizer->total_cost_fertilizers}}">
                
             </div>
 
-            {{-- hidden id of pesticides to fetch to total --}}
+        
             <div>
-              @php
-         $id = Auth::id();
-
-         // Find the user by their ID and eager load the personalInformation relationship
-         $pesticide= App\Models\Pesticide::find($id)->latest()->first();
-
-          @endphp
+             
               
-              <input type="hidden" id="pesticides_id" class="form-control mb-4 mb-md-0" name="total_cost_fertilizers" i value="{{ $pesticide->total_cost_pesticides}}">
+              <input type="hidden" id="pesticides_id" class="form-control mb-4 mb-md-0" name="total_cost_pesticides" i value="{{ $pesticide->total_cost_pesticides}}">
                
             </div>
- {{-- hidden id of delivery cost to fetch to total variable cost--}}
+
             <div>
-              @php
-         $id = Auth::id();
-
-         // Find the user by their ID and eager load the personalInformation relationship
-         $transport = App\Models\Transport::find($id)->latest()->first();
-
-          @endphp
+            
               
               <input type="hidden" id="transports_id" class="form-control mb-4 mb-md-0" name="total_transport_per_deliverycost" i value="{{ $transport->total_transport_per_deliverycost}}">
                
@@ -104,14 +76,14 @@
 
             <div class="row mb-3">
               <h2 class="card-title"><span>a.</span>Farmer Variable Cost:</h2>
+                     <div >
+
+                    <input type="hidden" name="users_id" value="{{ $userId}}">
+                   
+                 
+             </div>
               <div class="col-md-3 mb-3">    
-                @php
-              $id = Auth::id();
-
-          // Find the user by their ID and eager load the personalInformation relationship
-          $profile= App\Models\PersonalInformations::where('users_id', $id)->latest()->first();
-
-            @endphp
+             
                 <label class="form-expand" for="personal_informations_id">Farmers Name:</label>
                 <select class="form-control placeholder-text" name="personal_informations_id" aria-label="personal_informations_id">
                       
@@ -120,13 +92,7 @@
           </select>
               </div>
               <div class="col-md-3 mb-3">    
-                @php
-              $id = Auth::id();
-
-          // Find the user by their ID and eager load the personalInformation relationship
-          $farmprofile= App\Models\FarmProfile::find($id)->latest()->first();
-
-            @endphp
+               
                 <label class="form-expand" for="farm_profiles_id">FarmProfile:</label>
                 <select class="form-control mb-4 mb-md-0" name="farm_profiles_id" aria-label="farm_profiles_id">
                
@@ -137,84 +103,54 @@
 
 
               <div class="col-md-3 mb-3">    
-                @php
-           $id = Auth::id();
-
-           // Find the user by their ID and eager load the personalInformation relationship
-           $seed= App\Models\Seed::find($id)->latest()->first();
-
-            @endphp
-                <label class="form-expand" for="seeds_id">Total Seed Cost:</label>
+       
+                <label class="form-expand" for="seeds_id">Total Seed Cost(PHP):</label>
                 <select  class="form-control mb-4 mb-md-0" name="seeds_id" aria-label="seeds_id">
                   {{-- @foreach ( $seed->sortByDesc('id') as  $seed) --}}
-                          <option  value="{{ $seed->id }}">{{ $seed->total_seed_cost }}</option>
+                          <option  value="{{ $seed->id }}">{{ number_format($seed->total_seed_cost,2) }}</option>
                       {{-- @endforeach --}}
                   </select>
               </div>
      
              
               <div class="col-md-3 mb-3">    
-                @php
-           $id = Auth::id();
-
-            // Find the user by their ID and eager load the personalInformation relationship
-            $labor= App\Models\Labor::find($id)->latest()->first();
-
-            @endphp
-                <label class="form-expand" for="labors_id">Total Labor Cost:</label>
+          
+                <label class="form-expand" for="labors_id">Total Labor Cost(PHP):</label>
                 <select  class="form-control mb-4 mb-md-0" name="labors_id" aria-label="labors_id">
                   {{-- @foreach ( $labor as  $labor) --}}
-                          <option value="{{ $labor->id }}">{{ $labor->total_labor_cost}}</option>
+                          <option value="{{ $labor->id }}">{{ number_format($labor->total_labor_cost,2)}}</option>
                       {{-- @endforeach --}}
                   </select>
               </div>
              
    
               <div class="col-md-3 mb-3">    
-                @php
-           $id = Auth::id();
-
-            // Find the user by their ID and eager load the personalInformation relationship
-            $fertilize= App\Models\Fertilizer::find($id)->latest()->first();
-
-            @endphp
-                <label class="form-expand" for="fertilizers_id">Total Fertilizers Cost:</label>
+         
+                <label class="form-expand" for="fertilizers_id">Total Fertilizers Cost(PHP):</label>
                 <select  class="form-control mb-4 mb-md-0" name="fertilizers_id" aria-label="fertilizers_id">
                   {{-- @foreach ($profile->sortByDesc('id') as $location) --}}
-                      <option  value="{{ $fertilize->id }}">{{ $fertilize->total_cost_fertilizers	}}</option>
+                      <option  value="{{ $fertilizer->id }}">{{ number_format($fertilizer->total_cost_fertilizers,2)	}}</option>
                   {{-- @endforeach --}}
               </select>
               </div>
 
               
               <div class="col-md-3 mb-3">    
-                @php
-           $id = Auth::id();
-
-            // Find the user by their ID and eager load the personalInformation relationship
-            $pesticide= App\Models\Pesticide::find($id)->latest()->first();
-
-            @endphp
-                <label class="form-expand" for="pesticides_id">Total Pesticides Cost:</label>
+       
+                <label class="form-expand" for="pesticides_id">Total Pesticides Cost(PHP):</label>
                 <select class="form-control mb-4 mb-md-0" name="pesticides_id" aria-label="pesticides_id">
                   {{-- @foreach ( $farmprofile->sortByDesc('id') as  $farmprofile) --}}
-                          <option value="{{ $pesticide->id }}">{{ $pesticide->total_cost_pesticides }}</option>
+                          <option value="{{ $pesticide->id }}">{{ number_format($pesticide->total_cost_pesticides,2) }}</option>
                       {{-- @endforeach --}}
                   </select>
               </div>
   
               <div class="col-md-3 mb-3">    
-                @php
-           $id = Auth::id();
-
-            // Find the user by their ID and eager load the personalInformation relationship
-            $transport = App\Models\Transport::find($id)->latest()->first();
-
-            @endphp
-                <label class="form-expand" for="transports_id">Total Delivery Cost:</label>
+      
+                <label class="form-expand" for="transports_id">Total Delivery Cost(PHP):</label>
                 <select class="form-control mb-4 mb-md-0" name="transports_id" aria-label="transports_id">
                 
-                      <option value="{{ $transport->id }}">{{ $transport->total_transport_per_deliverycost }}</option>
+                      <option value="{{ $transport->id }}">{{ number_format($transport->total_transport_per_deliverycost,2) }}</option>
                
               </select>
               </div>
@@ -237,7 +173,7 @@
 
  <div  class="d-grid gap-2 d-md-flex justify-content-md-end">
     {{-- <a  href="{{route('production_data.index')}}"button  class="btn btn-success me-md-2">Back</button></a></p> --}}
-  <button  type="submit" class="btn btn-success me-md-2">Next</button></a></p>
+    <button type="submit" class="btn btn-success me-md-2 btn-submit">Next</button>
 </div>
           </form>
         
@@ -254,6 +190,75 @@
   </div>
 
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script type="text/javascript">
+
+
+  // // Function to handle successful form submission
+  // function handleFormSubmissionSuccess() {
+
+    
+  //     // Display success message after a short delay
+  //     setTimeout(function() {
+  //         swal({
+  //             title: "Farm Profile completed successfully!",
+  //             text: "Thank you for your submission.",
+  //             icon: "success",
+  //         }).then(() => {
+  //             // Redirect to the next page
+  //             window.location.href = "/admin-fixedcost"; // Replace with the actual URL
+  //         });
+  //     }, 500);
+  // }
+
+  // jQuery script for form submission
+  $(document).ready(function() {
+      $(document).on('click', '.btn-submit', function(event) {
+          var form = $(this).closest("form");
+
+          event.preventDefault(); // Prevent the default button action
+
+          swal({
+              title: "Are you sure you want to submit this form?",
+              text: "Please confirm your action.",
+              icon: "warning",
+              buttons: {
+                  cancel: "Cancel",
+                  confirm: {
+                      text: "Yes, Continue!",
+                      value: true,
+                      visible: true,
+                      className: "btn-success",
+                      closeModal: false
+                  }
+              },
+              dangerMode: true,
+          }).then((willSubmit) => {
+              if (willSubmit) {
+                  // Display loading indicator
+                  swal({
+                      title: "Processing...",
+                      text: "Please wait.",
+                      buttons: false,
+                      closeOnClickOutside: false,
+                      closeOnEsc: false,
+                      icon: "info",
+                      timerProgressBar: true,
+                  });
+
+                  // Submit the form after a short delay to allow the loading indicator to be shown
+                  setTimeout(function() {
+                      form.submit(); // Submit the form
+                      handleFormSubmissionSuccess(); // Call the success handling function
+                  }, 500);
+              }
+          });
+      });
+  });
+</script>
+
+
 <script>
 // Calculate total variable cost
 function calculateTotalVariableCost() {
@@ -282,5 +287,31 @@ document.getElementById('total_machinery_fuel_cost').addEventListener('input', c
 calculateTotalVariableCost();
 
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+//  total FUEL cost in decimal formats
+document.addEventListener('DOMContentLoaded', function() {
+// Get input elements
+const totalLaborCostInput = document.getElementById('total_machinery_fuel_cost');
 
+
+// Add event listeners for input events
+total_machinery_fuel_cost.addEventListener('input', formatDecimal);
+
+
+// Function to format input values as decimal
+function formatDecimal(event) {
+    const input = event.target;
+    // Get the input value
+    let value = input.value;
+    // Remove any non-numeric characters and leading zeroes
+    value = value.replace(/[^0-9.]/g, '');
+    // Format the value as a decimal number
+    value = parseFloat(value).toFixed(2);
+    // Update the input value
+    input.value = value;
+}
+
+});
+</script>
 @endsection

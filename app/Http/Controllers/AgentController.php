@@ -41,16 +41,42 @@ class AgentController extends Controller
 
 
 
-    public function AgentDashboard(){
-        $totalfarms= FarmProfile::count();
-        $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
-        $totalAreaYield = FarmProfile::sum('yield_kg_ha');
-        $totalCost= VariableCost::sum('total_variable_cost');
-
-        $yieldPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalAreaYield / $totalAreaPlanted : 0;
-        $averageCostPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalCost / $totalAreaPlanted : 0;
-        return view('agent.agent_index',compact('totalfarms','totalAreaPlanted','totalAreaYield','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted'));
+ 
+    public function AgentDashboard()
+    {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // User is authenticated, proceed with retrieving the user's ID
+            $userId = Auth::id();
+    
+            // Find the user based on the retrieved ID
+            $agent = User::find($userId);
+    
+            if ($agent) {
+                // Assuming you have additional logic to fetch dashboard data
+                $totalfarms = FarmProfile::count();
+                $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+                $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+                $totalCost = VariableCost::sum('total_variable_cost');
+    
+                $yieldPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalAreaYield / $totalAreaPlanted : 0;
+                $averageCostPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalCost / $totalAreaPlanted : 0;
+                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                // Return the view with dashboard data
+                return view('agent.agent_index', compact('totalRiceProduction','agent', 'totalfarms', 'totalAreaPlanted', 'totalAreaYield', 'totalCost', 'yieldPerAreaPlanted', 'averageCostPerAreaPlanted'));
+            } else {
+                // Handle the case where the user is not found
+                // You can redirect the user or display an error message
+                return redirect()->route('login')->with('error', 'User not found.');
+            }
+        } else {
+            // Handle the case where the user is not authenticated
+            // Redirect the user to the login page
+            return redirect()->route('login');
+        }
     }
+    
+
     public function agentlog(Request $request)
     {
         Auth::guard('web')->logout();
@@ -69,16 +95,33 @@ class AgentController extends Controller
 
 
       //agent add personal informations 
-      public function addpersonalInfo(){
-     // Assuming you have the authenticated user
-    $user = Auth::user(); // Assuming you're using Laravel's authentication
-
-    // Fetching user's id and agri_district
-    $user_id = $user->id;
-    $agri_district = $user->agri_district;
-
-        return view('agent.personal_info.add_info', compact('user_id', 'agri_district'));
-    }
+      public function addPersonalInfo()
+      {
+          if (Auth::check()) {
+              // User is authenticated, proceed with retrieving the user's ID
+              $userId = Auth::id();
+      
+              // Find the user based on the retrieved ID
+              $agent = User::find($userId);
+      
+              if ($agent) {
+                  // Assuming you have additional logic to fetch other agent information
+                  $agri_district = $agent->agri_district;
+                  $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                  // Return the view with agent information
+                  return view('agent.personal_info.add_info', compact('userId','totalRiceProduction', 'agri_district', 'agent'));
+              } else {
+                  // Handle the case where the user is not found
+                  // You can redirect the user or display an error message
+                  return redirect()->route('login')->with('error', 'User not found.');
+              }
+          } else {
+              // Handle the case where the user is not authenticated
+              // Redirect the user to the login page
+              return redirect()->route('login');
+          }
+      }
+      
 
     // agent input persona info
     public function addinfo(PersonalInformationsRequest $request)
@@ -245,157 +288,49 @@ public function fetchtables()
     }
 }
 
+public function farmprofiles()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
 
-public function farmprofiles(){
-     // Assuming $user represents the currently logged-in user
-     $user = auth()->user();
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
 
-     // Check if user is authenticated before proceeding
-     if (!$user) {
-         // Handle unauthenticated user, for example, redirect them to login
-         return redirect()->route('login');
-     }
-    $user_id = $user->id;
-    $agri_districts = $user->agri_district;
-    $agri_districts_id = $user->agri_districts_id;
-    return view('agent.farmprofile.add_profile',compact('agri_districts','agri_districts_id'));
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Fetch user's information
+            $user_id = $user->id;
+            $agri_districts = $user->agri_district;
+            $agri_districts_id = $user->agri_districts_id;
+
+            // Find the user by their ID and eager load the personalInformation relationship
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.farmprofile.add_profile', compact('agri_districts','userId','totalRiceProduction', 'agri_districts_id', 'agent', 'profile'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-// public function farmprofiles(){
-//     // Assuming $user represents the currently logged-in user
-//     $user = auth()->user();
-
-//     // Check if user is authenticated before proceeding
-//     if (!$user) {
-//         // Handle unauthenticated user, for example, redirect them to login
-//         return redirect()->route('login');
-//     }
-
-//     // Fetching user ID
-//     $user_id = $user->id;
-
-//     // Fetching agri_districts for the user
-//     $agri_districts = $user->agri_districts; // assuming 'agri_districts' is the relationship name
-
-//     // Fetching agri_districts_id based on the user's ID and agri_districts
-//     $agri_districts_ids = $agri_districts->pluck('id');
-
-//     // Assuming AgriDistrict is your model for agricultural districts
-//     // Fetching AgriDistricts based on their IDs
-//     $agri_districts_info = AgriDistrict::whereIn('id', $agri_districts_ids)->get();
-
-//     return view('agent.farmprofile.add_profile', compact('agri_districts_info'));
-// }
 
 
-// agent added new farm profiles
-// public function AddFarmProfile(FarmProfileRequest $request)
-//     {
-       
-//         try {
-           
-//             $user = auth()->user();
-//             $data = $request->validated();
-           
-
-       
-
-//     // Check if the associated PersonalInformations record exists
-//     // Access the primary key of the PersonalInformations model instance
-
-//     $existingFarmProfile = FarmProfile::where([
-//         ['personal_informations_id', '=', $request->input('personal_informations_id')],
-       
-    
-       
-       
-    
-      
-//         // Add other fields here
-//     ])->first();
-    
-//     if ($existingFarmProfile) {
-//         // FarmProfile with the given personal_informations_id and other fields already exists
-//         // You can handle this scenario here, for example, return an error message
-//         return redirect('/add-farm-profile')->with('error', 'Farm Profile with this information already exists.');
-//     }
-    
-
-//             $farmProfile = new FarmProfile;
-//             $farmProfile->personal_informations_id= $request->personal_informations_id;
-//         //    $farmProfile->users_id= $request->users_id;
-//         $farmProfile->agri_districts_id= $request->agri_districts_id;
-//         // $farmProfile->polygons_id= $request->polygons_id;
-//         $farmProfile->agri_districts= $request->agri_districts;
-//         if ($request->tenurial_status=== 'Add') {
-//               $farmProfile->tenurial_status= $request->add_newTenure; // Use the value entered in the "tenurial_status" input field
-//             } else {
-//                       $farmProfile->tenurial_status= $request->tenurial_status; // Use the selected no_of_children from the dropdown
-//             }
-//         $farmProfile->rice_farm_address= $request->rice_farm_address;
-      
-//         if ($request->no_of_years_as_farmers=== 'Add') {
-//             $farmProfile->no_of_years_as_farmers= $request->add_newFarmyears; // Use the value entered in the "no_of_years_as_farmers" input field
-//           } else {
-//                     $farmProfile->no_of_years_as_farmers= $request->no_of_years_as_farmers; // Use the selected no_of_children from the dropdown
-//           }
-//         $farmProfile->gps_longitude= $request->gps_longitude;
-//         $farmProfile->gps_latitude= $request->gps_latitude;
-//         $farmProfile->total_physical_area_has= $request->total_physical_area_has;
-//         $farmProfile->rice_area_cultivated_has= $request->rice_area_cultivated_has;
-//         $farmProfile->land_title_no= $request->land_title_no;
-//         $farmProfile->lot_no= $request->lot_no;
-       
-//         if ($request->area_prone_to=== 'Add Prone') {
-//             $farmProfile->area_prone_to= $request->add_newProneYear; // Use the value entered in the "area_prone_to" input field
-//           } else {
-//                     $farmProfile->area_prone_to= $request->area_prone_to; // Use the selected no_of_children from the dropdown
-//           }
-
-//         if ($request->ecosystem=== 'Add ecosystem') {
-//             $farmProfile->ecosystem= $request->Add_Ecosystem; // Use the value entered in the "ecosystem" input field
-//           } else {
-//                     $farmProfile->ecosystem= $request->ecosystem; // Use the selected no_of_children from the dropdown
-//           }
-//         $farmProfile->type_rice_variety= $request->type_rice_variety;
-//         $farmProfile->prefered_variety= $request->prefered_variety;
-//         $farmProfile->plant_schedule_wetseason= $request->plant_schedule_wetseason;
-//         $farmProfile->plant_schedule_dryseason= $request->plant_schedule_dryseason;
-      
-//         if ($request->no_of_cropping_yr=== 'Adds') {
-//             $farmProfile->no_of_cropping_yr= $request->add_cropyear; // Use the value entered in the "no_of_cropping_yr" input field
-//           } else {
-//                     $farmProfile->no_of_cropping_yr= $request->no_of_cropping_yr; // Use the selected no_of_children from the dropdown
-//           }
-//         $farmProfile->yield_kg_ha= $request->yield_kg_ha;
-//         $farmProfile->rsba_register= $request->rsba_register;
-//         $farmProfile->pcic_insured= $request->pcic_insured;
-//         $farmProfile->government_assisted= $request->government_assisted;
-       
-//         if ($request->source_of_capital=== 'Others') {
-//             $farmProfile->source_of_capital= $request->add_sourceCapital; // Use the value entered in the "source_of_capital" input field
-//           } else {
-//                     $farmProfile->source_of_capital= $request->source_of_capital; // Use the selected no_of_children from the dropdown
-//           }
-//         $farmProfile->remarks_recommendation= $request->remarks_recommendation;
-//         $farmProfile->oca_district_office= $request->oca_district_office;
-//         $farmProfile->name_technicians= $request->name_technicians;
-//         $farmProfile->date_interview= $request->date_interview;
-
-
-
-//           dd($farmProfile);
-//         //   save new info
-//         $farmProfile->save();
-
-         
-    
-
-// return redirect('/add-fixed-cost')->with('message', 'Farm Profile added successfully');
-// } catch (\Exception $ex) {
-//     // Handle the exception
-//    dd($ex);
-//     return redirect('/add-farm-profile')->with('message', 'Something went wrong');
-// }
        
 //     }
 public function AddFarmProfile(FarmProfileRequest $request)
@@ -458,9 +393,49 @@ public function AddFarmProfile(FarmProfileRequest $request)
 }
 
 // agent fixed cost view
-public function fixedCost(){
-    return view('agent.fixedcost.add_fcost');
+public function fixedCost()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.fixedcost.add_fcost', compact('agent','totalRiceProduction','userId', 'profile', 'farmprofile'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
+
 
 //agent add a new fixed cost
 
@@ -505,11 +480,49 @@ public function AddFcost(FixedCostRequest $request)
     }
 }
 
-//agent machineris used view
-public function machineUsed(){
-    return view('agent.machineused.add_mused');
-}
 
+public function machineUsed()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.machineused.add_mused', compact('agent','totalRiceProduction','userId', 'profile', 'farmprofile'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
 // agent add new machineries used
 public function AddMused(MachineriesUsedtRequest $request)
 {
@@ -569,10 +582,50 @@ public function AddMused(MachineriesUsedtRequest $request)
 }
 
 // agent lastt production view
-public function LastProduction(){
-    return view('agent.lastproduction.add_production');
-}
 
+public function LastProduction()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+            $agri_districts = $user->agri_district;
+            $agri_districts_id = $user->agri_districts_id;
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.lastproduction.add_production', compact('agent','totalRiceProduction','userId', 'profile','agri_districts_id', 'farmprofile'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
 // agent added new last production data
 public function AddNewProduction(LastProductionDatasRequest $request)
     {
@@ -635,11 +688,50 @@ public function AddNewProduction(LastProductionDatasRequest $request)
 
 // agnet varaible cost view seed 
 
-public function variableSeed(){
-    return view('agent.variablecost.seed.add_seeds');
+
+
+public function variableSeed()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.seed.add_seeds', compact('agent','totalRiceProduction','userId', 'profile', 'farmprofile'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-
-
 // agent added new last production data
 public function AddNewSeeed(SeedRequest $request)
 {
@@ -670,12 +762,50 @@ public function AddNewSeeed(SeedRequest $request)
     }
 }
 
-// agnet varaible cost view labor
+// agent varaible cost view labor
 
-public function variableLabor(){
-    return view('agent.variablecost.labor.add_labors');
+public function variableLabor()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.labor.add_labors', compact('agent','totalRiceProduction','userId', 'profile', 'farmprofile'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-
 // add new variable cost labor
 public function AddNewLabor(laborRequest $request)
 {
@@ -693,32 +823,48 @@ public function AddNewLabor(laborRequest $request)
 }
 
 //agent variablecost fertilizers
+public function variableFertilizers()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
 
-public function variableFertilizers(){
-    return view('agent.variablecost.fertilizers.add_fertilizer');
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.fertilizers.add_fertilizer', compact('agent','totalRiceProduction','userId', 'profile', 'farmprofile'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-
-//agent variablecost fertilizers add new
-// public function AddNewfertilizers(Request $request)
-// {
-//     try{
-//         // $data= $request->validated();
-//         // $data= $request->all();
-//         $fertilizer= new Fertilizer;
-//         $fertilizer->name_of_fertilizer = $request->name_of_fertilizer === 'other' ? $request->additionalFertilizer : $request->name_of_fertilizer;
-//         $fertilizer->type_of_fertilizer = $request->type_of_fertilizer;
-//         $fertilizer->no_ofsacks = $request->no_ofsacks;
-//         $fertilizer->unitprice_per_sacks = $request->unitprice_per_sacks;
-//         $fertilizer->total_cost_fertilizers = $request->total_cost_fertilizers;
-//         dd($fertilizer);
-//         $fertilizer->save();
-//         return redirect('/add-variable-cost-pesticides')->with('message','Fertilizers data added successsfully');
-    
-//     }
-//     catch(\Exception $ex){
-//         return redirect('/add-variable-cost-fertilizers')->with('message','Someting went wrong');
-//     }
-// }
 public function AddNewfertilizers(FertilizerRequest $request)
 {
     try {
@@ -753,10 +899,48 @@ public function AddNewfertilizers(FertilizerRequest $request)
 }    
 
 // Agent variable cost pesticides view
- public function variablePesticides(){
-    return view('agent.variablecost.pesticides.add_pesticide');
+ public function variablePesticides()
+ {
+     // Check if the user is authenticated
+     if (Auth::check()) {
+         // User is authenticated, proceed with retrieving the user's ID
+         $userId = Auth::id();
+ 
+         // Find the user based on the retrieved ID
+         $agent = User::find($userId);
+ 
+         if ($agent) {
+             // Assuming $user represents the currently logged-in user
+             $user = auth()->user();
+ 
+             // Check if user is authenticated before proceeding
+             if (!$user) {
+                 // Handle unauthenticated user, for example, redirect them to login
+                 return redirect()->route('login');
+             }
+ 
+             // Find the user's personal information by their ID
+             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+ 
+             // Fetch the farm ID associated with the user
+             $farmId = $user->id;
+ 
+             // Find the farm profile using the fetched farm ID
+             $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+             // Return the view with the fetched data
+             return view('agent.variablecost.pesticides.add_pesticide', compact('agent','totalRiceProduction','userId' ,'profile', 'farmprofile'));
+         } else {
+             // Handle the case where the user is not found
+             // You can redirect the user or display an error message
+             return redirect()->route('login')->with('error', 'User not found.');
+         }
+     } else {
+         // Handle the case where the user is not authenticated
+         // Redirect the user to the login page
+         return redirect()->route('login');
+     }
  }
-
 //  agent variablecost pesticides add new
 public function AddNewPesticide( PesticidesRequest $request)
     {
@@ -791,8 +975,49 @@ public function AddNewPesticide( PesticidesRequest $request)
     }
 
     // agent variable cost transport
-    public function variableTransport(){
-        return view('agent.variablecost.transport.add_transports');
+
+    public function variableTransport()
+    {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // User is authenticated, proceed with retrieving the user's ID
+            $userId = Auth::id();
+    
+            // Find the user based on the retrieved ID
+            $agent = User::find($userId);
+    
+            if ($agent) {
+                // Assuming $user represents the currently logged-in user
+                $user = auth()->user();
+    
+                // Check if user is authenticated before proceeding
+                if (!$user) {
+                    // Handle unauthenticated user, for example, redirect them to login
+                    return redirect()->route('login');
+                }
+    
+                // Find the user's personal information by their ID
+                $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+    
+                // Fetch the farm ID associated with the user
+                $farmId = $user->id;
+    
+                // Find the farm profile using the fetched farm ID
+                $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                // Return the view with the fetched data
+                // Return the view with the fetched data
+                return view('agent.variablecost.transport.add_transports', compact('agent','totalRiceProduction','userId', 'profile', 'farmprofile'));
+            } else {
+                // Handle the case where the user is not found
+                // You can redirect the user or display an error message
+                return redirect()->route('login')->with('error', 'User not found.');
+            }
+        } else {
+            // Handle the case where the user is not authenticated
+            // Redirect the user to the login page
+            return redirect()->route('login');
+        }
     }
 //  agent add new variable cost transport
 public function AddNewTransport(TransportRequest $request)
@@ -811,10 +1036,71 @@ public function AddNewTransport(TransportRequest $request)
 }
 
 // agent varible cost variabletotal
-public function variableVartotal(){
-    return view('agent.variablecost.variable_total.add_vartotal');
 
-}
+
+
+ public function variableVartotal()
+    {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // User is authenticated, proceed with retrieving the user's ID
+            $userId = Auth::id();
+    
+            // Find the user based on the retrieved ID
+            $admin = User::find($userId);
+    
+            if ($admin) {
+                // Assuming $user represents the currently logged-in user
+                $user = auth()->user();
+    
+                // Check if user is authenticated before proceeding
+                if (!$user) {
+                    // Handle unauthenticated user, for example, redirect them to login
+                    return redirect()->route('login');
+                }
+    
+                // Find the user's personal information by their ID
+                $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+    
+                // Fetch the farm ID associated with the user
+                $farmId = $user->id;
+    
+                // Find the farm profile using the fetched farm ID
+                $farmprofile = FarmProfile::where('users_id', $farmId)->latest()->first();
+                
+                // Calculate total rice production
+                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                
+                // Fetch labor information
+                $labor = Labor::where('users_id', $userId)->latest()->first();
+                
+                // Fetch seed information
+                $seed = Seed::where('users_id', $userId)->latest()->first();
+                
+                // Fetch fertilizer information
+                $fertilizer = Fertilizer::where('users_id', $userId)->latest()->first();
+                
+                // Fetch pesticide information
+                $pesticide = Pesticide::where('users_id', $userId)->latest()->first();
+                
+                // Fetch transport information
+                $transport = Transport::where('users_id', $userId)->latest()->first();
+    
+                // Return the view with the fetched data
+                return view('agent.variablecost.variable_total.add_vartotal', compact('admin', 'profile', 'farmprofile', 'totalRiceProduction', 'userId', 'labor', 'seed', 'fertilizer', 'pesticide', 'transport'));
+            } else {
+                // Handle the case where the user is not found
+                // You can redirect the user or display an error message
+                return redirect()->route('login')->with('error', 'User not found.');
+            }
+        } else {
+            // Handle the case where the user is not authenticated
+            // Redirect the user to the login page
+            return redirect()->route('login');
+        }
+    }
+
+
 
 // agent add new varaible cost vartotal
 public function AddNewVartotal(VariableCostRequest $request)
@@ -877,17 +1163,223 @@ public function AddNewVartotal(VariableCostRequest $request)
 
 
 
-// checking of the Receipt of datta inserted for personal information
-public function viewpersoninfo(){
-   $personalinformations=PersonalInformations::orderBy('id','desc')->paginate(20);
-    return view('agent.personal_info.view_infor',compact('personalinformations'));
+// // checking of datta inserted for personal information
+// public function viewpersoninfo(){
+//        // users header access fro profile
+//        $id =Auth::user()->id;
+//        $agent = User:: find($id);
+//    $personalinformations=PersonalInformations::orderBy('id','desc')->paginate(20);
+//     return view('agent.personal_info.view_infor',compact('personalinformations','agent'));
+// }
+
+
+// checking of datta inserted for personal information
+
+public function viewpersoninfo(Request $request)
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch all personal information
+            $personalinfos = PersonalInformations::orderBy('id', 'asc');
+
+            // Search functionality
+            if ($request->has('search')) {
+                $keyword = $request->input('search');
+                $personalinfos->where(function ($query) use ($keyword) {
+                    $query->where('last_name', 'like', "%$keyword%")
+                          ->orWhere('first_name', 'like', "%$keyword%");
+                    // Add more search filters as needed
+                });
+            }
+
+            // Paginate the results
+            $personalinfos = $personalinfos->paginate(20);
+
+             // Fetch all farm profiles with their associated personal information and agricultural districts
+                $farmProfiles = FarmProfile::select('farm_profiles.*')
+                ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->with('agriDistrict')
+                ->orderBy('farm_profiles.id', 'asc');
+
+            // Check if a search query is provided
+            if ($request->has('search')) {
+                $keyword = $request->input('search');
+                // Apply search filters for last name and first name
+                $farmProfiles->where(function ($query) use ($keyword) {
+                    $query->where('personal_informations.last_name', 'like', "%$keyword%")
+                        ->orWhere('personal_informations.first_name', 'like', "%$keyword%");
+                });
+            }
+
+            // Paginate the results
+            $farmProfiles = $farmProfiles->paginate(20);
+
+              // Query for fixed costs with eager loading of related models
+            $fixedcosts = FixedCost::with('personalinformation', 'farmprofile')
+            ->orderBy('id', 'asc');
+
+            // Apply search functionality
+            if ($request->has('search')) {
+                $keyword = $request->input('search');
+                $fixedcosts->where(function ($query) use ($keyword) {
+                    $query->whereHas('personalinformation', function ($query) use ($keyword) {
+                        $query->where('last_name', 'like', "%$keyword%")
+                            ->orWhere('first_name', 'like', "%$keyword%");
+                    });
+                });
+            }
+
+            // Paginate the results
+            $fixedcosts = $fixedcosts->paginate(20);
+
+              // Query for fixed costs with eager loading of related models
+                    $machineries = MachineriesUseds::with('personalinformation', 'farmprofile')
+                    ->orderBy('id', 'asc');
+
+                // Apply search functionality
+                if ($request->has('search')) {
+                    $keyword = $request->input('search');
+                    $machineries->where(function ($query) use ($keyword) {
+                        $query->whereHas('personalinformation', function ($query) use ($keyword) {
+                            $query->where('last_name', 'like', "%$keyword%")
+                                ->orWhere('first_name', 'like', "%$keyword%");
+                        });
+                    });
+                }
+
+                // Paginate the results
+                $machineries = $machineries->paginate(20);
+
+                    // Query for variable cost with search functionality
+                        $variable = VariableCost::with('personalinformation', 'farmprofile','seeds','labors','fertilizers','pesticides','transports')
+                        ->orderBy('id', 'asc');
+        
+                    // Apply search functionality
+                    if ($request->has('search')) {
+                        $keyword = $request->input('search');
+                        $variable->where(function ($query) use ($keyword) {
+                            $query->whereHas('personalinformation', function ($query) use ($keyword) {
+                                $query->where('last_name', 'like', "%$keyword%")
+                                    ->orWhere('first_name', 'like', "%$keyword%");
+                            });
+                        });
+                    }
+        
+                    // Paginate the results
+                    $variable = $variable->paginate(20);
+
+                    // Query for fixed costs with eager loading of related models
+
+
+                    $productions = LastProductionDatas::with('personalinformation', 'farmprofile','agridistrict')
+                    ->orderBy('id', 'asc');
+
+                // Apply search functionality
+                if ($request->has('search')) {
+                    $keyword = $request->input('search');
+                    $productions->where(function ($query) use ($keyword) {
+                        $query->whereHas('personalinformation', function ($query) use ($keyword) {
+                            $query->where('last_name', 'like', "%$keyword%")
+                                ->orWhere('first_name', 'like', "%$keyword%");
+                        });
+                    });
+                }
+
+                // Paginate the results
+                $productions = $productions->paginate(20);
+
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.personal_info.view_infor', compact('agent', 'profile', 'personalinfos','farmProfiles','fixedcosts','machineries','variable','productions','totalRiceProduction'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
+
+
+
 // UPDATE view
-public function updateview($id){
-    $personlinformation=PersonalInformations::find($id);
-    return view('agent.personal_info.update_records',compact('personlinformation'));
+// public function updateview($id){
+//        // users header access fro profile
+//        $id =Auth::user()->id;
+//        $agent = User:: find($id);
+//     $personlinformation=PersonalInformations::find($id);
+//     return view('agent.personal_info.update_records',compact('personlinformation','agent'));
+// }
+
+// update the personal info
+public function   updateview($id){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+            $agri_district = $user->agri_district;
+            $agri_districts_id = $user->agri_districts_id;
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $personalinfos=PersonalInformations::find($id);
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.personal_info.update_records', compact('agent','agri_district', 'profile', 'userId','farmprofile','personalinfos','totalRiceProduction'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
+
+
 // edit the receipt form
 public function updateinfo(PersonalInformationsRequest $request,$id)
 {
@@ -949,12 +1441,12 @@ public function updateinfo(PersonalInformationsRequest $request,$id)
          $data->save();     
         
        
-        return redirect('/show-personal-info')->with('message','Personal informations Updated successsfully');
+        return redirect('/agent-show-personal-info')->with('message','Personal informations Updated successsfully');
     
     }
     catch(\Exception $ex){
         // dd($ex); // Debugging statement to inspect the exception
-        return redirect('/update-personal-info/{personlinformations}')->with('message','Someting went wrong');
+        return redirect('/agent-update-personal-info/{personalinfos}')->with('message','Someting went wrong');
         
     }   
 } 
@@ -989,17 +1481,101 @@ public function infodelete($id) {
 
 
 
-public function showfarm(){
-    $farmprofiles=FarmProfile::orderBy('id','desc')->paginate(20);
-    return view('agent.farmprofile.farm_view',compact('farmprofiles'));
+// public function showfarm(){
+//        // users header access fro profile
+//        $id =Auth::user()->id;
+//        $agent = User:: find($id);
+//     $farmprofiles=FarmProfile::orderBy('id','desc')->paginate(20);
+//     return view('agent.farmprofile.farm_view',compact('farmprofiles','agent'));
+// }
+// view the fetch data of farm
+public function  showfarm(){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $farmprofiles=FarmProfile::orderBy('id','desc')->paginate(20);
+            // Return the view with the fetched data
+            return view('agent.farmprofile.farm_view', compact('agent', 'profile', 'farmprofile','farmprofiles'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 // agent farm profile update data view
-public function farmUpdate($id){
-    $farmprofiles=FarmProfile::find($id);
-    return view('agent.farmprofile.farm_update',compact('farmprofiles'));
+
+
+public function  farmUpdate($id){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+            $agri_districts = $user->agri_district;
+            $agri_districts_id = $user->agri_districts_id;
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $farmProfiles=FarmProfile::find($id);
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.farmprofile.farm_update', compact('agent','agri_districts_id','agri_districts' ,'profile','totalRiceProduction','userId', 'farmprofile','farmProfiles'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-
-
 // agent farm profile update data
     public function updatesFarm(FarmProfileRequest $request,$id)
     {
@@ -1064,12 +1640,12 @@ public function farmUpdate($id){
             $data->save();     
             
         
-            return redirect('/show-farm-profile')->with('message','Farm Profile Data Update successsfully');
+            return redirect('/agent-show-personal-info')->with('message','Farm Profile Data Update successsfully');
         
         }
         catch(\Exception $ex){
             // dd($ex); // Debugging statement to inspect the exception
-            return redirect('/update-farm-profile/{farmprofiles}')->with('message','Someting went wrong');
+            return redirect('/agent-update-farm-profile/{farmProfiles}')->with('message','Someting went wrong');
             
         }   
     } 
@@ -1098,15 +1674,92 @@ public function farmdelete($id) {
 }
 
 // fixed cost view
-public function viewFixed(){
-    $fixedcosts=FixedCost::orderBy('id','desc')->paginate(20);
-    return view('agent.fixedcost.fcost_view',compact('fixedcosts'));
-}
 
+public function  viewFixed(){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $fixedcosts=FixedCost::orderBy('id','desc')->paginate(20);
+            // Return the view with the fetched data
+            return view('agent.fixedcost.fcost_view', compact('agent', 'profile', 'farmprofile','fixedcosts'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
 // fixed cost update
+
 public function FixedUpdate($id){
-    $fixedcosts=FixedCost::find($id);
-    return view('agent.fixedcost.fixed_updates',compact('fixedcosts'));
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $fixedcosts=FixedCost::find($id);
+
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.fixedcost.fixed_updates', compact('agent','userId', 'profile','totalRiceProduction', 'farmprofile','fixedcosts'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 public function UpdateFixedCost(FixedCostRequest $request,$id)
@@ -1133,12 +1786,12 @@ public function UpdateFixedCost(FixedCostRequest $request,$id)
         $data->save();     
         
     
-        return redirect('/show-fixed-cost')->with('message','Fixed cost Data Updated successsfully');
+        return redirect('/agent-show-personal-info')->with('message','Fixed cost Data Updated successsfully');
     
     }
     catch(\Exception $ex){
         // dd($ex); // Debugging statement to inspect the exception
-        return redirect('/update-farm-profile/{farmprofiles}')->with('message','Someting went wrong');
+        return redirect('/agent-update-fixed-cost/{fixedcosts}')->with('message','Someting went wrong');
         
     }   
 } 
@@ -1173,19 +1826,52 @@ public function fixedcostdelete($id) {
 
 
 // machineries used view 
-public function showMachine(){
-    $machineries= MachineriesUseds::orderBy('id','desc')->paginate(20);
-    return view('agent.machineused.show_maused',compact('machineries'));
-}
 
 
-// fixed cost update
+
 public function MachineUpdate($id){
-   $machineries=MachineriesUseds::find($id);
-    return view('agent.machineused.update_machine',compact('machineries'));
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $machineries=MachineriesUseds::find($id);
+
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.machineused.update_machine', compact('agent','userId', 'profile','totalRiceProduction', 'farmprofile','machineries'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-
-
 
 public function UpdateMachines(MachineriesUsedtRequest $request,$id)
 {
@@ -1224,12 +1910,12 @@ public function UpdateMachines(MachineriesUsedtRequest $request,$id)
         $data->save();     
         
     
-        return redirect('/show-machinereies-used')->with('message','Machineries Used Data Updated successsfully');
+        return redirect('/agent-show-personal-info')->with('message','Machineries Used Data Updated successsfully');
     
     }
     catch(\Exception $ex){
         // dd($ex); // Debugging statement to inspect the exception
-        return redirect('/update-machineries-used/{machineries}')->with('message','Someting went wrong');
+        return redirect('/agent-update-machinereies-used/{machineries}')->with('message','Someting went wrong');
         
     }   
 } 
@@ -1262,17 +1948,95 @@ public function machinedelete($id) {
 }
 
 // last production view
+
 public function viewProduction(){
-    $productions= LastProductionDatas::orderBy('id','desc')->paginate(20);
-    return view('agent.lastproduction.view_prod',compact('productions'));
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $productions= LastProductionDatas::orderBy('id','desc')->paginate(20);
+            // Return the view with the fetched data
+            return view('agent.lastproduction.view_prod', compact('agent', 'profile', 'farmprofile','productions'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 // last prduction view update
-public function produpdate($id){
-     $productions= LastProductionDatas::find($id);
-     return view('agent.lastproduction.last_edit',compact('productions'));
- }
 
+public function produpdate($id){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+            $agri_district = $user->agri_district;
+            $agri_districts_id = $user->agri_districts_id;
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $productions= LastProductionDatas::find($id);
+
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.lastproduction.last_edit', compact('agent','userId', 'profile','totalRiceProduction','agri_districts_id', 'farmprofile','productions'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
  public function update(LastProductionDatasRequest $request,$id)
 {
 
@@ -1316,21 +2080,18 @@ public function produpdate($id){
         $data->save();     
         
     
-        return redirect('/show-last-production')->with('message','Last Production Data Updated successsfully');
+        return redirect('/agent-show-personal-info')->with('message','Last Production Data Updated successsfully');
     
     }
     catch(\Exception $ex){
         // dd($ex); // Debugging statement to inspect the exception
-        return redirect('/update-last-production/{productions}')->with('message','Someting went wrong');
+        return redirect('/agent-update-last-production/{production}')->with('message','Someting went wrong');
         
     }   
 } 
 
 
-
-
-
-
+// update the production
 public function ProductionDelete($id) {
     try {
         // Find the personal information by ID
@@ -1354,18 +2115,95 @@ public function ProductionDelete($id) {
 }
 
 // varaible cost view, edit, update and delete access by agent
-public function  displayvar(){
-    $variable= VariableCost::orderBy('id','desc')->paginate(10);
-    return view('agent.variablecost.variable_total.show_var',compact('variable'));
+
+public function displayvar(){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $variable= VariableCost::orderBy('id','desc')->paginate(10);
+            // Return the view with the fetched data
+            return view('agent.variablecost.variable_total.show_var', compact('agent', 'profile', 'farmprofile','variable'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
-
-
+// update the variale cost total
 
 
 public function varupdate($id){
-   $variable= VariableCost::find($id);
-    return view('agent.variablecost.variable_total.var_edited',compact('variable'));
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+            $agri_district = $user->agri_district;
+            $agri_districts_id = $user->agri_districts_id;
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $variable= VariableCost::find($id);
+
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.variable_total.var_edited', compact('agent','userId', 'profile','totalRiceProduction', 'farmprofile','variable'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 public function updatevaria(VariableCostRequest $request,$id)
@@ -1396,12 +2234,12 @@ public function updatevaria(VariableCostRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/show-last-production')->with('message','Variable Cost Data Updated successsfully');
+       return redirect('/agent-show-personal-info')->with('message','Variable Cost Data Updated successsfully');
    
    }
    catch(\Exception $ex){
        dd($ex); // Debugging statement to inspect the exception
-       return redirect('update-variable-cost/{variable}')->with('message','Someting went wrong');
+       return redirect('/agent-update-variable-cost/{variables}')->with('message','Someting went wrong');
        
    }   
 } 
@@ -1437,13 +2275,48 @@ public function vardelete($id) {
 
 
 // agent update profile
-
-
 public function AgentProfile(){
-    $id =Auth::user()->id;
-    $agent = User:: find($id);
-    return view('agent.profile.agent_profiles', compact('agent'));
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.profile.agent_profiles', compact('agent', 'profile','totalRiceProduction', 'farmprofile'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
+
 
 public function Agentupdate(Request $request){
    
@@ -1496,21 +2369,205 @@ public function Agentupdate(Request $request){
 
 
 // Seeds data update and view accessed by agent
+// public function SeedDataView(){
+//     // Check if the user is authenticated
+//     if (Auth::check()) {
+//         // User is authenticated, proceed with retrieving the user's ID
+//         $userId = Auth::id();
 
-public function SeedDataView(){
-    $seeds= Seed::orderBy('id','desc')->paginate(10);
-    return view('agent.variablecost.seed.show_seeds_data',compact('seeds'));
+//         // Find the user based on the retrieved ID
+//         $agent = User::find($userId);
+
+//         if ($agent) {
+//             // Assuming $user represents the currently logged-in user
+//             $user = auth()->user();
+
+//             // Check if user is authenticated before proceeding
+//             if (!$user) {
+//                 // Handle unauthenticated user, for example, redirect them to login
+//                 return redirect()->route('login');
+//             }
+
+//             // Find the user's personal information by their ID
+//             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+//             // Fetch the farm ID associated with the user
+//             $farmId = $user->id;
+
+//             // Find the farm profile using the fetched farm ID
+//             $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+//             $seeds= Seed::orderBy('id','desc')->paginate(10);
+//             // Return the view with the fetched data
+//             return view('agent.variablecost.seed.show_seeds_data', compact('agent', 'profile', 'farmprofile'));
+//         } else {
+//             // Handle the case where the user is not found
+//             // You can redirect the user or display an error message
+//             return redirect()->route('login')->with('error', 'User not found.');
+//         }
+//     } else {
+//         // Handle the case where the user is not authenticated
+//         // Redirect the user to the login page
+//         return redirect()->route('login');
+//     }
+// }
+
+public function  SeedDataView(Request $request)
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+         
+                // Query for seeds with search functionality
+            $seedsQuery = Seed::query();
+            if ($request->has('search')) {
+                $searchTerm = $request->input('search');
+                $seedsQuery->where('seed_name', 'like', "%$searchTerm%");
+            }
+            $seeds = $seedsQuery->orderBy('id','asc')->paginate(10);
+            
+            // Query for labors with search functionality
+                $laborsQuery = Labor::query();
+                if ($request->has('search')) {
+                    $searchTerm = $request->input('search');
+                    $laborsQuery->where(function($query) use ($searchTerm) {
+                        $query->where('no_of_person', 'like', "%$searchTerm%")
+                            ->orWhere('total_labor_cost', 'like', "%$searchTerm%")
+                            ->orWhere('rate_per_person', 'like', "%$searchTerm%");
+                    });
+                }
+                $labors = $laborsQuery->orderBy('id','asc')->paginate(10);
+
+                      // Query for fertilizer with search functionality
+                      $fertilizersQuery = Fertilizer::query();
+                      if ($request->has('search')) {
+                          $searchTerm = $request->input('search');
+                          $fertilizersQuery->where(function($query) use ($searchTerm) {
+                              $query->where('name_of_fertilizer', 'like', "%$searchTerm%")
+                                  ->orWhere('no_ofsacks', 'like', "%$searchTerm%")
+                                  ->orWhere('total_cost_fertilizers', 'like', "%$searchTerm%");
+                          });
+                      }
+                      $fertilizers = $fertilizersQuery->orderBy('id','asc')->paginate(10);
+
+                      // Query for pesticides with search functionality
+                    $pesticidesQuery =  Pesticide::query();
+                    if ($request->has('search')) {
+                        $searchTerm = $request->input('search');
+                        $pesticidesQuery->where(function($query) use ($searchTerm) {
+                            $query->where('pesticides_name', 'like', "%$searchTerm%")
+                                ->orWhere('type_ofpesticides', 'like', "%$searchTerm%")
+                                ->orWhere('total_cost_pesticides', 'like', "%$searchTerm%");
+                        });
+                    }
+                    $pesticides = $pesticidesQuery->orderBy('id','asc')->paginate(10);
+                    
+                     // Query for transports with search functionality
+                    $transportsQuery =  Transport::query();
+                    if ($request->has('search')) {
+                        $searchTerm = $request->input('search');
+                        $transportsQuery->where(function($query) use ($searchTerm) {
+                            $query->where('name_of_vehicle', 'like', "%$searchTerm%")
+                                ->orWhere('type_of_vehicle', 'like', "%$searchTerm%")
+                                ->orWhere('total_transport_per_deliverycost', 'like', "%$searchTerm%");
+                        });
+                    }
+                    $transports = $transportsQuery->orderBy('id','asc')->paginate(10);
+
+                    // Query for variable cost with search functionality
+                    $variable = VariableCost::with('personalinformation', 'farmprofile','seeds','labors','fertilizers','pesticides','transports')
+                    ->orderBy('id', 'asc');
+    
+                // Apply search functionality
+                if ($request->has('search')) {
+                    $keyword = $request->input('search');
+                    $variable->where(function ($query) use ($keyword) {
+                        $query->whereHas('personalinformation', function ($query) use ($keyword) {
+                            $query->where('last_name', 'like', "%$keyword%")
+                                  ->orWhere('first_name', 'like', "%$keyword%");
+                        });
+                    });
+                }
+    
+                // Paginate the results
+                $variable = $variable->paginate(20);
+           
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+
+            // Return the view with the fetched data
+            return view('agent.variablecost.seed.show_seeds_data', compact('agent', 'profile', 'labors', 'seeds','fertilizers','pesticides','transports','variable', 'totalRiceProduction'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
-
-
-
-
+// seeds update
 public function SeedsUpdate($id){
-    $seeds= Seed::find($id);
-    return view('agent.variablecost.seed.seeds_form_edit',compact('seeds'));
-}
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
 
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $seeds= Seed::find($id);
+
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.seed.seeds_form_edit', compact('agent','userId', 'profile','totalRiceProduction', 'farmprofile','seeds'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
 public function SeedDataupdate(SeedRequest $request,$id)
 {
 
@@ -1522,18 +2579,25 @@ public function SeedDataupdate(SeedRequest $request,$id)
        
        $data=Seed::find($id);
 
-       $data->seed_name = $request->seed_name;  
-       $data->seed_type = $request->seed_type;
+       $data->users_id = $request->users_id;
+       $data->seed_name = $request->seed_name === 'OtherseedName' 
+       ? $request->add_newInbreeds 
+       : ($request->seed_name === 'OtherseedVarie' 
+           ? $request->add_newInbreed
+           : $request->seed_name);
+
+
+       $data->seed_type = $request->seed_type === 'OtherseedVariety' ? $request->AddRiceVariety : $request->seed_type;
+      
        $data->unit = $request->unit;
        $data->quantity = $request->quantity;
        $data->unit_price = $request->unit_price;
-
        $data->total_seed_cost = $request->total_seed_cost;
-
-       $data->save();     
+       // dd($data);
+       $data->save();  
        
    
-       return redirect('/show-variable-cost-seed')->with('message','Seeds Data Updated successsfully');
+       return redirect('/agent-show-variable-cost-seed')->with('message','Seeds Data Updated successsfully');
    
    }
    catch(\Exception $ex){
@@ -1573,21 +2637,96 @@ public function SeedsDelete($id) {
 
 
 // labors data edit and view by agentt
-
-
 public function LaborsDataView(){
-    $labors= Labor::orderBy('id','desc')->paginate(10);
-    return view('agent.variablecost.labor.show_laborData',compact('labors'));
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $labors= Labor::orderBy('id','desc')->paginate(10);
+            // Return the view with the fetched data
+            return view('agent.variablecost.labor.show_laborData', compact('agent', 'profile', 'farmprofile','variable'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 
 
-
-
+// labors update
 public function LaborUpdate($id){
-    $labors= Labor::find($id);
-    return view('agent.variablecost.labor.formEdit_labors',compact('labors'));
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $labors= Labor::find($id);
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.labor.formEdit_labors', compact('agent','userId', 'profile','totalRiceProduction', 'farmprofile','labors'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
+
+
+
 
 public function LaborDataupdate(LaborRequest $request,$id)
 {
@@ -1608,12 +2747,12 @@ public function LaborDataupdate(LaborRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/show-variable-cost-labor')->with('message','Labor Data Updated successsfully');
+       return redirect('/agent-show-variable-cost-seed')->with('message','Labor Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('/update-variable-cost-labor/{labors}')->with('message','Someting went wrong');
+       return redirect('/agent-update-variable-cost-labor/{labors}')->with('message','Someting went wrong');
        
    }   
 } 
@@ -1649,21 +2788,95 @@ public function LaborsDelete($id) {
 
 // eidt ,view and delete of fertilizer
 
-
 public function FertilizerDataView(){
-    $fertilizers= Fertilizer::orderBy('id','desc')->paginate(10);
-    return view('agent.variablecost.fertilizers.show_fertilizeData',compact('fertilizers'));
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $fertilizers= Fertilizer::orderBy('id','desc')->paginate(10);
+            // Return the view with the fetched data
+            return view('agent.variablecost.fertilizers.show_fertilizeData', compact('agent', 'profile', 'farmprofile','fertilizers'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 
 
 
 
-public function FertilizerUpdate($id){
-    $fertilizers= Fertilizer::find($id);
-    return view('agent.variablecost.fertilizers.formsEdit_fertilizeData',compact('fertilizers'));
-}
+// ferilizers update
+public function  FertilizerUpdate($id){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
 
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $fertilizers= Fertilizer::find($id);
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.fertilizers.formsEdit_fertilizeData', compact('agent','userId', 'profile','totalRiceProduction', 'farmprofile','fertilizers'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
 public function FertilizerDataupdate(FertilizerRequest $request,$id)
 {
 
@@ -1684,12 +2897,12 @@ public function FertilizerDataupdate(FertilizerRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/show-variable-cost-fertilizers')->with('message','Fertilizer Data Updated successsfully');
+       return redirect('/agent-show-variable-cost-seed')->with('message','Fertilizer Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('/update-variable-cost-fertilizers/{fertilizers}')->with('message','Someting went wrong');
+       return redirect('/agent-update-variable-cost-fertilizers/{fertilizers}')->with('message','Someting went wrong');
        
    }   
 } 
@@ -1722,20 +2935,93 @@ public function FertilizerDelete($id) {
 // edit, delete and view 0f pesticides data by agent
 
 
-public function PesticideDataView(){
-    $pesticides= Pesticide::orderBy('id','desc')->paginate(10);
-    return view('agent.variablecost.pesticides.show_pesticidesData',compact('pesticides'));
+public function  PesticideDataView(){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $pesticides= Pesticide::orderBy('id','desc')->paginate(10);
+            // Return the view with the fetched data
+            return view('agent.variablecost.pesticides.show_pesticidesData', compact('agent', 'profile', 'farmprofile','pesticides'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 
 
+//  pesicide  updates
+public function  PesticideUpdate($id){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
 
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
 
-public function PesticideUpdate($id){
-    $pesticides= Pesticide::find($id);
-    return view('agent.variablecost.pesticides.formsEdit_pesticidesData',compact('pesticides'));
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $pesticides= Pesticide::find($id);
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.pesticides.formsEdit_pesticidesData', compact('agent','userId', 'profile','totalRiceProduction', 'farmprofile','pesticides'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-
 public function PesticideDataupdate(PesticidesRequest $request,$id)
 {
 
@@ -1756,12 +3042,12 @@ public function PesticideDataupdate(PesticidesRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/show-variable-cost-pesticides')->with('message','Pesticide Data Updated successsfully');
+       return redirect('/agent-show-variable-cost-seed')->with('message','Pesticide Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('/update-variable-cost-pesticides/{pesticides}')->with('message','Someting went wrong');
+       return redirect('/agent-update-variable-cost-pesticides/{pesticides}')->with('message','Someting went wrong');
        
    }   
 } 
@@ -1791,20 +3077,94 @@ public function PesticideDelete($id) {
 
 // view, edit of transport by agent
 
-public function TransportDataView(){
-    $transports= Transport::orderBy('id','desc')->paginate(10);
-    return view('agent.variablecost.transport.show_ttransportsData',compact('transports'));
+public function  TransportDataView(){
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $transports= Transport::orderBy('id','desc')->paginate(10);
+            // Return the view with the fetched data
+            return view('agent.variablecost.transport.show_ttransportsData', compact('agent', 'profile', 'farmprofile','transports'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 
 
-
+// transport data update
 
 public function TransportUpdate($id){
-    $transports= Transport::find($id);
-    return view('agent.variablecost.transport.formsEdit_transportsData',compact('transports'));
-}
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
 
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmprofile = FarmProfile::where('id', $farmId)->latest()->first();
+            $transports= Transport::find($id);
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.variablecost.transport.formsEdit_transportsData', compact('agent','userId', 'profile','totalRiceProduction', 'farmprofile','transports'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
 public function TransportDataupdate(TransportRequest $request,$id)
 {
 
@@ -1825,12 +3185,12 @@ public function TransportDataupdate(TransportRequest $request,$id)
        $data->save();     
        
    
-       return redirect('/show-variable-cost-transport')->with('message','Transport Data Updated successsfully');
+       return redirect('/agent-show-variable-cost-seed')->with('message','Transport Data Updated successsfully');
    
    }
    catch(\Exception $ex){
     //    dd($ex); // Debugging statement to inspect the exception
-       return redirect('/update-variable-cost-transports/{transports}')->with('message','Someting went wrong');
+       return redirect('/agent-update-variable-cost-transport/{tranports}')->with('message','Someting went wrong');
        
    }   
 } 
@@ -1865,87 +3225,144 @@ public function mapView($id){
 }
 
 // Rice Variety "Inbred
-public function InbredVariety()
-{
-    try {
-        $inbredData = DB::table('personal_informations')
-            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-            ->select(
-                'personal_informations.agri_district',
-                'farm_profiles.type_rice_variety',
-                'farm_profiles.prefered_variety'
-            )
-            ->orderBy('personal_informations.agri_district')
-            ->get();
-
-        // Group the data by district
-        $InbredInfo = [];
-        foreach ($inbredData as $data) {
-            $typeVariety = $data->type_rice_variety;
-            $preferedVariety = $data->prefered_variety;
-
-            // If type of variety is "N/A", use preferred variety
-            if (strtolower($typeVariety) === 'n/a' || strtolower($typeVariety) === 'na') {
-                $variety = $preferedVariety;
-            } else {
-                $variety = $typeVariety;
-            }
-
-            if (!isset($InbredInfo[$data->agri_district][$variety])) {
-                $InbredInfo[$data->agri_district][$variety] = ['count' => 0, 'percentage' => 0];
-            }
-
-            $InbredInfo[$data->agri_district][$variety]['count']++;
-        }
-
-        // Calculate percentage for each rice variety in each district
-        foreach ($InbredInfo as $district => &$varieties) {
-            $totalRiceVarietiesInDistrict = array_sum(array_column($varieties, 'count'));
-            foreach ($varieties as &$data) {
-                $percentage = ($totalRiceVarietiesInDistrict > 0) ? ($data['count'] / $totalRiceVarietiesInDistrict) * 100 : 0;
-                $data['percentage'] = number_format($percentage, 2);
-            }
-        }
-
-        return view('agent.riceVariety.inbred_variety', compact('InbredInfo'));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
-    }
-}
-
-
-
-
-// // Rice Variety "Hybrid" access by agent
-// public function HybridVariety(){
+// public function InbredVariety()
+// {
 //     try {
-//         $FarmersData = DB::table('personal_informations')
+//         $inbredData = DB::table('personal_informations')
 //             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-//             ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
-//             ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
-//             ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
-//             ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
 //             ->select(
-//                 'personal_informations.*',
-//                 'farm_profiles.*',
-//                 'fixed_costs.*',
-//                 'machineries_useds.*',
-//                 'variable_costs.*',
-//                 'last_production_datas.*'
+//                 'personal_informations.agri_district',
+//                 'farm_profiles.type_rice_variety',
+//                 'farm_profiles.prefered_variety'
 //             )
-//             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
+//             ->orderBy('personal_informations.agri_district')
 //             ->get();
 
-//         return view('agent.riceVariety.hybrid_variety', compact('FarmersData'));
+//         // Group the data by district
+//         $InbredInfo = [];
+//         foreach ($inbredData as $data) {
+//             $typeVariety = $data->type_rice_variety;
+//             $preferedVariety = $data->prefered_variety;
+
+//             // If type of variety is "N/A", use preferred variety
+//             if (strtolower($typeVariety) === 'n/a' || strtolower($typeVariety) === 'na') {
+//                 $variety = $preferedVariety;
+//             } else {
+//                 $variety = $typeVariety;
+//             }
+
+//             if (!isset($InbredInfo[$data->agri_district][$variety])) {
+//                 $InbredInfo[$data->agri_district][$variety] = ['count' => 0, 'percentage' => 0];
+//             }
+
+//             $InbredInfo[$data->agri_district][$variety]['count']++;
+//         }
+
+//         // Calculate percentage for each rice variety in each district
+//         foreach ($InbredInfo as $district => &$varieties) {
+//             $totalRiceVarietiesInDistrict = array_sum(array_column($varieties, 'count'));
+//             foreach ($varieties as &$data) {
+//                 $percentage = ($totalRiceVarietiesInDistrict > 0) ? ($data['count'] / $totalRiceVarietiesInDistrict) * 100 : 0;
+//                 $data['percentage'] = number_format($percentage, 2);
+//             }
+//         }
+//                 // users header access fro profile
+         
+//         return view('agent.riceVariety.inbred_variety', compact('InbredInfo','agent'));
 //     } catch (\Exception $ex) {
 //         // Log the exception for debugging purposes
 //         dd($ex);
 //         return redirect()->back()->with('message', 'Something went wrong');
 //     }
-    
 // }
+
+
+public function InbredVariety()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch inbred variety data
+            $inbredData = DB::table('personal_informations')
+                ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                ->select(
+                    'personal_informations.agri_district',
+                    'farm_profiles.type_rice_variety',
+                    'farm_profiles.prefered_variety'
+                )
+                ->orderBy('personal_informations.agri_district')
+                ->get();
+
+            // Group the data by district
+            $InbredInfo = [];
+            foreach ($inbredData as $data) {
+                $typeVariety = $data->type_rice_variety;
+                $preferedVariety = $data->prefered_variety;
+
+                // If type of variety is "N/A", use preferred variety
+                if (strtolower($typeVariety) === 'n/a' || strtolower($typeVariety) === 'na') {
+                    $variety = $preferedVariety;
+                } else {
+                    $variety = $typeVariety;
+                }
+
+                if (!isset($InbredInfo[$data->agri_district][$variety])) {
+                    $InbredInfo[$data->agri_district][$variety] = ['count' => 0, 'percentage' => 0];
+                }
+
+                $InbredInfo[$data->agri_district][$variety]['count']++;
+            }
+
+            // Calculate percentage for each rice variety in each district
+            foreach ($InbredInfo as $district => &$varieties) {
+                $totalRiceVarietiesInDistrict = array_sum(array_column($varieties, 'count'));
+                foreach ($varieties as &$data) {
+                    $percentage = ($totalRiceVarietiesInDistrict > 0) ? ($data['count'] / $totalRiceVarietiesInDistrict) * 100 : 0;
+                    $data['percentage'] = number_format($percentage, 2);
+                }
+            }
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.riceVariety.inbred_variety', compact('agent','userId', 'profile','totalRiceProduction', 'farmProfile', 'InbredInfo'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
+
+
 
 
 // Rice harvest sch
@@ -1988,10 +3405,40 @@ public function HarvestSched(){
 
 
 
-// Rice Planting schedule of farmers per district
-public function PlantingSched(){
-    try {
-        $farmersData = DB::table('personal_informations')
+
+public function PlantingSched()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch inbred variety data
+            $farmersData = DB::table('personal_informations')
             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
             ->select(
@@ -2017,22 +3464,58 @@ public function PlantingSched(){
                 'prefered_variety' => $data->prefered_variety,
             ];
         }
-        return view('agent.Schedule.planting', compact('plantingSchedule'));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
+
+            // Return the view with the fetched data
+            return view('agent.riceVariety.inbred_variety', compact('agent', 'profile', 'farmProfile', 'plantingSchedule'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
     }
 }
-
 
 // Rice farmers per districts informations
 
 // ayala farmers
+
 public function AyalaFarmers()
 {
-    try {
-        $FarmersData = DB::table('personal_informations')
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch ayala farmers fetching  data
+            $FarmersData = DB::table('personal_informations')
             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
@@ -2156,59 +3639,61 @@ public function AyalaFarmers()
             $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
             $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-        return view('agent.agriDistricts.ayala_farmers', compact('FarmersData','totalRiceProduction',
-        'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
-        'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
-        'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
-        'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner','countorg'
-    ));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
-    }
 
-       
-}
-
-public function show($id)
-{
-    try {
-        $ayalaData = DB::table('personal_informations')
-            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
-            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
-            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
-            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
-            ->select(
-                'personal_informations.*',
-                'farm_profiles.*',
-                'fixed_costs.*',
-                'machineries_useds.*',
-                'variable_costs.*',
-                'last_production_datas.*'
-            )
-            ->where('personal_informations.id', $id)
-            ->first();
-
-        if (!$ayalaData) {
-            return redirect()->back()->with('error', 'Data not found');
+            // Return the view with the fetched data
+            return view('agent.agriDistricts.ayala_farmers', compact('agent', 'profile', 'farmProfile','FarmersData','totalRiceProduction',
+            'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+            'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+            'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner','countorg'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
         }
-
-        return view('agent.ayala.show_personal_info', compact('ayalaData'));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('error', 'Something went wrong');
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
     }
 }
-
 
 
 // tumaga farmers
-public function TumagaFarmers(){
-    try {
-        $FarmersData = DB::table('personal_informations')
+
+public function TumagaFarmers()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch ayala farmers fetching  data
+            $FarmersData = DB::table('personal_informations')
             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
@@ -2224,132 +3709,168 @@ public function TumagaFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
-             // Calculate the age for each farmer
-             foreach ($FarmersData as $farmer) {
+            // Specify the agri district you want to filter by
                 // Calculate the age for each farmer
-                $dateOfBirth = $farmer->date_of_birth;
-                $age = Carbon::parse($dateOfBirth)->age;
+                foreach ($FarmersData as $farmer) {
+                    // Calculate the age for each farmer
+                    $dateOfBirth = $farmer->date_of_birth;
+                    $age = Carbon::parse($dateOfBirth)->age;
 
-                // Add the age to the farmer object
-                $farmer->age = $age;
-            }
-        // Count the number of farmers in the "ayala" district
-        $totalfarms = DB::table('personal_informations')
-        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-        ->where('farm_profiles.agri_districts', 'tumaga')
-        ->distinct()
-        ->count('personal_informations.id');
-
-          // Calculate the total area planted in the "tumaga" district
-        $totalAreaPlantedAyala = DB::table('farm_profiles')
-        ->where('agri_districts', 'tumaga')
-        ->sum('total_physical_area_has');
-        $totalAreaYieldAyala = DB::table('farm_profiles')
-        ->where('agri_districts', 'tumaga')
-        ->sum('yield_kg_ha');
-     
-         // Calculate the total fixed cost in the "tumaga" district
-        $totalFixedCostAyala = DB::table('fixed_costs')
-        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
-        ->where('farm_profiles.agri_districts', 'tumaga')
-        ->sum('fixed_costs.total_amount');
-        
-              // Calculate the total machineries cost in the "tumaga" district
-              $totalMachineriesUsedAyala= DB::table('machineries_useds')
-              ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
-              ->where('farm_profiles.agri_districts', 'tumaga')
-              ->sum('machineries_useds.total_cost_for_machineries');
-
-            // Calculate the total variable cost in the "tumaga" district
-            $totalVariableCostAyala = DB::table('variable_costs')
-            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+                    // Add the age to the farmer object
+                    $farmer->age = $age;
+                }
+            // Count the number of farmers in the "ayala" district
+            $totalfarms = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->where('farm_profiles.agri_districts', 'tumaga')
-            ->sum('variable_costs.total_variable_cost');
+            ->distinct()
+            ->count('personal_informations.id');
 
-                // Calculate the total rice production in the Ayala district
-                $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
-                ->where('farm_profiles.agri_districtS', 'Ayala')
-                ->sum('last_production_datas.yield_tons_per_kg');
-
-
-                          // Count owner tenants
-                        $countOwnerTenants = DB::table('personal_informations')
-                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->where('farm_profiles.agri_districts', 'tumaga')
-                        ->where('farm_profiles.tenurial_status', 'owner')
-                        ->distinct()
-                        ->count('farm_profiles.tenurial_status');
-
-                        // Count tiller tenant tenants
-                        $countTillerTenantTenants = DB::table('personal_informations')
-                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->where('farm_profiles.agri_districts', 'tumaga')
-                        ->where('farm_profiles.tenurial_status', 'tiller tenant')
-                        ->distinct()
-                        ->count('farm_profiles.tenurial_status');
-
-                        // Count tiller tenants
-                        $countTillerTenants = DB::table('personal_informations')
-                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->where('farm_profiles.agri_districts', 'tumaga')
-                        ->where('farm_profiles.tenurial_status', 'tiller')
-                        ->distinct()
-                        ->count('farm_profiles.tenurial_status');
-
-                        // Count lease tenants
-                        $countLeaseTenants = DB::table('personal_informations')
-                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->where('farm_profiles.agri_districts', 'tumaga')
-                        ->where('farm_profiles.tenurial_status', 'lease')
-                        ->distinct()
-                        ->count('farm_profiles.tenurial_status');
-                    // Count owner tenants
-                $countOwner = DB::table('personal_informations')
-                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->where('farm_profiles.agri_districts', 'tumaga')
-                ->where('farm_profiles.tenurial_status', 'owner')
-                ->distinct()
-                ->count('farm_profiles.tenurial_status');
-                //count no of farmers organization
-                $countorg = DB::table('personal_informations')
-                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->where('farm_profiles.agri_districts', 'tumaga')
-                ->distinct('personal_informations.nameof_farmers_ass_org_coop')
-                ->count('personal_informations.nameof_farmers_ass_org_coop');
+              // Calculate the total area planted in the "tumaga" district
+            $totalAreaPlantedAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'tumaga')
+            ->sum('total_physical_area_has');
+            $totalAreaYieldAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'tumaga')
+            ->sum('yield_kg_ha');
+         
+             // Calculate the total fixed cost in the "tumaga" district
+            $totalFixedCostAyala = DB::table('fixed_costs')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+            ->where('farm_profiles.agri_districts', 'tumaga')
+            ->sum('fixed_costs.total_amount');
             
-            // Calculate rice productivity in the Ayala district
-            $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+                  // Calculate the total machineries cost in the "tumaga" district
+                  $totalMachineriesUsedAyala= DB::table('machineries_useds')
+                  ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+                  ->where('farm_profiles.agri_districts', 'tumaga')
+                  ->sum('machineries_useds.total_cost_for_machineries');
 
-             // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
- 
-        $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
-        $totalAreaYield = FarmProfile::sum('yield_kg_ha');
-        $totalCost= VariableCost::sum('total_variable_cost');
-            
-        $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
-        $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
-        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    return view('agent.agriDistricts.tumaga_farmers', compact('FarmersData','totalRiceProduction',
-    'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
-    'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
-    'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
-    'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
-    'countorg'
-));
-} catch (\Exception $ex) {
-    // Log the exception for debugging purposes
-    dd($ex);
-    return redirect()->back()->with('message', 'Something went wrong');
+                // Calculate the total variable cost in the "tumaga" district
+                $totalVariableCostAyala = DB::table('variable_costs')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+                ->where('farm_profiles.agri_districts', 'tumaga')
+                ->sum('variable_costs.total_variable_cost');
+
+                    // Calculate the total rice production in the Ayala district
+                    $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+                    ->where('farm_profiles.agri_districtS', 'tumaga')
+                    ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                              // Count owner tenants
+                            $countOwnerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'tumaga')
+                            ->where('farm_profiles.tenurial_status', 'owner')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenant tenants
+                            $countTillerTenantTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'tumaga')
+                            ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenants
+                            $countTillerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'tumaga')
+                            ->where('farm_profiles.tenurial_status', 'tiller')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count lease tenants
+                            $countLeaseTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'tumaga')
+                            ->where('farm_profiles.tenurial_status', 'lease')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+                        // Count owner tenants
+                    $countOwner = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'tumaga')
+                    ->where('farm_profiles.tenurial_status', 'owner')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // total farmers organizattion
+                    $countorg = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'tumaga')
+                    ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+                    ->count('personal_informations.nameof_farmers_ass_org_coop');
+
+
+                // Calculate rice productivity in the Ayala district
+                $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+                 // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+     
+            $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+            $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+            $totalCost= VariableCost::sum('total_variable_cost');
+                
+            $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+            $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+
+            // Return the view with the fetched data
+            return view('agent.agriDistricts.tumaga_farmers', compact('agent', 'profile', 'farmProfile','FarmersData','totalRiceProduction',
+            'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+            'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+            'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner','countorg'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
-
-   
-}
-
 
 // culianan farmers
-public function CuliananFarmers(){
-    try {
-        $FarmersData = DB::table('personal_informations')
+
+public function CuliananFarmers()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch ayala farmers fetching  data
+            $FarmersData = DB::table('personal_informations')
             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
@@ -2365,132 +3886,169 @@ public function CuliananFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
-             // Calculate the age for each farmer
-             foreach ($FarmersData as $farmer) {
+            // Specify the agri district you want to filter by
                 // Calculate the age for each farmer
-                $dateOfBirth = $farmer->date_of_birth;
-                $age = Carbon::parse($dateOfBirth)->age;
+                foreach ($FarmersData as $farmer) {
+                    // Calculate the age for each farmer
+                    $dateOfBirth = $farmer->date_of_birth;
+                    $age = Carbon::parse($dateOfBirth)->age;
 
-                // Add the age to the farmer object
-                $farmer->age = $age;
-            }
-        // Count the number of farmers in the "ayala" district
-        $totalfarms = DB::table('personal_informations')
-        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-        ->where('farm_profiles.agri_districts', 'culianan')
-        ->distinct()
-        ->count('personal_informations.id');
-
-          // Calculate the total area planted in the "culianan" district
-        $totalAreaPlantedAyala = DB::table('farm_profiles')
-        ->where('agri_districts', 'culianan')
-        ->sum('total_physical_area_has');
-        $totalAreaYieldAyala = DB::table('farm_profiles')
-        ->where('agri_districts', 'culianan')
-        ->sum('yield_kg_ha');
-     
-         // Calculate the total fixed cost in the "culianan" district
-        $totalFixedCostAyala = DB::table('fixed_costs')
-        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
-        ->where('farm_profiles.agri_districts', 'culianan')
-        ->sum('fixed_costs.total_amount');
-        
-              // Calculate the total machineries cost in the "culianan" district
-              $totalMachineriesUsedAyala= DB::table('machineries_useds')
-              ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
-              ->where('farm_profiles.agri_districts', 'culianan')
-              ->sum('machineries_useds.total_cost_for_machineries');
-
-            // Calculate the total variable cost in the "culianan" district
-            $totalVariableCostAyala = DB::table('variable_costs')
-            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+                    // Add the age to the farmer object
+                    $farmer->age = $age;
+                }
+            // Count the number of farmers in the "ayala" district
+            $totalfarms = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->where('farm_profiles.agri_districts', 'culianan')
-            ->sum('variable_costs.total_variable_cost');
+            ->distinct()
+            ->count('personal_informations.id');
 
-                // Calculate the total rice production in the Ayala district
-                $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
-                ->where('farm_profiles.agri_districtS', 'Ayala')
-                ->sum('last_production_datas.yield_tons_per_kg');
-
-
-                          // Count owner tenants
-                        $countOwnerTenants = DB::table('personal_informations')
-                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->where('farm_profiles.agri_districts', 'culianan')
-                        ->where('farm_profiles.tenurial_status', 'owner')
-                        ->distinct()
-                        ->count('farm_profiles.tenurial_status');
-
-                        // Count tiller tenant tenants
-                        $countTillerTenantTenants = DB::table('personal_informations')
-                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->where('farm_profiles.agri_districts', 'culianan')
-                        ->where('farm_profiles.tenurial_status', 'tiller tenant')
-                        ->distinct()
-                        ->count('farm_profiles.tenurial_status');
-
-                        // Count tiller tenants
-                        $countTillerTenants = DB::table('personal_informations')
-                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->where('farm_profiles.agri_districts', 'culianan')
-                        ->where('farm_profiles.tenurial_status', 'tiller')
-                        ->distinct()
-                        ->count('farm_profiles.tenurial_status');
-
-                        // Count lease tenants
-                        $countLeaseTenants = DB::table('personal_informations')
-                        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->where('farm_profiles.agri_districts', 'culianan')
-                        ->where('farm_profiles.tenurial_status', 'lease')
-                        ->distinct()
-                        ->count('farm_profiles.tenurial_status');
-                    // Count owner tenants
-                $countOwner = DB::table('personal_informations')
-                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->where('farm_profiles.agri_districts', 'culianan')
-                ->where('farm_profiles.tenurial_status', 'owner')
-                ->distinct()
-                ->count('farm_profiles.tenurial_status');
-                //count no of farmers organization
-                $countorg = DB::table('personal_informations')
-                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->where('farm_profiles.agri_districts', 'culianan')
-                ->distinct('personal_informations.nameof_farmers_ass_org_coop')
-                ->count('personal_informations.nameof_farmers_ass_org_coop');
+              // Calculate the total area planted in the "culianan" district
+            $totalAreaPlantedAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'culianan')
+            ->sum('total_physical_area_has');
+            $totalAreaYieldAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'culianan')
+            ->sum('yield_kg_ha');
+         
+             // Calculate the total fixed cost in the "culianan" district
+            $totalFixedCostAyala = DB::table('fixed_costs')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+            ->where('farm_profiles.agri_districts', 'culianan')
+            ->sum('fixed_costs.total_amount');
             
-            // Calculate rice productivity in the Ayala district
-                    $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+                  // Calculate the total machineries cost in the "culianan" district
+                  $totalMachineriesUsedAyala= DB::table('machineries_useds')
+                  ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+                  ->where('farm_profiles.agri_districts', 'culianan')
+                  ->sum('machineries_useds.total_cost_for_machineries');
 
-                    // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
-        
-                $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
-                $totalAreaYield = FarmProfile::sum('yield_kg_ha');
-                $totalCost= VariableCost::sum('total_variable_cost');
-                    
-                $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
-                $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
-                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                return view('agent.agriDistricts.culianan_farmers', compact('FarmersData','totalRiceProduction',
-                'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
-                'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
-                'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
-                'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
-                'countorg'
-            ));
-            } catch (\Exception $ex) {
-                // Log the exception for debugging purposes
-                dd($ex);
-                return redirect()->back()->with('message', 'Something went wrong');
-            }       
+                // Calculate the total variable cost in the "culianan" district
+                $totalVariableCostAyala = DB::table('variable_costs')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+                ->where('farm_profiles.agri_districts', 'culianan')
+                ->sum('variable_costs.total_variable_cost');
 
-       
-   
+                    // Calculate the total rice production in the Ayala district
+                    $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+                    ->where('farm_profiles.agri_districtS', 'culianan')
+                    ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                              // Count owner tenants
+                            $countOwnerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'culianan')
+                            ->where('farm_profiles.tenurial_status', 'owner')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenant tenants
+                            $countTillerTenantTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'culianan')
+                            ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenants
+                            $countTillerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'culianan')
+                            ->where('farm_profiles.tenurial_status', 'tiller')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count lease tenants
+                            $countLeaseTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'culianan')
+                            ->where('farm_profiles.tenurial_status', 'lease')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+                        // Count owner tenants
+                    $countOwner = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'culianan')
+                    ->where('farm_profiles.tenurial_status', 'owner')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // total farmers organizattion
+                    $countorg = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'culianan')
+                    ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+                    ->count('personal_informations.nameof_farmers_ass_org_coop');
+
+
+                // Calculate rice productivity in the Ayala district
+                $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+                 // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+     
+            $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+            $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+            $totalCost= VariableCost::sum('total_variable_cost');
+                
+            $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+            $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+
+            // Return the view with the fetched data
+            return view('agent.agriDistricts.culianan_farmers', compact('agent', 'profile', 'farmProfile','FarmersData','totalRiceProduction',
+            'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+            'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+            'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner','countorg'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 // Manicahan farmers
-public function ManicahanFarmers(){
-    try {
-        $FarmersData = DB::table('personal_informations')
+
+
+public function ManicahanFarmers()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch ayala farmers fetching  data
+            $FarmersData = DB::table('personal_informations')
             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
@@ -2506,8 +4064,9 @@ public function ManicahanFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
-                  // Calculate the age for each farmer
-                  foreach ($FarmersData as $farmer) {
+            // Specify the agri district you want to filter by
+                // Calculate the age for each farmer
+                foreach ($FarmersData as $farmer) {
                     // Calculate the age for each farmer
                     $dateOfBirth = $farmer->date_of_birth;
                     $age = Carbon::parse($dateOfBirth)->age;
@@ -2515,122 +4074,158 @@ public function ManicahanFarmers(){
                     // Add the age to the farmer object
                     $farmer->age = $age;
                 }
-    // Count the number of farmers in the "ayala" district
-    $totalfarms = DB::table('personal_informations')
-    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-    ->where('farm_profiles.agri_districts', 'manicahan')
-    ->distinct()
-    ->count('personal_informations.id');
+            // Count the number of farmers in the "ayala" district
+            $totalfarms = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->where('farm_profiles.agri_districts', 'manicahan')
+            ->distinct()
+            ->count('personal_informations.id');
 
-      // Calculate the total area planted in the "manicahan" district
-    $totalAreaPlantedAyala = DB::table('farm_profiles')
-    ->where('agri_districts', 'manicahan')
-    ->sum('total_physical_area_has');
-    $totalAreaYieldAyala = DB::table('farm_profiles')
-    ->where('agri_districts', 'manicahan')
-    ->sum('yield_kg_ha');
- 
-     // Calculate the total fixed cost in the "manicahan" district
-    $totalFixedCostAyala = DB::table('fixed_costs')
-    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
-    ->where('farm_profiles.agri_districts', 'manicahan')
-    ->sum('fixed_costs.total_amount');
-    
-          // Calculate the total machineries cost in the "manicahan" district
-          $totalMachineriesUsedAyala= DB::table('machineries_useds')
-          ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
-          ->where('farm_profiles.agri_districts', 'manicahan')
-          ->sum('machineries_useds.total_cost_for_machineries');
+              // Calculate the total area planted in the "manicahan" district
+            $totalAreaPlantedAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'manicahan')
+            ->sum('total_physical_area_has');
+            $totalAreaYieldAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'manicahan')
+            ->sum('yield_kg_ha');
+         
+             // Calculate the total fixed cost in the "manicahan" district
+            $totalFixedCostAyala = DB::table('fixed_costs')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+            ->where('farm_profiles.agri_districts', 'manicahan')
+            ->sum('fixed_costs.total_amount');
+            
+                  // Calculate the total machineries cost in the "manicahan" district
+                  $totalMachineriesUsedAyala= DB::table('machineries_useds')
+                  ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+                  ->where('farm_profiles.agri_districts', 'manicahan')
+                  ->sum('machineries_useds.total_cost_for_machineries');
 
-        // Calculate the total variable cost in the "manicahan" district
-        $totalVariableCostAyala = DB::table('variable_costs')
-        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
-        ->where('farm_profiles.agri_districts', 'manicahan')
-        ->sum('variable_costs.total_variable_cost');
+                // Calculate the total variable cost in the "manicahan" district
+                $totalVariableCostAyala = DB::table('variable_costs')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+                ->where('farm_profiles.agri_districts', 'manicahan')
+                ->sum('variable_costs.total_variable_cost');
 
-            // Calculate the total rice production in the Ayala district
-            $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
-            ->where('farm_profiles.agri_districtS', 'Ayala')
-            ->sum('last_production_datas.yield_tons_per_kg');
+                    // Calculate the total rice production in the Ayala district
+                    $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+                    ->where('farm_profiles.agri_districtS', 'culianan')
+                    ->sum('last_production_datas.yield_tons_per_kg');
 
 
-                      // Count owner tenants
-                    $countOwnerTenants = DB::table('personal_informations')
+                              // Count owner tenants
+                            $countOwnerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'manicahan')
+                            ->where('farm_profiles.tenurial_status', 'owner')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenant tenants
+                            $countTillerTenantTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'manicahan')
+                            ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenants
+                            $countTillerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'manicahan')
+                            ->where('farm_profiles.tenurial_status', 'tiller')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count lease tenants
+                            $countLeaseTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'manicahan')
+                            ->where('farm_profiles.tenurial_status', 'lease')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+                        // Count owner tenants
+                    $countOwner = DB::table('personal_informations')
                     ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
                     ->where('farm_profiles.agri_districts', 'manicahan')
                     ->where('farm_profiles.tenurial_status', 'owner')
                     ->distinct()
                     ->count('farm_profiles.tenurial_status');
 
-                    // Count tiller tenant tenants
-                    $countTillerTenantTenants = DB::table('personal_informations')
+                    // total farmers organizattion
+                    $countorg = DB::table('personal_informations')
                     ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
                     ->where('farm_profiles.agri_districts', 'manicahan')
-                    ->where('farm_profiles.tenurial_status', 'tiller tenant')
-                    ->distinct()
-                    ->count('farm_profiles.tenurial_status');
+                    ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+                    ->count('personal_informations.nameof_farmers_ass_org_coop');
 
-                    // Count tiller tenants
-                    $countTillerTenants = DB::table('personal_informations')
-                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                    ->where('farm_profiles.agri_districts', 'manicahan')
-                    ->where('farm_profiles.tenurial_status', 'tiller')
-                    ->distinct()
-                    ->count('farm_profiles.tenurial_status');
 
-                    // Count lease tenants
-                    $countLeaseTenants = DB::table('personal_informations')
-                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                    ->where('farm_profiles.agri_districts', 'manicahan')
-                    ->where('farm_profiles.tenurial_status', 'lease')
-                    ->distinct()
-                    ->count('farm_profiles.tenurial_status');
-                // Count owner tenants
-            $countOwner = DB::table('personal_informations')
-            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-            ->where('farm_profiles.agri_districts', 'manicahan')
-            ->where('farm_profiles.tenurial_status', 'owner')
-            ->distinct()
-            ->count('farm_profiles.tenurial_status');
-            //count no of farmers organization
-            $countorg = DB::table('personal_informations')
-            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-            ->where('farm_profiles.agri_districts', 'manicahan')
-            ->distinct('personal_informations.nameof_farmers_ass_org_coop')
-            ->count('personal_informations.nameof_farmers_ass_org_coop');
-        
-        // Calculate rice productivity in the Ayala district
+                // Calculate rice productivity in the Ayala district
                 $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
 
-                // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
-    
+                 // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+     
             $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
             $totalAreaYield = FarmProfile::sum('yield_kg_ha');
             $totalCost= VariableCost::sum('total_variable_cost');
                 
             $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
             $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
-                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-            return view('agent.agriDistricts.manicahan_farmers', compact('FarmersData','totalRiceProduction',
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+
+            // Return the view with the fetched data
+            return view('agent.agriDistricts.manicahan_farmers', compact('agent', 'profile', 'farmProfile','FarmersData','totalRiceProduction',
             'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
             'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
             'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
-            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
-            'countorg'
-        ));
-        } catch (\Exception $ex) {
-            // Log the exception for debugging purposes
-            dd($ex);
-            return redirect()->back()->with('message', 'Something went wrong');
-        }       
-       
-  
+            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner','countorg'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 // curuan farmers
-public function CuruanFarmers(){
-    try {
-        $FarmersData = DB::table('personal_informations')
+
+public function CuruanFarmers()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch ayala farmers fetching  data
+            $FarmersData = DB::table('personal_informations')
             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
@@ -2646,8 +4241,9 @@ public function CuruanFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
-                 // Calculate the age for each farmer
-                 foreach ($FarmersData as $farmer) {
+            // Specify the agri district you want to filter by
+                // Calculate the age for each farmer
+                foreach ($FarmersData as $farmer) {
                     // Calculate the age for each farmer
                     $dateOfBirth = $farmer->date_of_birth;
                     $age = Carbon::parse($dateOfBirth)->age;
@@ -2655,122 +4251,158 @@ public function CuruanFarmers(){
                     // Add the age to the farmer object
                     $farmer->age = $age;
                 }
-    // Count the number of farmers in the "ayala" district
-    $totalfarms = DB::table('personal_informations')
-    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-    ->where('farm_profiles.agri_districts', 'curuan')
-    ->distinct()
-    ->count('personal_informations.id');
+            // Count the number of farmers in the "ayala" district
+            $totalfarms = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->where('farm_profiles.agri_districts', 'curuan')
+            ->distinct()
+            ->count('personal_informations.id');
 
-      // Calculate the total area planted in the "curuan" district
-    $totalAreaPlantedAyala = DB::table('farm_profiles')
-    ->where('agri_districts', 'curuan')
-    ->sum('total_physical_area_has');
-    $totalAreaYieldAyala = DB::table('farm_profiles')
-    ->where('agri_districts', 'curuan')
-    ->sum('yield_kg_ha');
- 
-     // Calculate the total fixed cost in the "curuan" district
-    $totalFixedCostAyala = DB::table('fixed_costs')
-    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
-    ->where('farm_profiles.agri_districts', 'curuan')
-    ->sum('fixed_costs.total_amount');
-    
-          // Calculate the total machineries cost in the "curuan" district
-          $totalMachineriesUsedAyala= DB::table('machineries_useds')
-          ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
-          ->where('farm_profiles.agri_districts', 'curuan')
-          ->sum('machineries_useds.total_cost_for_machineries');
+              // Calculate the total area planted in the "curuan" district
+            $totalAreaPlantedAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'curuan')
+            ->sum('total_physical_area_has');
+            $totalAreaYieldAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'curuan')
+            ->sum('yield_kg_ha');
+         
+             // Calculate the total fixed cost in the "curuan" district
+            $totalFixedCostAyala = DB::table('fixed_costs')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+            ->where('farm_profiles.agri_districts', 'curuan')
+            ->sum('fixed_costs.total_amount');
+            
+                  // Calculate the total machineries cost in the "curuan" district
+                  $totalMachineriesUsedAyala= DB::table('machineries_useds')
+                  ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+                  ->where('farm_profiles.agri_districts', 'curuan')
+                  ->sum('machineries_useds.total_cost_for_machineries');
 
-        // Calculate the total variable cost in the "curuan" district
-        $totalVariableCostAyala = DB::table('variable_costs')
-        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
-        ->where('farm_profiles.agri_districts', 'curuan')
-        ->sum('variable_costs.total_variable_cost');
+                // Calculate the total variable cost in the "curuan" district
+                $totalVariableCostAyala = DB::table('variable_costs')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+                ->where('farm_profiles.agri_districts', 'curuan')
+                ->sum('variable_costs.total_variable_cost');
 
-            // Calculate the total rice production in the Ayala district
-            $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
-            ->where('farm_profiles.agri_districtS', 'Ayala')
-            ->sum('last_production_datas.yield_tons_per_kg');
+                    // Calculate the total rice production in the Ayala district
+                    $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+                    ->where('farm_profiles.agri_districtS', 'curuan')
+                    ->sum('last_production_datas.yield_tons_per_kg');
 
 
-                      // Count owner tenants
-                    $countOwnerTenants = DB::table('personal_informations')
+                              // Count owner tenants
+                            $countOwnerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'curuan')
+                            ->where('farm_profiles.tenurial_status', 'owner')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenant tenants
+                            $countTillerTenantTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'curuan')
+                            ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenants
+                            $countTillerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'curuan')
+                            ->where('farm_profiles.tenurial_status', 'tiller')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count lease tenants
+                            $countLeaseTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'curuan')
+                            ->where('farm_profiles.tenurial_status', 'lease')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+                        // Count owner tenants
+                    $countOwner = DB::table('personal_informations')
                     ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
                     ->where('farm_profiles.agri_districts', 'curuan')
                     ->where('farm_profiles.tenurial_status', 'owner')
                     ->distinct()
                     ->count('farm_profiles.tenurial_status');
 
-                    // Count tiller tenant tenants
-                    $countTillerTenantTenants = DB::table('personal_informations')
+                    // total farmers organizattion
+                    $countorg = DB::table('personal_informations')
                     ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
                     ->where('farm_profiles.agri_districts', 'curuan')
-                    ->where('farm_profiles.tenurial_status', 'tiller tenant')
-                    ->distinct()
-                    ->count('farm_profiles.tenurial_status');
+                    ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+                    ->count('personal_informations.nameof_farmers_ass_org_coop');
 
-                    // Count tiller tenants
-                    $countTillerTenants = DB::table('personal_informations')
-                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                    ->where('farm_profiles.agri_districts', 'curuan')
-                    ->where('farm_profiles.tenurial_status', 'tiller')
-                    ->distinct()
-                    ->count('farm_profiles.tenurial_status');
 
-                    // Count lease tenants
-                    $countLeaseTenants = DB::table('personal_informations')
-                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                    ->where('farm_profiles.agri_districts', 'curuan')
-                    ->where('farm_profiles.tenurial_status', 'lease')
-                    ->distinct()
-                    ->count('farm_profiles.tenurial_status');
-                // Count owner tenants
-            $countOwner = DB::table('personal_informations')
-            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-            ->where('farm_profiles.agri_districts', 'curuan')
-            ->where('farm_profiles.tenurial_status', 'owner')
-            ->distinct()
-            ->count('farm_profiles.tenurial_status');
-            //count no of farmers organization
-            $countorg = DB::table('personal_informations')
-            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-            ->where('farm_profiles.agri_districts', 'curuan')
-            ->distinct('personal_informations.nameof_farmers_ass_org_coop')
-            ->count('personal_informations.nameof_farmers_ass_org_coop');
-        
-        // Calculate rice productivity in the Ayala district
+                // Calculate rice productivity in the Ayala district
                 $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
 
-                // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
-    
+                 // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+     
             $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
             $totalAreaYield = FarmProfile::sum('yield_kg_ha');
             $totalCost= VariableCost::sum('total_variable_cost');
                 
             $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
             $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
-                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-            return view('agent.agriDistricts.curuan_farmers', compact('FarmersData','totalRiceProduction',
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+
+            // Return the view with the fetched data
+            return view('agent.agriDistricts.curuan_farmers', compact('agent', 'profile', 'farmProfile','FarmersData','totalRiceProduction',
             'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
             'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
             'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
-            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
-            'countorg'
-        ));
-        } catch (\Exception $ex) {
-            // Log the exception for debugging purposes
-            dd($ex);
-            return redirect()->back()->with('message', 'Something went wrong');
-        }       
-        
-   
+            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner','countorg'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
 }
 
 // vitali farmers
-public function VitaliFarmers(){
-    try {
-        $FarmersData = DB::table('personal_informations')
+
+public function VitaliFarmers()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch ayala farmers fetching  data
+            $FarmersData = DB::table('personal_informations')
             ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
             ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
@@ -2786,190 +4418,295 @@ public function VitaliFarmers(){
             )
             ->orderBy('personal_informations.id', 'desc') // Order by the ID of personal_informations table in descending order
             ->get();
-          
-            // Calculate the age for each farmer
-            foreach ($FarmersData as $farmer) {
+            // Specify the agri district you want to filter by
                 // Calculate the age for each farmer
-                $dateOfBirth = $farmer->date_of_birth;
-                $age = Carbon::parse($dateOfBirth)->age;
+                foreach ($FarmersData as $farmer) {
+                    // Calculate the age for each farmer
+                    $dateOfBirth = $farmer->date_of_birth;
+                    $age = Carbon::parse($dateOfBirth)->age;
 
-                // Add the age to the farmer object
-                $farmer->age = $age;
-            }
-// Count the number of farmers in the "ayala" district
-$totalfarms = DB::table('personal_informations')
-->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-->where('farm_profiles.agri_districts', 'vitali')
-->distinct()
-->count('personal_informations.id');
+                    // Add the age to the farmer object
+                    $farmer->age = $age;
+                }
+            // Count the number of farmers in the "ayala" district
+            $totalfarms = DB::table('personal_informations')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->where('farm_profiles.agri_districts', 'vitali')
+            ->distinct()
+            ->count('personal_informations.id');
 
-  // Calculate the total area planted in the "vitali" district
-$totalAreaPlantedAyala = DB::table('farm_profiles')
-->where('agri_districts', 'vitali')
-->sum('total_physical_area_has');
-$totalAreaYieldAyala = DB::table('farm_profiles')
-->where('agri_districts', 'vitali')
-->sum('yield_kg_ha');
-
- // Calculate the total fixed cost in the "vitali" district
-$totalFixedCostAyala = DB::table('fixed_costs')
-->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
-->where('farm_profiles.agri_districts', 'vitali')
-->sum('fixed_costs.total_amount');
-
-      // Calculate the total machineries cost in the "vitali" district
-      $totalMachineriesUsedAyala= DB::table('machineries_useds')
-      ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
-      ->where('farm_profiles.agri_districts', 'vitali')
-      ->sum('machineries_useds.total_cost_for_machineries');
-
-    // Calculate the total variable cost in the "vitali" district
-    $totalVariableCostAyala = DB::table('variable_costs')
-    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
-    ->where('farm_profiles.agri_districts', 'vitali')
-    ->sum('variable_costs.total_variable_cost');
-
-        // Calculate the total rice production in the Ayala district
-        $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
-        ->where('farm_profiles.agri_districtS', 'Ayala')
-        ->sum('last_production_datas.yield_tons_per_kg');
-
-
-                  // Count owner tenants
-                $countOwnerTenants = DB::table('personal_informations')
-                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->where('farm_profiles.agri_districts', 'vitali')
-                ->where('farm_profiles.tenurial_status', 'owner')
-                ->distinct()
-                ->count('farm_profiles.tenurial_status');
-
-                // Count tiller tenant tenants
-                $countTillerTenantTenants = DB::table('personal_informations')
-                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->where('farm_profiles.agri_districts', 'vitali')
-                ->where('farm_profiles.tenurial_status', 'tiller tenant')
-                ->distinct()
-                ->count('farm_profiles.tenurial_status');
-
-                // Count tiller tenants
-                $countTillerTenants = DB::table('personal_informations')
-                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->where('farm_profiles.agri_districts', 'vitali')
-                ->where('farm_profiles.tenurial_status', 'tiller')
-                ->distinct()
-                ->count('farm_profiles.tenurial_status');
-
-                // Count lease tenants
-                $countLeaseTenants = DB::table('personal_informations')
-                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->where('farm_profiles.agri_districts', 'vitali')
-                ->where('farm_profiles.tenurial_status', 'lease')
-                ->distinct()
-                ->count('farm_profiles.tenurial_status');
-            // Count owner tenants
-        $countOwner = DB::table('personal_informations')
-        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-        ->where('farm_profiles.agri_districts', 'vitali')
-        ->where('farm_profiles.tenurial_status', 'owner')
-        ->distinct()
-        ->count('farm_profiles.tenurial_status');
-        //count no of farmers organization
-        $countorg = DB::table('personal_informations')
-        ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-        ->where('farm_profiles.agri_districts', 'vitali')
-        ->distinct('personal_informations.nameof_farmers_ass_org_coop')
-        ->count('personal_informations.nameof_farmers_ass_org_coop');
-    
-    // Calculate rice productivity in the Ayala district
-            $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
-
-            // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
-
-        $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
-        $totalAreaYield = FarmProfile::sum('yield_kg_ha');
-        $totalCost= VariableCost::sum('total_variable_cost');
+              // Calculate the total area planted in the "vitali" district
+            $totalAreaPlantedAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'vitali')
+            ->sum('total_physical_area_has');
+            $totalAreaYieldAyala = DB::table('farm_profiles')
+            ->where('agri_districts', 'vitali')
+            ->sum('yield_kg_ha');
+         
+             // Calculate the total fixed cost in the "vitali" district
+            $totalFixedCostAyala = DB::table('fixed_costs')
+            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'fixed_costs.personal_informations_id')
+            ->where('farm_profiles.agri_districts', 'vitali')
+            ->sum('fixed_costs.total_amount');
             
-        $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
-        $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
+                  // Calculate the total machineries cost in the "vitali" district
+                  $totalMachineriesUsedAyala= DB::table('machineries_useds')
+                  ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','machineries_useds.personal_informations_id')
+                  ->where('farm_profiles.agri_districts', 'vitali')
+                  ->sum('machineries_useds.total_cost_for_machineries');
+
+                // Calculate the total variable cost in the "vitali" district
+                $totalVariableCostAyala = DB::table('variable_costs')
+                ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=','variable_costs.personal_informations_id')
+                ->where('farm_profiles.agri_districts', 'vitali')
+                ->sum('variable_costs.total_variable_cost');
+
+                    // Calculate the total rice production in the Ayala district
+                    $totalRiceProductionAyala = LastProductionDatas::join('farm_profiles', 'last_production_datas.personal_informations_id', '=', 'farm_profiles.personal_informations_id')
+                    ->where('farm_profiles.agri_districtS', 'vitali')
+                    ->sum('last_production_datas.yield_tons_per_kg');
+
+
+                              // Count owner tenants
+                            $countOwnerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'vitali')
+                            ->where('farm_profiles.tenurial_status', 'owner')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenant tenants
+                            $countTillerTenantTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'vitali')
+                            ->where('farm_profiles.tenurial_status', 'tiller tenant')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count tiller tenants
+                            $countTillerTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'vitali')
+                            ->where('farm_profiles.tenurial_status', 'tiller')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+
+                            // Count lease tenants
+                            $countLeaseTenants = DB::table('personal_informations')
+                            ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                            ->where('farm_profiles.agri_districts', 'vitali')
+                            ->where('farm_profiles.tenurial_status', 'lease')
+                            ->distinct()
+                            ->count('farm_profiles.tenurial_status');
+                        // Count owner tenants
+                    $countOwner = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'vitali')
+                    ->where('farm_profiles.tenurial_status', 'owner')
+                    ->distinct()
+                    ->count('farm_profiles.tenurial_status');
+
+                    // total farmers organizattion
+                    $countorg = DB::table('personal_informations')
+                    ->join('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                    ->where('farm_profiles.agri_districts', 'vitali')
+                    ->distinct('personal_informations.nameof_farmers_ass_org_coop')
+                    ->count('personal_informations.nameof_farmers_ass_org_coop');
+
+
+                // Calculate rice productivity in the Ayala district
+                $riceProductivityAyala = ($totalAreaPlantedAyala > 0) ? $totalRiceProductionAyala / $totalAreaPlantedAyala : 0;
+
+                 // Assuming $personalinformation->date_of_birth contains the date of birth in "YYYY-MM-DD" format
+     
+            $totalAreaPlanted = FarmProfile::sum('total_physical_area_has');
+            $totalAreaYield = FarmProfile::sum('yield_kg_ha');
+            $totalCost= VariableCost::sum('total_variable_cost');
+                
+            $yieldPerAreaPlanted = ($totalAreaPlantedAyala!= 0) ?  $totalAreaYieldAyala/ $totalAreaPlantedAyala : 0;
+            $averageCostPerAreaPlanted = ($totalAreaPlantedAyala != 0) ? $totalVariableCostAyala / $totalAreaPlantedAyala : 0;
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-        return view('agent.agriDistricts.vitali_farmers', compact('FarmersData','totalRiceProduction',
-        'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
-        'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
-        'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
-        'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner',
-        'countorg'
-    ));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
-    }       
-       
-  
-}
-public function RiceCrop(){
-    try {
-        $riceProductionData = DB::table('personal_informations')
-        ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-        ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
-        ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
-        ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
-            ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
-            ->select(
-                'personal_informations.*',
-                'farm_profiles.*',
-                'fixed_costs.*',
-                'machineries_useds.*',
-                'variable_costs.*',
-                'personal_informations.agri_district',
-        
-                'personal_informations.last_name',
-                'personal_informations.first_name',
-                'last_production_datas.date_planted',
-                'last_production_datas.date_harvested',
-                'last_production_datas.yield_tons_per_kg',
-                'last_production_datas.unit_price_palay_per_kg',
-                'last_production_datas.unit_price_rice_per_kg',
-                'last_production_datas.gross_income_palay',
-                'last_production_datas.gross_income_rice',
-                'last_production_datas.type_of_product'
-            )
-            // ->where('last_production_datas.type_of_product', 'rice',) // Filter for rice production only
-            ->orderBy('personal_informations.agri_district')
-            ->get();
 
-        // Group the data by district
-        $riceProductionSchedule = [];
-        foreach ($riceProductionData as $data) {
-            $riceProductionSchedule[$data->agri_district][] = [
-                'last_name' => $data->last_name,
-                'first_name' => $data->first_name,
-                'date_planted' => $data->date_planted,
-                'date_harvested' => $data->date_harvested,
-                'yield_tons_per_kg' => $data->yield_tons_per_kg,
-                'unit_price_palay_per_kg' => $data->unit_price_palay_per_kg,
-                'unit_price_rice_per_kg' => $data->unit_price_rice_per_kg,
-                'gross_income_palay' => $data->gross_income_palay,
-                'gross_income_rice' => $data->gross_income_rice,
-                'type_of_product' => $data->type_of_product
-            ];
+            // Return the view with the fetched data
+            return view('agent.agriDistricts.vitali_farmers', compact('agent', 'profile', 'farmProfile','FarmersData','totalRiceProduction',
+            'totalfarms','totalAreaPlantedAyala','totalAreaYieldAyala',
+            'totalFixedCostAyala','totalCost','yieldPerAreaPlanted','averageCostPerAreaPlanted',
+            'totalMachineriesUsedAyala','totalVariableCostAyala','riceProductivityAyala',
+            'countOwnerTenants','countTillerTenantTenants','countTillerTenants','countLeaseTenants','countOwner','countorg'));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
         }
-
-
-        return view('agent.cropProductions.rice_crop', compact('riceProductionSchedule'));
-    } catch (\Exception $ex) {
-        // Log the exception for debugging purposes
-        dd($ex);
-        return redirect()->back()->with('message', 'Something went wrong');
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
     }
-        
 }
 
+
+
+//  last productions of ruce farmers
+
+public function RiceCrop()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
+
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            // Fetch last production data  farmers fetching  data
+            $riceProductionData = DB::table('personal_informations')
+            ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
+            ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
+                ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
+                ->select(
+                    'personal_informations.*',
+                    'farm_profiles.*',
+                    'fixed_costs.*',
+                    'machineries_useds.*',
+                    'variable_costs.*',
+                    'personal_informations.agri_district',
+            
+                    'personal_informations.last_name',
+                    'personal_informations.first_name',
+                    'last_production_datas.date_planted',
+                    'last_production_datas.date_harvested',
+                    'last_production_datas.yield_tons_per_kg',
+                    'last_production_datas.unit_price_palay_per_kg',
+                    'last_production_datas.unit_price_rice_per_kg',
+                    'last_production_datas.gross_income_palay',
+                    'last_production_datas.gross_income_rice',
+                    'last_production_datas.type_of_product'
+                )
+                // ->where('last_production_datas.type_of_product', 'rice',) // Filter for rice production only
+                ->orderBy('personal_informations.agri_district')
+                ->get();
+    
+            // Group the data by district
+            $riceProductionSchedule = [];
+            foreach ($riceProductionData as $data) {
+                $riceProductionSchedule[$data->agri_district][] = [
+                    'last_name' => $data->last_name,
+                    'first_name' => $data->first_name,
+                    'date_planted' => $data->date_planted,
+                    'date_harvested' => $data->date_harvested,
+                    'yield_tons_per_kg' => $data->yield_tons_per_kg,
+                    'unit_price_palay_per_kg' => $data->unit_price_palay_per_kg,
+                    'unit_price_rice_per_kg' => $data->unit_price_rice_per_kg,
+                    'gross_income_palay' => $data->gross_income_palay,
+                    'gross_income_rice' => $data->gross_income_rice,
+                    'type_of_product' => $data->type_of_product
+                ];
+            }
+             // Initialize an array to store total rice production per district
+        $totalRiceProductionPerDistrict = [];
+
+        // Group the data by district and calculate total rice production per district
+        foreach ($riceProductionData as $data) {
+            $district = $data->agri_district;
+            $riceProduction = $data->yield_tons_per_kg;
+
+            // If the district is not already in the array, initialize it with the rice production
+            if (!isset($totalRiceProductionPerDistrict[$district])) {
+                $totalRiceProductionPerDistrict[$district] = $riceProduction;
+            } else {
+                // If the district is already in the array, add the rice production to the existing total
+                $totalRiceProductionPerDistrict[$district] += $riceProduction;
+            }
+        }
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.cropProductions.rice_crop', compact('agent', 'profile', 'farmProfile','totalRiceProduction',
+           'riceProductionSchedule','totalRiceProductionPerDistrict'
+            ));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
 // multiple impor of excels in Dataase access by agent
-public function ExcelFile(){
-    return view('agent.mutipleFile.import_excelFile');
-}
+public function ExcelFile()
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // User is authenticated, proceed with retrieving the user's ID
+        $userId = Auth::id();
 
+        // Find the user based on the retrieved ID
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Assuming $user represents the currently logged-in user
+            $user = auth()->user();
+
+            // Check if user is authenticated before proceeding
+            if (!$user) {
+                // Handle unauthenticated user, for example, redirect them to login
+                return redirect()->route('login');
+            }
+
+            // Find the user's personal information by their ID
+            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+            // Fetch the farm ID associated with the user
+            $farmId = $user->farm_id;
+
+            // Find the farm profile using the fetched farm ID
+            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+      
+
+            
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            // Return the view with the fetched data
+            return view('agent.mutipleFile.import_excelFile', compact('agent', 'profile', 'farmProfile','totalRiceProduction'
+            
+            ));
+        } else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
+        return redirect()->route('login');
+    }
+}
 public function FarmersReport(){
     
 }

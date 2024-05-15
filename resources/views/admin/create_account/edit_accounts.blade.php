@@ -40,6 +40,20 @@
                       @enderror
                         </div>
                         <div class="input-box">
+                          <span class="details">First Name</span>
+                          <input type="text" class="form-control @error('first_name') is-invalid @enderror"value="{{$users->first_name}}"  name="first_name" placeholder="Enter your firstname"value="{{ old('first_name') }}" >
+                          @error('first_name')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                        </div>
+                        <div class="input-box">
+                          <span class="details">Last Name</span>
+                          <input type="text" class="form-control @error('last_name') is-invalid @enderror"value="{{$users->last_name}}"  name="last_name" placeholder="Enter your lastname"value="{{ old('last_name') }}" >
+                          @error('last_name')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                        </div>
+                        <div class="input-box">
                           <span class="details">email</span>
                           <input type="email"name="email" class="form-control @error('email') is-invalid @enderror"value="{{$users->email}}" placeholder="Enter your username" >
                           @error('email')

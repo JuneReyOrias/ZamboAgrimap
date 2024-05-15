@@ -37,11 +37,13 @@ class RegisteredUserController extends Controller
             
             $user = new User;
             $user->name = $request['name'];
+            $user->first_name = $request['first_name'];
+            $user->last_name = $request['last_name'];
             $user->email = $request['email'];
             $user->agri_district = $request['agri_district'];
             $user->password = bcrypt($request['password']); // Hash the password for security
-            $user->role = $request['role'];
-            // dd($data);
+            // $user->role = $request['role'];
+            // dd($user);
             $user->save();
             
             return redirect('/login')->with('message', 'Registered successfully');

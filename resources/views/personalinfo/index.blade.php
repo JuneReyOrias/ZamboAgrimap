@@ -7,10 +7,10 @@
   <nav class="page-breadcrumb">
 
   </nav>
-  {{-- <div class="progress mb-3">
-    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">15% Complete</div>
+  <div class="progress mb-3">
+    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">1 out of 6 Complete</div>
 
-  </div> --}}
+  </div>
   <div class="row">
     <div class="col-md-12 grid-margin">
       <div class="card-forms border rounded">
@@ -37,12 +37,12 @@
 <br><br>
           <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
         
-          <form action{{url('addinfo')}} method="post">
+          <form id="surveyForm" action{{url('store')}} method="post">
             @csrf
        
             <div >
 
-             <input type="hidden" name="users_id" value="{{ $user_id}}">
+             <input type="hidden" name="users_id" value="{{ $userId}}">
             
           
       </div>
@@ -607,7 +607,7 @@
           </div>
           
 <div  class="d-grid gap-2 d-md-flex justify-content-md-end">
-  <button  type="submit" class="btn btn-success me-md-2">Next</button></a></p>
+  <button type="submit" class="btn btn-success me-md-2 btn-submit">Next</button>
 </div>
           </form>
         
@@ -622,6 +622,66 @@
 
 
 </div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      $(document).on('click', '.btn-submit', function(event){
+          var form = $(this).closest("form");
+          
+          event.preventDefault(); // Prevent the default button action
+          
+          swal({
+              title: "Are you sure you want to submit this form?",
+              text: "Please confirm your action.",
+              icon: "warning",
+              buttons: {
+                  cancel: "Cancel",
+                  confirm: {
+                      text: "Yes, Continue!",
+                      value: true,
+                      visible: true,
+                      className: "btn-success", // Add the success class to the button
+                      closeModal: false // Prevent dialog from closing on confirmation
+                  }
+              },
+              dangerMode: true,
+          }).then((willSubmit) => {
+              if (willSubmit) {
+                  // Display loading indicator
+                  swal({
+                      title: "Processing...",
+                      text: "Please wait.",
+                      buttons: false,
+                      closeOnClickOutside: false,
+                      closeOnEsc: false,
+                      icon: "info",
+                      timerProgressBar: true,
+                  });
+
+                  // Submit the form after a short delay to allow the loading indicator to be shown
+                  setTimeout(function() {
+                      form.submit(); // Submit the form
+                  }, 500);
+              }
+          });
+      });
+  });
+
+  // Function to handle successful form submission
+  function handleFormSubmissionSuccess() {
+      swal({
+          title: "Personal Informations completed successfully!",
+          text: "Thank you for your submission.",
+          icon: "success",
+      });
+  }
+</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>

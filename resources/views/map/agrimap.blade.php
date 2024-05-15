@@ -59,11 +59,17 @@
     {{-- <!-- File input for uploading files -->
     <input type="file" id="fileInput" accept=".kml, .kmz, .geojson"> --}}
     <input type="hidden" id="fileInput" accept=".kml,.kmz">
-    <form action="{{ route('map.agrimap') }}" method="GET">
-      <input type="text" name="query" placeholder="Search by last name">
-      <button type="submit">Search</button>
-  </form>
-  
+   
+  <div class="d-flex justify-content-between">
+    <form action="{{ route('map.agrimap') }}" method="GET" class="d-flex">
+        <input type="text" name="query" placeholder="Search by last name" class="form-control me-2">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <form id="showAllForm" action="{{ route('map.agrimap') }}" method="GET">
+        <button class="btn btn-outline-success" type="submit">All</button>
+    </form>
+</div>
     
     
     {{-- <!-- Container to display search results -->

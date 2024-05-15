@@ -29,11 +29,11 @@
           <table class="table table bordered dataTable">
               <thead class="thead-light">
                   <tr >
-                      <th>no.</th>
-                      <th>Last production_id</th>
-                      <th>personal info id</th>
-                      <th>farm profile id</th>
-                      <th>agri district id</th>
+                      
+                      <th>#</th>
+                      <th>Farmer Name</th>
+                      <th>Tenurial Status</th>
+                      <th>agri district</th>
                       <th>seed_type_used</th>
                       <th>seeds_used_in_kg</th>
                       <th>seed_source</th>
@@ -60,11 +60,30 @@
                 @if($productions->count() > 0)
               @foreach($productions as $lastproductdata)
                   <tr class="table-light">
-                       <td>{{ $loop->iteration }}</td>
+                      
                        <td>{{ $lastproductdata->id}}</td>
-                       <td>{{ $lastproductdata->personal_informations_id}}</td>
-                       <td>{{ $lastproductdata->farm_profiles_id}}</td>
-                       <td>{{ $lastproductdata->agri_districts_id}}</td>
+                       <td>
+                        @if (optional($lastproductdata->personalinformation)->last_name && strtolower($lastproductdata->personalinformation->ast_name) != 'N/A')
+                            {{ $lastproductdata->personalinformation->last_name}}
+                        @else
+                         
+                        @endif
+                      </td>
+                      <td>
+                        @if (optional($lastproductdata->farmprofile)->tenurial_status && strtolower($lastproductdata->farmprofile->tenurial_status) != 'N/A')
+                            {{ $lastproductdata->farmprofile->tenurial_status}}
+                        @else
+                         
+                        @endif
+                      </td>
+                      <td>
+                        @if (optional($lastproductdata->agridistrict)->district && strtolower($lastproductdata->agridistrict->district) != 'N/A')
+                            {{ $lastproductdata->agridistrict->district}}
+                        @else
+                         
+                        @endif
+                      </td>
+                      
 
                       <td>{{ $lastproductdata->seeds_typed_used}}</td>
                       <td>{{ $lastproductdata->seeds_used_in_kg}}</td>

@@ -22,19 +22,46 @@ class VariableCost extends Model
 
 
     ];
-    public function seeds(){
-        return$this->hasMany(Seed::class, 'seeds_id','id');
+    
+  
+   
+    
+
+    // relations to personal info and farm profile
+    public function personalinformation()
+    {
+        return $this->belongsTo(PersonalInformations::class, 'personal_informations_id');
     }
-    public function fertilizers(){
-        return$this->hasMany(Fertilizer::class, 'fertilizers_id','id');
+
+    public function farmprofile()
+    {
+        return $this->belongsTo(FarmProfile::class, 'farm_profiles_id');
     }
-    public function labors(){
-        return$this->hasMany(Labor::class, 'labors_id','id');
-    }
-    public function pesticides(){
-        return$this->hasMany(Pesticide::class, 'pesticides_id','id');
-    }
-    public function transports(){
-        return$this->hasMany(Transport::class, 'tranports_id','id');
-    }
+    // relation to seeds
+   public function seeds()
+  {
+      return $this->belongsTo(Seed::class, 'seeds_id');
+  }
+     // relation to labors
+     public function labors()
+     {
+         return $this->belongsTo(Labor::class, 'labors_id');
+     }
+
+      // relation to fertilizers
+      public function fertilizers()
+      {
+          return $this->belongsTo(Fertilizer::class, 'fertilizers_id');
+      }
+      // relation to pesticides
+      public function pesticides()
+      {
+          return $this->belongsTo(Pesticide::class, 'pesticides_id');
+      }
+
+         // relation to transports
+         public function transports()
+         {
+             return $this->belongsTo(Transport::class, 'transports_id');
+         }
 }

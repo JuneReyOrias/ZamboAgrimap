@@ -33,7 +33,13 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         $rule= [
-            'name'=>[
+       
+            'first_name'=>[
+                'required',
+                'string',
+                'max:50',
+            ],
+            'last_name'=>[
                 'required',
                 'string',
                 'max:50',
@@ -63,7 +69,8 @@ class RegisterRequest extends FormRequest
     }
     public function messages(){
        return [
-            'name.required'=>'Please input your Fullname',
+            'first_name.required'=>'Please input your firstname',
+            'last_name.required'=>'Please input your lastname',
             'email.required'=>'Please input your email',
             'agri_district.required'=>'Please choose your agri_district you belong',
             'password.required'=>'Please input your password',

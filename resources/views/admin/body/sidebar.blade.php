@@ -125,9 +125,9 @@
                 <a href="{{route('admin.allfarmersdata.farmers_info')}}" class="nav-link">Farmers Rice Info</a>
               </li> --}}
               <li class="nav-item">
-                <a href="{{route('personalinfo.create')}}" class="nav-link">Personal Informations</a>
+                <a href="{{route('personalinfo.create')}}" class="nav-link">Rice Farmer Info</a>
               </li>
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{route('farm_profile.farminfo_view')}}" class="nav-link">Farm Profiles</a>
             </li>
               <li class="nav-item">
@@ -135,14 +135,17 @@
               </li> 
               <li class="nav-item">
                 <a href="{{route('machineries_used.machine_create')}}" class="nav-link">Machineries Used </a>
-              </li> 
+              </li>  --}}
               <li class="nav-item">
+                <a href="{{route('variable_cost.seeds.view')}}" class="nav-link">Rice Farmer Variable Cost  </a>
+              </li> 
+              {{-- <li class="nav-item">
                 <a href="{{route('variable_cost.var_show')}}" class="nav-link">Variable Cost </a>
-              </li> 
-              <li class="nav-item">
-                <a href="{{route('variable_cost.seeds.view')}}" class="nav-link">Seeds </a>
-              </li>
-              <li class="nav-item">
+              </li>  --}}
+              {{-- <li class="nav-item">
+                <a href="{{route('variable_cost.seeds.view')}}" class="nav-link">Variable Cost  </a>
+              </li> --}}
+              {{-- <li class="nav-item">
                 <a href="{{route('variable_cost.labor.labors_view')}}" class="nav-link">Labor </a>
               </li>
               <li class="nav-item">
@@ -153,10 +156,10 @@
               </li>
               <li class="nav-item">
                 <a href="{{route('variable_cost.transport.show')}}" class="nav-link">Transport</a>
-              </li>
-              <li class="nav-item">
+              </li> --}}
+              {{-- <li class="nav-item">
                 <a href="{{route('production_data.production_create')}}" class="nav-link">Last Production Data </a>
-              </li> 
+              </li>  --}}
             
             </ul>
           </div>
@@ -235,27 +238,27 @@
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#icons" role="button" aria-expanded="false" aria-controls="icons">
             <i class="link-icon" data-feather="map-pin"></i>
-            <span class="link-title">Coordinates Update</span>
+            <span class="link-title">Parcel and Polygon</span>
             <i class="link-arrow" data-feather="chevron-down"></i>
           </a>
           <div class="collapse" id="icons">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <a href="{{route('polygon.polygons_show')}}" class="nav-link">polygon Boundary</a>
+                <a href="{{route('polygon.polygons_show')}}" class="nav-link">Rice Boarders</a>
               </li>
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{route('parcels.show')}}" class="nav-link">Parcellary Boarders</a>
               </li>
               <li class="nav-item">
                 <a href="" class="nav-link">Ricefield Boarders</a>
-              </li>
+              </li> --}}
               {{-- <li class="nav-item">
                 <a href="{{route('agri_districts.insertdata')}}" class="nav-link">Agri-Districts</a>
               </li> --}}
               <li class="nav-item">
-                <a href="{{route('categorize.index')}}" class="nav-link">Categorize Create</a>
+                <a href="{{route('categorize.index')}}" class="nav-link">Category</a>
               </li>
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{route('crop_category.crop_create')}}" class="nav-link">Crop Category Create</a>
               </li>      
                <li class="nav-item">
@@ -273,7 +276,7 @@
               </li>        
                <li class="nav-item">
                 <a href="{{route('livestocks.create')}}" class="nav-link">Livestocks Create</a>
-              </li> 
+              </li>  --}}
              
             </ul>
           </div>

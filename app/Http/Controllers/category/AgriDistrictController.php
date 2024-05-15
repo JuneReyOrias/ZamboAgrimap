@@ -48,27 +48,14 @@ class AgriDistrictController extends Controller
            return redirect()->back()->with('message', 'Something went wrong');
        }
         }  
-    public function Gmap()
-    {
-        $districts= AgriDistrict::all();
-    //     $farmLocation = DB::table('farm_profiles')
-    //  ->Join('agri_districts', 'farm_profiles.agri_districtS_id', '=', 'agri_districts.id')
-    //  ->select('farm_profiles.*', 'agri_districts.*')
-    //  ->get();
 
 
-    //  return view('map.arcmap',compact('farmprofile'));
-    // return  $farmLocation;
-    return view('map.gmap', ['districts' => $districts]);
-
-     }
-
-    //polygons foreign key join functions
-    public function Polygons()
-    {
-        $agriculture = AgriDistrict::all();
-     return view('polygon.polygon_create',compact('agriculture'));
-    }
+    // //polygons foreign key join functions
+    // public function Polygons()
+    // {
+    //     $agriculture = AgriDistrict::all();
+    //  return view('polygon.polygon_create',compact('agriculture'));
+    // }
 
      //category foreign key join functions
     public function category()

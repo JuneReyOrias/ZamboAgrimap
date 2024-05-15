@@ -99,7 +99,7 @@
               <thead class="thead-light">
                   <tr >
                     <th>No.</th>
-                      <th>CropCatID</th>
+                      <th>FishCatID</th>
                       <th>CategoryID</th>
                       <th>Fisheries Category Name</th>
                       <th>Description</th>

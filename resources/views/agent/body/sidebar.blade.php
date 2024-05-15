@@ -120,9 +120,9 @@
               <a href="{{route('agent.allfarmersinfo.forms_info')}}" class="nav-link">Farmers Rice Info</a>
             </li> --}}
             <li class="nav-item">
-              <a href="{{route('agent.personal_info.view_infor')}}" class="nav-link">Personal Informations</a>
+              <a href="{{route('agent.personal_info.view_infor')}}" class="nav-link">Rice Farmer Info</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{route('agent.farmprofile.farm_view')}}" class="nav-link">Farm Profiles</a>
           </li>
             <li class="nav-item">
@@ -133,11 +133,11 @@
             </li> 
             <li class="nav-item">
               <a href="{{route('agent.variablecost.variable_total.show_var')}}" class="nav-link">Variable Cost </a>
-            </li> 
+            </li>  --}}
             <li class="nav-item">
-              <a href="{{route('agent.variablecost.seed.show_seeds_data')}}" class="nav-link">Seeds </a>
+              <a href="{{route('agent.variablecost.seed.show_seeds_data')}}" class="nav-link">Rice Farmer Variable Cost </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{route('agent.variablecost.labor.show_laborData')}}" class="nav-link">Labor </a>
             </li>
             <li class="nav-item">
@@ -152,7 +152,7 @@
             <li class="nav-item">
               <a href="{{route('agent.lastproduction.view_prod')}}" class="nav-link">Last Production Data </a>
             </li> 
-          
+           --}}
           </ul>
         </div>
       </li>

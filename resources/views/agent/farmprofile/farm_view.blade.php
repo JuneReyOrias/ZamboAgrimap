@@ -27,7 +27,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <h4 class="mb-3 mb-md-0">Personal Informations</h4> <br>
+        <h4 class="mb-3 mb-md-0">Farm Profile</h4> <br>
   
         <p class="text-success">This page provides a clear overview of the personal data we have collected about you, including categories of information, purposes of collection, data usage, sharing practices, security measures, and options for data access and control. We are committed to transparency and safeguarding your privacy rights.</p><br>
           <div class="table-responsive tab ">
@@ -103,7 +103,7 @@
                         <td>{{ $farmprofile->updated_at}}</td>
                         <td>
                            
-                            <a href="{{route('agent.far mprofile.farm_update', $farmprofile->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                            <a href="{{route('agent.farmprofile.farm_update', $farmprofile->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                 
                              <form  action="{{ route('agent.farmprofile.delete', $farmprofile->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                 {{-- {{ csrf_field()}} --}}@csrf

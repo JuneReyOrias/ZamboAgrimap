@@ -18,16 +18,16 @@
       <h4 class="mb-3 mb-md-0 font-weight-bold">Culianan Rice Farmers</h4>
       
       <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
-          <span class="input-group-text input-group-addon bg-transparent border-primary" data-toggle><i data-feather="calendar" class="text-primary"></i></span>
-          <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input>
+          <!--<span class="input-group-text input-group-addon bg-transparent border-primary" data-toggle><i data-feather="calendar" class="text-primary"></i></span>-->
+          <!--<input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input>-->
       </div>
      
       
-      <button type="button" class="btn btn-primary btn-icon-text me-2 mb-2 mb-md-0" onclick="printTableContent()" data-toggle="popover" title="Print" data-content="Click to print the table content.">
+      <button type="button" class="btn btn-primary btn-icon-text me-2 mb-2 mb-md-0 hide-on-print" onclick="printTableContent()" data-toggle="popover" title="Print" data-content="Click to print the table content.">
         <i class="btn-icon-prepend" data-feather="printer"></i>
         Print Table
     </button>
-    <button onclick="printPersonalInfo()" class="btn btn-primary">Print Report</button>
+    <button onclick="printPersonalInfo()" class="btn btn-primary hide-on-print">Print Report</button>
     {{-- <button type="button" class="btn btn-primary btn-icon-text me-2 mb-2 mb-md-0" data-toggle="popover" title="Download Report" data-content="Your report will be downloaded once clicked.">
       <i class="btn-icon-prepend" data-feather="download-cloud"></i>
   </button> --}}
@@ -37,7 +37,7 @@
       </button> --}}
   
       <div class="btn-group">
-          <button class="btn btn-primary dropdown-toggle dropdown-success" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="btn btn-primary dropdown-toggle dropdown-success hide-on-print" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Menu
           </button>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
@@ -162,7 +162,7 @@
                                               
                                               
                                               <div class="box d-flex flex-column align-items-center">
-                                                <img style="height: 70px; width: 70px;" src="{{ url('upload/rice.JPG') }}" alt="Profile Image" class="img-fluid mb-4">
+                                                <img style="height: 70px; width: 70px;" src="{{ url('upload/rice.jpg') }}" alt="Profile Image" class="img-fluid mb-4">
                                                 <p class="text">{{$full_name}}</p>
                                                 <p class="text">Age:{{$personalinformation->age}}</p>
                                                 <div id="overlay">
@@ -837,7 +837,7 @@
     <div id="personal_info_section" style="display: none;">
        <br>
      
-       <h4 class="mb-3 mb-md-0">Culianan Farmer Reports</h4>
+    
        <br>
 
   <div class="row">
@@ -863,7 +863,7 @@
               </div>
               <div class="row">
                 <div class="col-6 col-md-12 col-xl-5"><br>
-                  <h3 class="mb-2">{{ number_format($totalfarms, 2) }}</h3>
+                  <h3 class="mb-2">{{$totalfarms }}</h3>
                   <div class="d-flex align-items-baseline">
                     {{-- <p class="text-success">
                       <span>+3.3%</span>
@@ -1122,7 +1122,7 @@
                 </div>
                 <div class="row">
                   <div class="col-6 col-md-12 col-xl-5"><br>
-                    <h3 class="mb-1">{{ number_format($totalRiceProduction, 2) }}</h3>
+                    <h3 class="mb-1">{{ number_format($averageCostPerAreaPlanted, 2) }}</h3>
                     <div class="d-flex align-items-baseline">
                       {{-- <p class="text-success">
                         <span>+2.8%</span>
@@ -1442,164 +1442,144 @@ showSection('personal_info');
 
 
 </script>
-<script>
-                        function showAllSections() {
-                        // Show all sections
-                        document.querySelectorAll('[id$="_section"]').forEach(section => {
-                            section.style.display = 'block';
-                        });
-                    }// Assuming you have the total number of farmers in the Ayala district from the server-side
-                    const totalFarmersAyala = {{ $totalfarms }}; // Replace with the actual variable from server-side
-
-                    // Define the data for the bar chart
-                    const data = {
-                        labels: ['Ayala'], // Labels for the X-axis (district name)
-                        datasets: [
-                            {
-                                label: 'Number of Farmers',
-                                data: [totalFarmersAyala], // Data array (number of farmers)
-                                backgroundColor: '#4caf50', // Green color for bars
-                                borderColor: '#388e3c', // Border color
-                                borderWidth: 1 // Border width
-                            }
-                        ]
-                    };
-
-                    // Define options for the chart
-                    const options = {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true // Start Y-axis at zero
-                            }
-                        },
-                        plugins: {
-                            datalabels: {
-                                display: true,
-                                color: 'black',
-                                formatter: function(value) {
-                                    return value.toLocaleString(); // Format numbers with commas
-                                }
-                            },
-                            legend: {
-                                display: false // Hide the legend
-                            }
-                        },
-                        animation: {
-                            duration: 2000, // Animation duration in milliseconds
-                            easing: 'easeOutCubic', // Easing function for the animation
-                        },
-                        // Add any additional plugins or options for 3D effects here
-                    };
-
-                    // Get the canvas element
-                    const ctx = document.getElementById('farmersBarChart').getContext('2d');
-
-                    // Create the bar chart
-                    const farmersBarChart = new Chart(ctx, {
-                        type: 'bar', // Type of chart
-                        data: data, // Data for the chart
-                        options: options // Options for the chart
-                    });
-
-</script>
 
 <script>
   // Function to print both the table content and its design
- // Function to print both the table content and its design
- // Function to print both the table content and its design
- function printTableContent() {
-     // Get the table element
-     var table = document.getElementById('printTable');
- 
-     // Get the description
-     var description = "This table displays information about farmers.";
- 
-     // Create a new window
-     var printWindow = window.open('', '_blank');
- 
-     // Write the HTML content to the new window
-     printWindow.document.write('<html><head><title>Print Table</title>');
- 
-     // Get the CSS styles of the table
-     var tableStyles = document.createElement('style');
-     tableStyles.innerHTML = getComputedStyle(table).cssText;
- 
-     // Append the CSS styles to the new window
-     printWindow.document.head.appendChild(tableStyles);
- 
-     // Write the description to the new window
-     printWindow.document.write('<body><p>' + description + '</p>');
- 
-     // Write the table content to the new window
-     printWindow.document.write(table.outerHTML);
- 
-     // Close the new window
-     printWindow.document.write('</body></html>');
-     printWindow.document.close();
- 
-     // Print the content in the new window
-     printWindow.print();
- 
-     // Close the new window after printing
-     printWindow.close();
- }
+
+function printTableContent() {
+    // Function to remove the last column from the table
+    function removeLastColumnFromTable(table) {
+        // Get all rows in the table body
+        var rows = table.querySelectorAll('tbody tr');
+        // Iterate over each row and remove the last cell
+        rows.forEach(function(row) {
+            var lastCell = row.lastElementChild;
+            row.removeChild(lastCell);
+        });
+
+        // Get the table header row
+        var headerRow = table.querySelector('thead tr');
+        // Remove the last cell from the header row
+        var lastHeaderCell = headerRow.lastElementChild;
+        headerRow.removeChild(lastHeaderCell);
+    }
+
+    // Get the current date and time
+    var currentDate = new Date();
+    var formattedDate = currentDate.toLocaleDateString();
+    var formattedTime = currentDate.toLocaleTimeString();
+
+    // Get the table element
+    var table = document.getElementById('printTable');
+    // Remove the last column from the table
+    removeLastColumnFromTable(table);
+
+    // Content for the print window
+    var description = "This table displays the Culianan Farmers Information.";
+    var printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>Print Table</title>');
+
+    // Add external CSS stylesheets
+    var stylesheets = document.querySelectorAll('link[rel="stylesheet"]');
+    stylesheets.forEach(function(sheet) {
+        printWindow.document.write('<link rel="stylesheet" href="' + sheet.href + '">');
+    });
+
+    // Write description, date, time, and table content
+    printWindow.document.write('</head><body><p>' + description + '</p>');
+    printWindow.document.write('<p>Printed on: ' + formattedDate + ' at ' + formattedTime + '</p>');
+    printWindow.document.write(table.outerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+
+    // Wait for a short time for stylesheets to load
+    setTimeout(function() {
+        printWindow.print();
+        printWindow.close();
+    }, 100); // Adjust the timeout value as needed
+}
+
+
+
  
  
  
  
  // Function to print the personal_info_section content and its design
+
  function printPersonalInfo() {
-     // Get the container element containing the personal_info_section content
-     var container = document.getElementById('personal_info_section');
- 
-     // Create a new window
-     var printWindow = window.open('', '_blank');
- 
-     // Write the HTML content to the new window
-     printWindow.document.write('<html><head><title>Print Report</title>');
- 
-     // Get the CSS styles of the container
-     var containerStyles = document.createElement('style');
-     containerStyles.innerHTML = getComputedStyle(container).cssText;
- 
-     // Append the CSS styles to the new window
-     printWindow.document.head.appendChild(containerStyles);
- 
-     // Write the report description above the content
-     printWindow.document.write(`
-         </head>
-         <body>
-             <div class="container-fluid">
-                 <h2>Culianan Farmers Report</h2>
-                 <p>This report contains Culianan Farmers Report.</p>
-             </div>
-             <hr>
-     `);
- 
-     // Write the personal_info_section content to the new window with space between each data item
-     printWindow.document.write(`
-             <div class="container-fluid">
-                 <div class="row">
-                     <!-- Start of the modified cards -->
-                     ${container.innerHTML.split('</div>').join('</div><div class="mb-4"></div>')}
-                     <!-- End of the modified cards -->
-                 </div>
-             </div>
-         </body>
-     </html>
-     `);
- 
-     // Close the new window
-     printWindow.document.close();
- 
-     // Print the content in the new window
-     printWindow.print();
- 
-     // Close the new window after printing
-     printWindow.close();
- }
- 
+    // Apply print styles
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '{{ asset('css/print.css') }}';
+    document.head.appendChild(link);
+
+    // Get current date
+    // Get the current date and time
+    var currentDate = new Date();
+    var formattedDate = currentDate.toLocaleDateString();
+    var formattedTime = currentDate.toLocaleTimeString();
+
+    // Create a new element to hold the title and the current date
+    const titleElement = document.createElement('div');
+    titleElement.textContent = 'Culianan Farmers Report';
+    titleElement.style.fontWeight = 'bold'; // Adjust styling as needed
+
+    const currentDateElement = document.createElement('div');
+    currentDateElement.textContent = 'Printed on: ' + currentDate;
+    currentDateElement.style.marginBottom = '20px'; // Adjust styling as needed
+
+    // Insert the title and the current date elements into the document body
+    document.body.insertBefore(titleElement, document.body.firstChild);
+    document.body.insertBefore(currentDateElement, titleElement.nextSibling);
+
+    // Hide the navbar
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        navbar.style.display = 'none';
+    }
+    document.querySelectorAll('.hide-on-print').forEach(button => {
+            button.style.display = 'none';
+        });
+    // Hide other elements not to be printed
+    const elementsToHide = document.querySelectorAll('.exclude-from-print');
+    elementsToHide.forEach(element => {
+        element.style.display = 'none';
+    });
+
+    // Insert space after "Average Cost per Area Planted"
+    insertSpaceForPrinting();
+
+    // Print only the page content
+    window.print();
+
+    // Show the navbar after printing
+    if (navbar) {
+        navbar.style.display = '';
+    }
+
+    // Show the hidden elements after printing
+    elementsToHide.forEach(element => {
+        element.style.display = '';
+    });
+    document.querySelectorAll('.hide-on-print').forEach(button => {
+            button.style.display = 'block';
+        });
+
+    // Remove the title and the current date elements after printing
+    titleElement.remove();
+    currentDateElement.remove();
+}
+
+// Function to insert a space after "Average Cost per Area Planted" when printing
+function insertSpaceForPrinting() {
+    const averageCostSection = document.getElementById('average-cost-section'); // Adjust the ID accordingly
+    if (averageCostSection) {
+        const spaceDiv = document.createElement('div');
+        spaceDiv.style.marginBottom = '1000px'; // Adjust the margin as needed
+        averageCostSection.parentNode.insertBefore(spaceDiv, averageCostSection.nextSibling);
+    }
+}
  
  </script>
 

@@ -60,32 +60,39 @@
                          <!-- Row with two columns for FullName and Email address -->
                       <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="exampleInputUsername1" class="form-label">FullName</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="exampleInputUsername1" name="name" autocomplete="name" placeholder="FullName" value="{{ old('name') }}">
-                            @error('name')
+                            <label for="exampleInputUsername1" class="form-label">FirstName</label>
+                            <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="exampleInputUsername1" name="first_name" autocomplete="first_name" placeholder="FirsName" value="{{ old('first_name') }}">
+                            @error('first_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        
                         <div class="col-md-6">
-                            <label for="userEmail" class="form-label">Email address</label>
-                               <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="userEmail" placeholder="Email" value="{{ old('email') }}">
-                                @error('email')
-                                   <div class="invalid-feedback">{{ $message }}</div>
-                               @enderror
-                                   </div>
+                          <label for="exampleInputUsername1" class="form-label">LastName</label>
+                          <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="exampleInputUsername1" name="last_name" autocomplete="last_name" placeholder="LastName" value="{{ old('last_name') }}">
+                          @error('last_name')
+                              <div class="invalid-feedback">{{ $message }}</div>
+                          @enderror
+                      </div>
+
                                     </div>
                                       <div class="row mb-3">
+                                        <div class="col-md-6">
+                                          <label for="userEmail" class="form-label">Email address</label>
+                                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="userEmail" placeholder="Email" value="{{ old('email') }}">
+                                              @error('email')
+                                                 <div class="invalid-feedback">{{ $message }}</div>
+                                             @enderror
+                                                 </div>
                                         <div class="col-md-6">
                                           <label for="agri_district" class="form-label">Agri District</label>
                                           <select class="form-control  @error('agri_district') is-invalid @enderror"  name="agri_district"id="validationCustom01" aria-label="Floating label select e">
                                             <option selected disabled>Select Agri-District</option>
-                                               <option value="Ayala Distict" {{ old('agri_district') == 'Ayala Distict' ? 'selected' : '' }}>Ayala Distict</option>
-                                                 <option value="Tumaga District" {{ old('agri_district') == 'Tumaga District' ? 'selected' : '' }}>Tumaga District</option>
-                                                   <option value="Culianan District " {{ old('agri_district') == 'Culianan District' ? 'selected' : '' }}>Culianan District</option>
-                                                     <option value="Manicahan District" {{ old('agri_district') == 'Manicahan District' ? 'selected' : '' }}>Manicahan District</option>
-                                                       <option value="Curuan District" {{ old('agri_district') == 'Curuan District' ? 'selected' : '' }}>Curuan District</option>
-                                                         <option value="Vitali District" {{ old('agri_district') == 'Vitali District' ? 'selected' : '' }}>Vitali District</option>
+                                               <option value="ayala" {{ old('agri_district') == 'ayala' ? 'selected' : '' }}>Ayala Distict</option>
+                                                 <option value="tumaga" {{ old('agri_district') == 'tumaga' ? 'selected' : '' }}>Tumaga District</option>
+                                                   <option value="culianan" {{ old('agri_district') == 'culianan' ? 'selected' : '' }}>Culianan District</option>
+                                                     <option value="Manicahan District" {{ old('agri_district') == 'manicahan' ? 'selected' : '' }}>Manicahan District</option>
+                                                       <option value="curuan" {{ old('agri_district') == 'curuan' ? 'selected' : '' }}>Curuan District</option>
+                                                         <option value="vitali" {{ old('agri_district') == 'vitali' ? 'selected' : '' }}>Vitali District</option>
                                                             </select>
                                                                  @error('agri_district')
                                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -115,13 +122,13 @@
                                             @enderror
                                           </div>
                                            <div class="col-md-6">
-                                            <label for="password" class="form-label">confirm Password</label>
-                                              <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" autocomplete="current-password" placeholder="Password" value="{{ old('password') }}">
+                                            <label for="confirm_password" class="form-label">confirm Password</label>
+                                              <input type="password" name="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" id="confirm_password" autocomplete="current-confirm_password" placeholder="Password" value="{{ old('confirm_password') }}">
                                               {{-- <div class="form-check mb-3">
                                                 <input type="checkbox" class="form-check-input"id="togglePasswordVisibilityCheckbox">
                                                 <label class="form-check-label" for="togglePasswordVisibilityCheckbox">Show Password</label>
                                               </div> --}}
-                                                  @error('password')
+                                                  @error('confirm_password')
                                                   <div class="invalid-feedback">{{ $message }}</div>
                                               @enderror
                                                         </div>
@@ -156,7 +163,24 @@
 			</div>
 		</div>
 	</div>
- 
+ <script>
+    const passwordField = document.getElementById('password');
+    const confirmPasswordField = document.getElementById('confirm_password');
+  
+    confirmPasswordField.addEventListener('input', function() {
+      const password = passwordField.value;
+      const confirmPassword = confirmPasswordField.value;
+  
+      if (password !== confirmPassword) {
+        confirmPasswordField.setCustomValidity("Passwords do not match");
+      } else {
+        confirmPasswordField.setCustomValidity('');
+      }
+    });
+  
+    // Ensure validation is run on page load
+    confirmPasswordField.reportValidity();
+  </script>
 
   <script>
     document.getElementById("togglePasswordVisibilityCheckbox").addEventListener("change", function () {
@@ -168,6 +192,8 @@
             passwordInput.type = "password";
         }
     });
+
+
 </script>
 	<!-- core:js -->
 	<script src="{{asset('../../../assets/vendors/core/core.js')}}"></script>

@@ -18,8 +18,7 @@ class Seed extends Model
         'total_seed_cost',
     ];
    
-    public function variablecost()
-    {
-        return $this->belongsTo(VariableCost::class, 'id','seeds_id');
+      public function variableCostforSeed(){
+        return$this->hasMany(VariableCost::class, 'seeds_id');
     }
 }

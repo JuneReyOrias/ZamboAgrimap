@@ -28,5 +28,13 @@ class FixedCost extends Model
     {
         return $this->belongsTo(FarmProfile::class, 'farm_profiles_id','id')->withDefault();
     }
+    public function personalinformation()
+    {
+        return $this->belongsTo(PersonalInformations::class, 'personal_informations_id');
+    }
 
+    public function farmprofile()
+    {
+        return $this->belongsTo(FarmProfile::class, 'farm_profiles_id');
+    }
 }

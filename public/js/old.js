@@ -375,8 +375,7 @@ function initMap() {
     }
 
     function generateInfoWindowContent(farm) {
-        const userRole = getCurrentUserRole();
-        let editButton = '';
+
 
 
         return `
@@ -482,7 +481,7 @@ function initMap() {
         </tr>
     </table>
     </div>
-    ${editButton} 
+   
     </div>
     </div>
         
@@ -493,16 +492,13 @@ function initMap() {
     //Districts informations info window
     function PolygonInfo(polygon) {
 
-        const userRole = getCurrentUserRole();
-        let editButton = '';
 
-        if (userRole === 'agent' || userRole === 'admin') {
-            editButton = `<button onclick="editFarm(${polygon.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
-        }
+
+
         return `
         <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
 
-        <h4 style="margin-bottom: 10px;Align-tex:center;">Polygons</h4>
+        <h4 style="margin-bottom: 10px;Align-tex:center;"></h4>
         <table style="width:100%; border-collapse: collapse;">
                 <tr style="background-color: #c6e2ff;">
                     <td style="padding: 8px;"><strong>PolyName:</strong></td>
@@ -517,19 +513,14 @@ function initMap() {
                 <td style="padding: 8px;">${polygon.perimeter}</td>
                 
     </table>
-    ${editButton} 
+
     </div>
         `;
     }
 
     //Parcels informations info window
     function ParcelInfo(parcelary) {
-        const userRole = getCurrentUserRole();
-        let editButton = '';
 
-        if (userRole === 'agent' || userRole === 'admin') {
-            editButton = `<button onclick="editFarm(${parcelary.id})" style="margin-top: 10px; padding: 8px 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Edit</button>`;
-        }
 
         return `
         <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -570,7 +561,7 @@ function initMap() {
                     </tr>
                 </table>
             </div>
-            ${editButton} 
+   
         </div>`;
     }
 
@@ -654,8 +645,7 @@ function initMap() {
     const imagedistrict = "../assets/images/district.png";
     //profiles of districts 
     listOfprofiles.forEach(profiles => {
-        console.log(profiles.latitude)
-        console.log(profiles.longitude)
+
 
         const position = {
             lat: profiles.latitude,
@@ -699,23 +689,6 @@ function initMap() {
 
     // Polygons points using lat lang  to create a districts boundary
     listOfPolygon.forEach(polygon => {
-        console.log(polygon.verone_latitude)
-        console.log(polygon.verone_longitude)
-        console.log(polygon.vertwo_latitude)
-        console.log(polygon.vertwo_longitude)
-        console.log(polygon.verthree_latitude)
-        console.log(polygon.verthree_longitude)
-        console.log(polygon.vertfour_latitude)
-        console.log(polygon.vertfour_longitude)
-        console.log(polygon.verfive_latitude)
-        console.log(polygon.verfive_longitude)
-        console.log(polygon.versix_latitude)
-        console.log(polygon.versix_longitude)
-        console.log(polygon.verseven_latitude)
-        console.log(polygon.verseven_longitude)
-        console.log(polygon.vereight_latitude)
-        console.log(polygon.verteight_longitude)
-        console.log(polygon.strokecolor)
 
 
         //coordinates of per points using lang
@@ -770,31 +743,6 @@ function initMap() {
 
     // ParcelBoarder points using lat lang  to create a districts boundary
     listOfParcels.forEach(parcelary => {
-        console.log(parcelary.parone_latitude)
-        console.log(parcelary.parone_longitude)
-        console.log(parcelary.partwo_latitude)
-        console.log(parcelary.partwo_longitude)
-        console.log(parcelary.parthree_latitude)
-        console.log(parcelary.parthree_longitude)
-        console.log(parcelary.parfour_latitude)
-        console.log(parcelary.parfour_longitude)
-        console.log(parcelary.parfive_latitude)
-        console.log(parcelary.parfive_longitude)
-        console.log(parcelary.parsix_latitude)
-        console.log(parcelary.parsix_longitude)
-        console.log(parcelary.parseven_latitude)
-        console.log(parcelary.parseven_longitude)
-        console.log(parcelary.pareight_latitude)
-        console.log(parcelary.pareight_longitude)
-        console.log(parcelary.parnine_latitude)
-        console.log(parcelary.parnine_longitude)
-        console.log(parcelary.parten_latitude)
-        console.log(parcelary.parten_longitude)
-        console.log(parcelary.pareleven_latitude)
-        console.log(parcelary.pareleven_longitude)
-        console.log(parcelary.partwelve_latitude)
-        console.log(parcelary.partwelve_longitude)
-        console.log(parcelary.parcolor)
 
 
 
@@ -849,8 +797,10 @@ function initMap() {
         });
 
         parcels.push(permDistrictParcel);
-
+        // Set the polygon on the map
+        districtPolygon.setMap(map);
     });
+    // Set the polygon on the map
 
     // const kmlLayer = new google.maps.KmlLayer({
     //     url: `/storage/kml_folder/{{ $fileName }}`,
@@ -946,16 +896,13 @@ function initMap() {
     // });
 
     // Use MarkerClusterer to cluster the markers
-    const markerCluster = new MarkerClusterer(map, markers, {
-        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-    });
 
 
 
 
 
-    // Set the polygon on the map
-    permDistrictPolygon.setMap(map);
+
+
 
     // Get the file input element
     // const fileInput = document.getElementById('fileInput');
@@ -1045,24 +992,5 @@ function initMap() {
     drawingManager.setMap(map);
 
     // Add an event listener for when an overlay is complete
-    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-        // Get the overlay (polygon or polyline) that was drawn
-        const overlay = event.overlay;
-
-        // Add the overlay to the map
-        overlay.setMap(map);
-
-        // Add the overlay to the global array (if you want to keep track of them)
-        markers.push(overlay);
-
-        // Add an event listener for click on the overlay
-        google.maps.event.addListener(overlay, 'click', function() {
-            // Handle the click event for the overlay (e.g., show information)
-            console.log('Overlay clicked');
-        });
-
-        // Reset the drawing mode to null (disables drawing)
-        drawingManager.setDrawingMode(null);
-    });
 
 }

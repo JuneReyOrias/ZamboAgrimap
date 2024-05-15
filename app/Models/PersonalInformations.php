@@ -47,16 +47,42 @@ class PersonalInformations extends Model
       'image',
       
     ];
+
+         // relationship  machineries used farm profiles
+ public function lastProduction()
+ {
+     return $this->hasMany(LastProductionDatas::class, 'personal_informations_id');
+ }
+     // relationship  machineries used farm profiles
+ public function variableCosts()
+ {
+     return $this->hasMany(VariableCost::class, 'personal_informations_id');
+ }
+ // relationship  machineries used farm profiles
+ public function machineries()
+ {
+     return $this->hasMany(MachineriesUseds::class, 'personal_informations_id');
+ }
+  // relatioship  fixed farm profiles
+    public function fixedCosts()
+    {
+        return $this->hasMany(FixedCost::class, 'personal_informations_id');
+    }
+ // relatioship  farmprofiles farm profiles
+    public function farmProfiles()
+    {
+        return $this->hasMany(FarmProfile::class, 'personal_informations_id');
+    }
     public function user()
     {
         return $this->belongsTo(User::class,'id','users_id', )->withDefault();
     }
 
     // Define the relationship with FarmProfile
-    public function farmProfiles()
-    {
-        return $this->hasMany(FarmProfile::class,'id','personal_informations_id')->withDefault();
-    }
+    // public function farmProfiles()
+    // {
+    //     return $this->hasMany(FarmProfile::class,'id','personal_informations_id')->withDefault();
+    // }
     public function fixedcost()
     {
         return $this->hasMany(FixedCost::class, 'id','personal_informations_id');
