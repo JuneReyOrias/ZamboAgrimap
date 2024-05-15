@@ -54,26 +54,4 @@ class RegisteredUserController extends Controller
     }
     
  
-    // // {
-    // //     $request->validate([
-    // //         'name' => ['required', 'string', 'max:255'],
-    // //         'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-    // //         'agri_district' => ['required', 'string', 'max:255'],
-    // //         'password' => ['required', 'confirmed', Rules\Password::defaults()],
-    // //         'role' => ['required', 'string', 'max:255'],
-    // //     ]);
-
-    // //     $user = User::create([
-    // //         'name' => $request->name,
-    // //         'email' => $request->email,
-    // //         'agri_district' => $request->agri_district,
-    // //         'password' => Hash::make($request->password),
-    // //         'role' => $request->role,
-    // //     ]);
-
-    // //     event(new Registered($user));
-
-    // //     Auth::login($user);
-
-    // //     return redirect(RouteServiceProvider::HOME);
     }

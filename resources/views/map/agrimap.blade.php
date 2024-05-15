@@ -81,7 +81,7 @@
       data-lng="{{ $location->longitude }}" 
       data-location="{{ $location->district}}" 
       data-description="{{ $location->description}}" 
-      data-lastname="{{ $location->last_name.', '.$location->first_name.', '.$location->middle_name.'|'. $location->personal_informations_id}}" 
+      data-lastname="{{ $location->last_name.', '.$location->first_name.', '.$location->middle_name}}" 
       data-mothers="{{ $location->mothers_maiden_name}}" 
       data-address="{{$location->home_address}}"
       data-agrDistrict="{{$location->agri_district}}"
