@@ -13,6 +13,7 @@ class PersonalInformations extends Model
     protected $fillable=[
    
       
+        'agri_district',
        'agri_districts_id',
        'crop_categorys_id',
        'livestock_categorys_id',

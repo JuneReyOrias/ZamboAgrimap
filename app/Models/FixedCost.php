@@ -10,12 +10,13 @@ class FixedCost extends Model
     use HasFactory;
     protected $table="fixed_costs";
     protected $fillable=[
-        'personal_informations_id',
-        'farm_profiles_id',
-        'particular',
-        'no_of_ha',
-        'cost_per_ha',
-        'total_amount',
+        'name_of_fertilizer',
+        'type_of_fertilizer',
+        'no_ofsacks',
+        'unitprice_per_sacks',
+        'total_cost_fertilizers',
+        'users_id',
+        'personal_informations_id'
     ];
 
 

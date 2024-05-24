@@ -37,7 +37,7 @@
 </head>
 <body>
   
-  <div class="main-wrapper"  style=" background-image: url(upload/rice.jpg);">
+  <div class="main-wrapper"  style=" background-image: url(Upload/rice.JPG);">
 		<div class="page-wrapper full-pages">
 			<div class="page-content d-flex align-items-center justify-content-center">
 
@@ -47,7 +47,7 @@
               
 							<div class="row">
                 <div class="col-md-4 pe-md-0">
-                  <div class="auth-side-wrapper"  style=" background-image: url(upload/rice.jpg);">
+                  <div class="auth-side-wrapper"  style=" background-image: url(Upload/rice.JPG);">
                  
                   </div>
                 </div>

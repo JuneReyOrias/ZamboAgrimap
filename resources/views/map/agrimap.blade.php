@@ -1,6 +1,5 @@
- {{-- @extends('admin.dashb')
-@section('admin') --}}
-@extends('user.user_Dashboard')
+
+@extends('user.user_dashboard')
 
 @section('user')
 
@@ -62,8 +61,8 @@
    
   <div class="d-flex justify-content-between">
     <form action="{{ route('map.agrimap') }}" method="GET" class="d-flex">
-        <input type="text" name="query" placeholder="Search by last name" class="form-control me-2">
-        <button type="submit" class="btn btn-primary">Search</button>
+        <input type="text" name="query" placeholder="Search" class="form-control me-2">
+        <button type="submit" class="btn btn-success">Search</button>
     </form>
 
     <form id="showAllForm" action="{{ route('map.agrimap') }}" method="GET">

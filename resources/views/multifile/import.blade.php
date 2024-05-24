@@ -21,9 +21,22 @@
               <div class="card-body">
                 @if (session('status'))
                 <div class="alert alert-success" role="alert">
-                  {{ session('status')}}
+                    {{ session('status')}}
                 </div>
-                
+                @endif
+                @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error')}}
+                </div>
+                @endif
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
                 @endif
                   <h6 class="card-title">Multiple Import File</h6><br><br>
                   <p class="text-muted mb-3">Import excel file, csv file or Msacces file only.</p>

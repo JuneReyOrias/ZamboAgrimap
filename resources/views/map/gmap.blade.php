@@ -1,5 +1,4 @@
- {{-- @extends('admin.dashb')
-@section('admin') --}}
+
 @extends('agent.agent_Dashboard')
 @section('agent') 
 @extends('layouts.auth')
@@ -20,8 +19,8 @@
   
   <div class="d-flex justify-content-between">
     <form action="{{ route('map.gmap') }}" method="GET" class="d-flex">
-        <input type="text" name="query" placeholder="Search by last name" class="form-control me-2">
-        <button type="submit" class="btn btn-primary">Search</button>
+        <input type="text" name="query" placeholder="Search" class="form-control me-2">
+        <button type="submit" class="btn btn-success">Search</button>
     </form>
 
     <form id="showAllForm" action="{{ route('map.gmap') }}" method="GET">

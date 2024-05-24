@@ -1,5 +1,4 @@
- {{-- @extends('admin.dashb')
-@section('admin') --}}
+
 @extends('admin.dashb')
 @section('admin') 
 @extends('layouts.auth')
@@ -19,8 +18,8 @@
 <input type="hidden" id="fileInput" accept=".kml,.kmz">
 <div class="d-flex justify-content-between">
     <form action="{{ route('map.arcmap') }}" method="GET" class="d-flex">
-        <input type="text" name="query" placeholder="Search by last name" class="form-control me-2">
-        <button type="submit" class="btn btn-primary">Search</button>
+        <input type="text" name="query" placeholder="Search" class="form-control me-2">
+        <button type="submit" class="btn btn-success">Search</button>
     </form>
 
     <form id="showAllForm" action="{{ route('map.arcmap') }}" method="GET">
@@ -240,7 +239,13 @@ data-partwelvelong ={{$parcel->partwelve_longitude}}
 
 
 </nav>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    window.onload = function() {
+        var kmlFiles = @json($kmlFiles);
+        console.log('KML files:', kmlFiles);  // Log the fetched KML files
+        initMap(kmlFiles);
+    };
+</script>
 <script>
 // Initialize the map variable globally
 
@@ -303,6 +308,8 @@ height: 550px;
 </style>
 
 <div id="map"></div>
+<div id="capture"></div>
+
 {{-- <button onclick="savePolyline()">Save Polyline</button> --}}
 {{-- <input type="checkbox" id="satelliteToggle"> Satellite View --}}
 </div>
@@ -314,8 +321,7 @@ height: 550px;
 {{-- <script>
 @php
 $id = Auth::id();
-// Define $personalinformation here, assuming it's available in your PHP code
-// Find the user by their ID and eager load the personalInformation relationship
+
 $personalinformation = App\Models\PersonalInformations::find($id);
 @endphp
 

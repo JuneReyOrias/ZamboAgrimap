@@ -124,7 +124,8 @@ class FarmProfileController extends Controller
                    $farmLocationQuery->where(function ($query) use ($searchQuery) {
                        $query->where('personal_informations.last_name', 'like', '%' . $searchQuery . '%')
                              ->orWhere('personal_informations.middle_name', 'like', '%' . $searchQuery . '%')
-                             ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%');
+                             ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%')
+                             ->orWhere('farm_profiles.tenurial_status', 'like', '%' . $searchQuery . '%');
                    });
                    break;
            }
@@ -150,10 +151,14 @@ class FarmProfileController extends Controller
 
             
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+            $kmlFiles = KmlFile::all()->map(function ($file) {
+                return asset('storage/' . $file->filename);
+            });
+    
             // Return the view with the fetched data
             return view('map.arcmap', compact( 'profile', 'farmProfile','farmLocation','totalRiceProduction',
             'agriDistrictIds', 'agriDistrictIds',
-            'polygonsIds','admin',
+            'polygonsIds','admin','kmlFiles',
             'searchQuery' , // Pass the search query to the view
             'searchType', // Pass the search type to the view
             ));
@@ -229,7 +234,8 @@ public function Gmap(Request $request)
                    $farmLocationQuery->where(function ($query) use ($searchQuery) {
                        $query->where('personal_informations.last_name', 'like', '%' . $searchQuery . '%')
                              ->orWhere('personal_informations.middle_name', 'like', '%' . $searchQuery . '%')
-                             ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%');
+                             ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%')
+                             ->orWhere('farm_profiles.tenurial_status', 'like', '%' . $searchQuery . '%');
                    });
                    break;
            }
@@ -333,7 +339,8 @@ public function Gmap(Request $request)
                        $farmLocationQuery->where(function ($query) use ($searchQuery) {
                            $query->where('personal_informations.last_name', 'like', '%' . $searchQuery . '%')
                                  ->orWhere('personal_informations.middle_name', 'like', '%' . $searchQuery . '%')
-                                 ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%');
+                                 ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%')
+                                 ->orWhere('farm_profiles.tenurial_status', 'like', '%' . $searchQuery . '%');
                        });
                        break;
                }
@@ -445,60 +452,6 @@ public function store(FarmProfileRequest $request)
 }  
    
     // farmers view of all the data from farm profile by admin 
- 
-    // public function ViewFarmProfile(Request $request)
-    // {
-    //     // Check if the user is authenticated
-    //     if (Auth::check()) {
-    //         // User is authenticated, proceed with retrieving the user's ID
-    //         $userId = Auth::id();
-    
-    //         // Find the user based on the retrieved ID
-    //         $admin = User::find($userId);
-    
-    //         if ($admin) {
-    //             // Assuming $user represents the currently logged-in user
-    //             $user = auth()->user();
-    
-    //             // Check if user is authenticated before proceeding
-    //             if (!$user) {
-    //                 // Handle unauthenticated user, for example, redirect them to login
-    //                 return redirect()->route('login');
-    //             }
-    
-    //             // Find the user's personal information by their ID
-    //             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-    
-    //             // Fetch all farm profiles with their associated personal information
-    //             $farmProfiles = FarmProfile::with('personalInformation','agriDistrict')->orderBy('id', 'desc');
-    
-    //             // Search functionality
-    //             if ($request->has('search')) {
-    //                 $keyword = $request->input('search');
-    //                 $farmProfiles->where(function ($query) use ($keyword) {
-    //                     $query->where('tenurial_status', 'like', "%$keyword%")
-    //                           ->orWhere('personal_informations_id', 'like', "%$keyword%");
-    //                 });
-    //             }
-    
-    //             // Paginate the results
-    //             $farmProfiles = $farmProfiles->paginate(20);
-    
-    //             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    
-    //             // Return the view with the fetched data
-    //             return view('farm_profile.farminfo_view', compact('admin', 'profile', 'farmProfiles', 'totalRiceProduction'));
-    //         } else {
-    //             // Handle the case where the user is not found
-    //             // You can redirect the user or display an error message
-    //             return redirect()->route('login')->with('error', 'User not found.');
-    //         }
-    //     } else {
-    //         // Handle the case where the user is not authenticated
-    //         // Redirect the user to the login page
-    //         return redirect()->route('login');
-    //     }
-    // }
     
     public function ViewFarmProfile(Request $request)
     {

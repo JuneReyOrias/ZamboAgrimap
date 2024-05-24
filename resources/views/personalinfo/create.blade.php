@@ -1003,41 +1003,59 @@
                                       </td>
 
 
-                                    <td>
-                                        @if ($vartotal->seeds->total_seed_cost && strtolower($vartotal->seeds->total_seed_cost) != 'n/a')
-                                            {{ number_format($vartotal->seeds->total_seed_cost,2) }}
+                                      <td>
+                                        @if (!is_null($vartotal->seeds->total_seed_cost) && $vartotal->seeds->total_seed_cost && strtolower($vartotal->seeds->total_seed_cost) != 'n/a')
+                                            {{ number_format($vartotal->seeds->total_seed_cost, 2) }}
                                         @else
-                                        
+                                           
+                                                {{ number_format($vartotal->total_seed_cost, 2) }}
+                                           
+                                          
                                         @endif
-                                        </td>
-                                        <td>
-                                            @if ($vartotal->labors->total_labor_cost && strtolower($vartotal->labors->total_labor_cost) != 'n/a')
-                                                {{ number_format($vartotal->labors->total_labor_cost,2) }}
+                                    </td>
+                                    <td>
+                                        @if (!is_null($vartotal->labors->total_labor_cost) &&$vartotal->labors->total_labor_cost && strtolower($vartotal->labors->total_labor_cost) != 'n/a')
+                                            {{ number_format($vartotal->labors->total_labor_cost, 2) }}
+                                        @else
+                                            @if ($vartotal->total_labor_cost)
+                                                {{ number_format($vartotal->total_labor_cost, 2) }}
                                             @else
-                                            
+                                                N/A
                                             @endif
-                                            </td>
-                                            <td>
-                                                @if ($vartotal->fertilizers->total_cost_fertilizers && strtolower($vartotal->fertilizers->total_cost_fertilizers) != 'n/a')
-                                                    {{ number_format($vartotal->fertilizers->total_cost_fertilizers,2) }}
-                                                @else
-                                                
-                                                @endif
-                                                </td>
-                                                <td>
-                                                    @if ($vartotal->pesticides->total_cost_pesticides && strtolower($vartotal->pesticides->total_cost_pesticides) != 'n/a')
-                                                        {{ number_format($vartotal->pesticides->total_cost_pesticides,2) }}
-                                                    @else
-                                                    
-                                                    @endif
-                                                    </td>
-                                                    <td>
-                                                        @if ($vartotal->transports->total_transport_per_deliverycost && strtolower($vartotal->transports->total_transport_per_deliverycost) != 'n/a')
-                                                            {{ number_format($vartotal->transports->total_transport_per_deliverycost,2) }}
-                                                        @else
-                                                        
-                                                        @endif
-                                                        </td>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (!is_null($vartotal->fertilizers->total_cost_fertilizers) &&$vartotal->fertilizers->total_cost_fertilizers && strtolower($vartotal->fertilizers->total_cost_fertilizers) != 'n/a')
+                                            {{ number_format($vartotal->fertilizers->total_cost_fertilizers, 2) }}
+                                        @else
+                                            @if ($vartotal->total_cost_fertilizers)
+                                                {{ number_format($vartotal->total_cost_fertilizers, 2) }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (!is_null($vartotal->pesticides->total_cost_pesticides) && $vartotal->pesticides->total_cost_pesticides && strtolower($vartotal->pesticides->total_cost_pesticides) != 'n/a')
+                                            {{ number_format($vartotal->pesticides->total_cost_pesticides, 2) }}
+                                        @else
+                                          
+                                                {{ number_format($vartotal->total_cost_pesticides, 2) }}
+                                          
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (!is_null($vartotal->transports->total_transport_per_deliverycost) &&$vartotal->transports->total_transport_per_deliverycost && strtolower($vartotal->transports->total_transport_per_deliverycost) != 'n/a')
+                                            {{ number_format($vartotal->transports->total_transport_per_deliverycost, 2) }}
+                                        @else
+                                            @if ($vartotal->total_transport_per_deliverycost)
+                                                {{ number_format($vartotal->total_transport_per_deliverycost, 2) }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        @endif
+                                    </td>
+                                    
                                                         <td>
                                                             @if ($vartotal->total_machinery_fuel_cost && strtolower($vartotal->total_machinery_fuel_cost) != 'n/a')
                                                                 {{ number_format($vartotal->total_machinery_fuel_cost,2) }}

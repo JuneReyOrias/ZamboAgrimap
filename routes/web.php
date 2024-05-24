@@ -99,7 +99,10 @@ use App\Models\AgriDistrict;
 
 
 // multiple improf execl file to dataase by  agen
-Route::get('agent-import-multipleFiles',[AgentController::class,'ExcelFile'])->name('agent.mutipleFile.import_excelFile');
+Route::get('/agent-import-multipleFiles',[AgentController::class,'ExcelFile'])->name('agent.mutipleFile.import_excelFile');
+Route::post('/agent-import-multipleFiles',[FileController::class,'AgentsaveUploadForm']);
+
+
 // cropProducions
 Route::get('/agent-rice-crop-productions',[AgentController::class,'RiceCrop'])->name('agent.cropProductions.rice_crop');
 

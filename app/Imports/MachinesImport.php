@@ -1,31 +1,19 @@
 <?php
 
 namespace App\Imports;
-
-use App\Models\Fertilizer;
+use App\Models\MachineriesUseds;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportFertilizer implements ToModel,WithHeadingRow
+class MachinesImport implements ToModel, WithHeadingRow
 {
-    // /**
-    // * @param array $row
-    // *
-    // * @return \Illuminate\Database\Eloquent\Model|null
-    // */
-    // public function model(array $row)
-    // {
-    //     return new Fertilizer([
-    //         'no_ofsacks'=>$row ['no_ofsacks'],
-    //         'unitprice_per_sacks'=>$row ['unitprice_per_sacks'],
-    //         'total_cost_fertilizers'=> $row ['total_cost_fertilizers'],
-    //     ]);
-    // }
+
     protected $personalInformationId;
     protected $farmProfileId;
-        private $fertilizerModel;
+
     public function __construct($personalInformationId, $farmProfileId)
     {
         $this->personalInformationId = $personalInformationId;
@@ -43,7 +31,7 @@ class ImportFertilizer implements ToModel,WithHeadingRow
         $agri_district = $user->agri_district;
 
         // Check if all required keys exist in the row
-        $requiredKeys = ['no_ofsacks', 'unitprice_per_sacks', 'total_cost_fertilizers'];
+        $requiredKeys = ['plowing_cost', 'harrowing_cost', 'harvesting_cost','post_harvest_cost','total_cost_for_machineries'];
         foreach ($requiredKeys as $key) {
             if (!isset($row[$key])) {
                 Log::error("Undefined array key '$key'. Row: " . json_encode($row));
@@ -55,28 +43,24 @@ class ImportFertilizer implements ToModel,WithHeadingRow
         // dd([
         //     'users_id' => $userId,
             
-        //     // 'personalInformationId' => $this->personalInformationId,
+        //     'personalInformationId' => $this->personalInformationId,
         //     'farmProfileId' => $this->farmProfileId,
         //     'row' => $row
         // ]);
 
         // Create or update FixedCost instance
-       $this->fertilizerModel= Fertilizer::firstOrCreate([
+        return MachineriesUseds::firstOrCreate([
             'personal_informations_id' => $this->personalInformationId,
             'users_id' => $userId,
         
          
         ], [
-                     'no_ofsacks'=>$row ['no_ofsacks'],
-                    'unitprice_per_sacks'=>$row ['unitprice_per_sacks'],
-                    'total_cost_fertilizers'=>$row ['total_cost_fertilizers'],
-                
-                    'farm_profiles_id' => $this->farmProfileId,
+            'plowing_cost'=>$row['plowing_cost'],
+            'harrowing_cost'=>$row['harrowing_cost'],
+            'harvesting_cost'=>$row['harvesting_cost'],
+            'post_harvest_cost'=>$row['post_harvest_cost'],
+            'total_cost_for_machineries'=>$row['total_cost_for_machineries'],
+            'farm_profiles_id' => $this->farmProfileId,
         ]);
-        $this->fertilizerModel->save();
-    }
-
-    public function getfertilizerId(){
-        return $this->fertilizerModel->id;
     }
 }

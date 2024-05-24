@@ -28,6 +28,7 @@ class MachineriesUseds extends Model
         'postharv_ownership_status',
         'post_harvest_cost',
         'total_cost_for_machineries',
+        'users_id'
        
     ];
 

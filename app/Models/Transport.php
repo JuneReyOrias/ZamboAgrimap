@@ -13,6 +13,8 @@ class Transport extends Model
         'name_of_vehicle',
         'type_of_vehicle',
         'total_transport_per_deliverycost',
+        'users_id',
+        'personal_informations_id'
     ]; 
 
     public function variablecost(){

@@ -16,6 +16,8 @@ class Seed extends Model
         'quantity',
         'unit_price',
         'total_seed_cost',
+        'users_id',
+       'personal_informations_id'
     ];
    
       public function variableCostforSeed(){

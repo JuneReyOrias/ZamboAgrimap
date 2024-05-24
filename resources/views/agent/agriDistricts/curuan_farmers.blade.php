@@ -160,7 +160,7 @@
                                             
                                             
                                             <div class="box d-flex flex-column align-items-center">
-                                              <img style="height: 70px; width: 70px;" src="{{ url('upload/rice.jpg') }}" alt="Profile Image" class="img-fluid mb-4">
+                                              <img src="/upload/farmerprof.png" alt="default avatar"  class="wd-80 ht-80 rounded-circle">
                                               <p class="text">{{$full_name}}</p>
                                               <p class="text">Age:{{$personalinformation->age}}</p>
                                               <div id="overlay">

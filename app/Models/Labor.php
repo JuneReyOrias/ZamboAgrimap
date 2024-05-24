@@ -13,6 +13,8 @@ class Labor extends Model
         'no_of_person',
         'rate_per_person',
         'total_labor_cost',
+        'users_id',
+       'personal_informations_id'
        
     ];
 

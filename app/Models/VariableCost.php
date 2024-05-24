@@ -17,9 +17,15 @@ class VariableCost extends Model
         'fertilizers_id',
         'pesticides_id',
         'transports_id',
+       ' total_seed_cost',
+       'total_labor_cost',
+       'total_cost_fertilizers',
+       'total_cost_pesticides', 
+       'total_transport_per_deliverycost',
         'total_machinery_fuel_cost',
         'total_variable_cost',
-
+        'users_id',
+        'personal_informations_id'
 
     ];
     

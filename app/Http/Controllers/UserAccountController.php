@@ -1637,7 +1637,6 @@ public function Userupdate(Request $request){
     $data->name= $request->name;
     $data->email= $request->email;
     $data->agri_district= $request->agri_district;
-
     $data->role= $request->role;
  
      
