@@ -487,33 +487,33 @@ function initMap() {
     }
 
     //Districts informations info window
-    // function PolygonInfo(polygon) {
+    function PolygonInfo(polygon) {
 
 
 
 
-    //     return `
-    //     <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        return `
+        <div style="font-family: Arial, sans-serif; color: #333; background-color: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
 
-    //     <h4 style="margin-bottom: 10px;Align-tex:center;"></h4>
-    //     <table style="width:100%; border-collapse: collapse;">
-    //             <tr style="background-color: #c6e2ff;">
-    //                 <td style="padding: 8px;"><strong>PolyName:</strong></td>
-    //                 <td style="padding: 8px;">${polygon.poly_name}</td>
-    //             </tr>
-    //             <tr style="background-color:#eaf7fa;">
-    //                 <td style="padding: 8px; "><strong>Area:</strong></td>
-    //                 <td style="padding: 8px;">${polygon.area}</td>
-    //             </tr>
-    //             <tr style="background-color: #c6e2ff;">
-    //             <td style="padding: 8px;"><strong>Perimeter:</strong></td>
-    //             <td style="padding: 8px;">${polygon.perimeter}</td>
+        <h4 style="margin-bottom: 10px;Align-tex:center;"></h4>
+        <table style="width:100%; border-collapse: collapse;">
+                <tr style="background-color: #c6e2ff;">
+                    <td style="padding: 8px;"><strong>PolyName:</strong></td>
+                    <td style="padding: 8px;">${polygon.poly_name}</td>
+                </tr>
+                <tr style="background-color:#eaf7fa;">
+                    <td style="padding: 8px; "><strong>Area:</strong></td>
+                    <td style="padding: 8px;">${polygon.area}</td>
+                </tr>
+                <tr style="background-color: #c6e2ff;">
+                <td style="padding: 8px;"><strong>Perimeter:</strong></td>
+                <td style="padding: 8px;">${polygon.perimeter}</td>
+                
+    </table>
 
-    // </table>
-
-    // </div>
-    //     `;
-    // }
+    </div>
+        `;
+    }
 
     //Parcels informations info window
     function ParcelInfo(parcelary) {
