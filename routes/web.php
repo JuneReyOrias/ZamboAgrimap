@@ -406,10 +406,10 @@ Route::post('/admin-multifile-imports', [FileController::class, 'saveUploadForm'
   Route::post('/admin-multifile-imports',[FileController::class, 'saveUploadForm']);
       
  // admin Map route
-      Route::get('/map/gmap',[FarmProfileController::class, 'Gmap'])->name('map.gmap');
+      Route::get('/agent-gmap',[FarmProfileController::class, 'Gmap'])->name('map.gmap');
       Route::get('/agent-map-view-info/{id}',[AgentController::class, 'mapView'])->name('map.view_map_info');
 
-      Route::get('/map/agrimap',[FarmProfileController::class, 'agrimap'])->name('map.agrimap');
+      Route::get('/user-agrimap',[FarmProfileController::class, 'agrimap'])->name('map.agrimap');
  
       // admin Map route
       Route::get('/admin-map-arcmap',[FarmProfileController::class, 'ArcMap'])->name('map.arcmap');
